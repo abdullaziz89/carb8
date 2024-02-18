@@ -1,0 +1,71 @@
+<div class="container" style="padding: 15px;" [formGroup]="headerImagesFormGroup!">
+  <div class="d-flex flex-row" mat-dialog-title>
+    <div class="col-md-10">
+      Create new Header Image
+    </div>
+    <div class="col-md-2">
+      <button mat-icon-button color="warn" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div matDialogContent>
+    <div class="row">
+      <div class="col-md-6">
+        <img
+          #headerImageImg
+          src="#"
+          alt="header image"
+          width="400"
+          height="200"
+        />
+      </div>
+      <div class="col-md-6">
+        <input #fileInput (change)="onFileInputChange(fileInput, $event, headerImageImg)" accept="image/*" hidden
+               multiple
+               required type="file"/>
+        <button (click)="setFile(fileInput)" color="primary" style="float: right;" mat-raised-button>Select File
+        </button>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 25px;">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Link (redirect user with click)</mat-label>
+          <input matInput formControlName="link" placeholder="Link (redirect user with click)" required>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Link Type</mat-label>
+          <mat-select formControlName="linkType" placeholder="Link Type" required>
+            <mat-option value="INTERNAL">Internal</mat-option>
+            <mat-option value="EXTERNAL">External</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type" placeholder="Type" required>
+            <mat-option value="ACADEMY">Academy</mat-option>
+            <mat-option value="EVENT">Event</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>order (for sorting)</mat-label>
+          <input matInput formControlName="order" placeholder="order (for sorting)" required>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row" matDialogActions>
+    <div class="col-md-12">
+      <button mat-raised-button color="accent" (click)="createHeaderImage()">Submit</button>
+    </div>
+  </div>
+</div>

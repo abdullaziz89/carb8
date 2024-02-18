@@ -1,0 +1,17 @@
+.content {
+  margin: 0 16px;
+  border: black 1px solid;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: white;
+}
+
+.enableButton {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+

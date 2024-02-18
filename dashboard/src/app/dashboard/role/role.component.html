@@ -1,0 +1,52 @@
+<app-indicator [isLoading]="isLoading"></app-indicator>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>Roles</h1>
+    </div>
+    <div class="col-md-6">
+      <button mat-raised-button color="accent" (click)="openCreateRole()"> create new role</button>
+    </div>
+  </div>
+  <mat-table [dataSource]="roles">
+    <ng-container matColumnDef="no">
+      <mat-header-cell *matHeaderCellDef> NO.</mat-header-cell>
+      <mat-cell class="pointer-event" *matCellDef="let role"> {{roles.data.indexOf(role) + 1}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+      <mat-cell class="pointer-event" *matCellDef="let role"> {{role.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="enable">
+      <mat-header-cell *matHeaderCellDef> Status</mat-header-cell>
+      <mat-cell class="pointer-event" *matCellDef="let role">
+        <mat-slide-toggle #enableToggle [checked]="role.enable"
+                          (change)="updateEnable(role.id, enableToggle)"></mat-slide-toggle>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let role">
+        <button mat-icon-button [matMenuTriggerFor]="menuRef">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menuRef="matMenu" [overlapTrigger]="false">
+          <button mat-menu-item (click)="openUpdate(role)">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="roleColumns"></mat-header-row>
+    <mat-row *matRowDef="let user; columns: roleColumns"></mat-row>
+  </mat-table>
+</div>

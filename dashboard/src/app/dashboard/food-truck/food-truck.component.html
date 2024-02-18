@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Food Truck</h2>
+    </div>
+    <div class="col-md-6">
+      <button mat-raised-button (click)="createFoodTruck()">Create new Food Truck</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mat-table [dataSource]="foodTrucks!">
+        <ng-container matColumnDef="no">
+          <mat-header-cell *matHeaderCellDef> NO.</mat-header-cell>
+          <mat-cell (click)="openDetails(element)"
+                    *matCellDef="let element"> {{foodTrucks!.data.indexOf(element) + 1}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="logo">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell (click)="openDetails(element)" *matCellDef="let element">
+            <img [src]="getLogo(element)" alt="logo" width="64px" height="64px" style="border-radius: 32px;" />
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nameEng">
+          <mat-header-cell *matHeaderCellDef> Name in English</mat-header-cell>
+          <mat-cell (click)="openDetails(element)" *matCellDef="let element"> {{element.nameEng}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nameArb">
+          <mat-header-cell *matHeaderCellDef> Name in Arabic</mat-header-cell>
+          <mat-cell (click)="openDetails(element)" *matCellDef="let element"> {{element.nameArb}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="sportType">
+          <mat-header-cell *matHeaderCellDef> Cuisine</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.SportType.nameEng}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="numberOfViews">
+          <mat-header-cell *matHeaderCellDef> Number Of Views</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p>{{element.foodTruckView.views}}</p>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="enable">
+          <mat-header-cell *matHeaderCellDef> Enable</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-slide-toggle #enableToggle [checked]="element.enable"
+                              (change)="updateStatus(element, enableToggle)"></mat-slide-toggle>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef> Actions</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menuRef">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menuRef="matMenu" [overlapTrigger]="false">
+              <button mat-menu-item (click)="updateFoodTruck(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+</div>

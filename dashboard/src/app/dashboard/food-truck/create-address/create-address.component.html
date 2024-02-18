@@ -1,0 +1,41 @@
+<div [formGroup]="addressForm!">
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Governorate</mat-label>
+        <mat-select formControlName="governorateId">
+          <mat-option *ngFor="let governorate of governorates"
+                      [value]="governorate.id">{{ governorate.nameEng }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Address</mat-label>
+        <textarea formControlName="address" matInput placeholder="Address"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Google Location</mat-label>
+        <input formControlName="googleLocation" matInput placeholder="Google Location" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>google Lat</mat-label>
+        <input formControlName="googleLat" matInput placeholder="Google Lat" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>google Lng</mat-label>
+        <input formControlName="googleLng" matInput placeholder="Google Lng" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>

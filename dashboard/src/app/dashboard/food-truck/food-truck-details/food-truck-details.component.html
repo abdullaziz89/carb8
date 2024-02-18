@@ -1,0 +1,85 @@
+<div class="container" style="padding-top: 30px;">
+  <div class="row d-flex align-items-center justify-content-center" matDialogTitle>
+<div class="col-md-3">
+      <img [src]="getLogo()" alt="foodTruck.nameEng"
+           style="width: 64px;height: 64px;border-radius: 32px;object-fit: contain;" />
+    </div>
+    <div class="col-md-3">
+      <p>Food Truck <u><b>{{foodTruck.nameEng}}</b></u> Details</p>
+    </div>
+    <div class="col-md-3">
+      <p style="text-align: center;">Sport Type: <b>{{foodTruck.SportType.nameEng}}</b></p>
+    </div>
+    <div class="col-md-3">
+      <button color="warn" mat-icon-button matDialogClose="true" style="float: right;">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div matDialogContent>
+    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+      <div class="col-md-6">
+        <input #fileInput (change)="onFileInputChange(fileInput, $event)" accept="image/*" hidden multiple
+               required type="file" />
+        <button (click)="setFile(fileInput)" color="primary" mat-raised-button style="float: right;">add banner image</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex align-items-center justify-content-around">
+        <div class="image-container" *ngFor="let image of filterLogo()">
+          <img
+            [src]="image"
+            alt="image"
+            class="img"
+            style="width: 64px;height: 64px;border-radius: 5px;object-fit: contain;"
+          />
+          <div class="edit-button-container">
+            <button (click)="deleteBannerImage(image)" class="edit-button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+      <div class="col-md-6">
+        <h2>Information</h2>
+      </div>
+      <div class="col-md-6">
+        <button (click)="editInformation(foodTruck.foodTruckInfo)" color="primary" mat-raised-button style="float: right;">
+          Edit info
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex align-items-center justify-content-around">
+        <p>Gender: {{foodTruck.foodTruckInfo.gender}}</p>
+        <p>Age: {{foodTruck.foodTruckInfo.ageFrom}} - {{foodTruck.foodTruckInfo.ageTo}} </p>
+        <p>Days in Month: {{foodTruck.foodTruckInfo.daysInMonth}} </p>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+      <div class="col-md-6">
+        <h2>Address</h2>
+      </div>
+      <div class="col-md-6">
+        <button (click)="editAddress(foodTruck.address)" color="primary" mat-raised-button style="float: right;">Edit
+          Address
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex align-items-center justify-content-around">
+        <p>Governorate: <span> {{ foodTruck.address.governorate.nameEng }} </span></p>
+        <p>Address: <span> {{ foodTruck.address.address }} </span></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex align-items-center justify-content-around">
+        <p>google Location: <span> {{ foodTruck.address.googleLocation }} </span></p>
+        <p>coordinates: <br /><span> latitude: {{ foodTruck.address.googeLat }}
+          - longitude: {{ foodTruck.address.googeLng }} </span></p>
+      </div>
+    </div>
+  </div>
+</div>

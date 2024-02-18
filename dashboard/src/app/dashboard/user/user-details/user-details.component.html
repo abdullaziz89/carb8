@@ -1,0 +1,37 @@
+<app-indicator [isLoading]="isLoading"></app-indicator>
+<div class="container">
+  <div class="header">
+    <div class="row">
+      <div class="col-md-3">
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+      <div class="col-md-3">
+        <h1>{{user.name}}</h1>
+      </div>
+<!--      <div class="col-md-3" *ngIf="user.provider === 'LOCAL'">-->
+<!--        <button mat-stroked-button color="warn" (click)="changePassword()">Update Password</button>-->
+<!--      </div>-->
+      <div class="col-md-3 enableButton">
+        <span *ngIf="slideToggle">{{slideToggle.checked ? 'Active': 'Deactivate'}}</span>
+        <mat-slide-toggle #slideToggle color="green" [checked]="user.enable" (toggleChange)="updateEnable(slideToggle)"></mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="row">
+      <div class="col-md-6">
+        <b>Email</b>: {{user.email}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <b>Join Date</b>: {{user.createdDate | date: 'dd/MM/yyyy'}}
+      </div>
+      <div *ngIf="user.role" class="col-md-6">
+        <b>Type</b>: {{user.role.name}}
+      </div>
+    </div>
+  </div>
+</div>

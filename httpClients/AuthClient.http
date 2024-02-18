@@ -1,0 +1,45 @@
+### create new user
+POST http://192.168.3.8:3000/authenticate/register
+Content-Type: application/json
+
+{
+  "user": {
+    "name": "Abdul Aziz",
+    "email": "im@abdullaziz.me",
+    "password": "Aziz98877449@?",
+    "enable": true
+  },
+  "roleId": "533b59c8-a573-498a-b094-efa8389ddb7e"
+}
+
+### create new user - online
+POST https://api.allsports.club/authenticate/register
+Content-Type: application/json
+
+{
+  "user": {
+    "name": "Abdul Aziz",
+    "email": "im@abdullaziz.me",
+    "password": "Aziz98877449@?",
+    "enable": true
+  },
+  "roleId": "0613f589-c869-4b90-9059-6b79856fbc9e"
+}
+
+### login as admin
+POST http://192.168.8.169:3001/authenticate/login
+Content-Type: application/json
+
+{
+  "email": "im@abdullaziz.me",
+  "password": "Aziz98877449@?"
+}
+
+### login as business
+POST http://192.168.8.133:3001/authenticate/login
+Content-Type: application/json
+
+{
+  "email": "abdullaziz89@hotmail.com",
+  "password": "1234"
+}

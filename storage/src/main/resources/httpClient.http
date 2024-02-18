@@ -1,0 +1,29 @@
+###
+GET http://localhost:8080/storage
+Content-Type: "application/json"
+
+###
+GET http://localhost:8080/authrization
+Content-Type: "application/json"
+
+###
+GET http://192.168.8.144:8080/storage/file/all
+Content-Type: "application/json"
+
+###
+GET http://localhost:8080/file/download/protocols/2b8aa008-ef71-4a1f-9f57-77378daa45f2/main/Events Registrants Controller.pdf
+Content-Type: "application/json"
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpbUBhYmR1bGxheml6Lm1lIiwiZXhwIjoxNjUyODcxNDEwLCJpYXQiOjE2NTI4NTM0MTB9.evtTRJE62W6GnDG5DgpeJcJV9CsBtky9jlrZIYrX7wYQ7MdvC2CCwZX22fhM_Ufb-KXcOYE-HzxQR2JMX1WL8w
+
+###
+POST http://cdphcapi.moh.gov.kw/employees/authenticate
+Content-Type: "application/json"
+
+{
+   "username": "im@abdullaziz.me",
+   "password": "Aziz98877449@?"
+}
+
+###
+DELETE http://cdphcapi.moh.gov.kw/employees/jobTitle/33833cf6-2324-4416-9698-2df7b7c28a6e
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpbUBhYmR1bGxheml6Lm1lIiwiZXhwIjoxNjYxMjU4MzY4LCJpYXQiOjE2NjEyNDAzNjh9.tYjeFGg2iZi3SavmIri9IWNEsHIqJwia110GtaVLiwWHvTlXI2A9vJfWxMd0xiF_FqSvxfoD-UWvjTvIV1SZXQ

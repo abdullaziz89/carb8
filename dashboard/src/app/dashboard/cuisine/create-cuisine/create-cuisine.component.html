@@ -1,0 +1,46 @@
+<app-indicator [isLoading]="isLoading"></app-indicator>
+<div class="container">
+  <div class="d-flex flex-row" matDialogTitle>
+    <div class="col-md-6">
+      Create a new Cuisine
+    </div>
+    <div class="col-md-6">
+      <button class="float-end" mat-icon-button color="warn" matDialogClose>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div matDialogContent>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="file" #fileInput (change)="onFileInputChange(fileInput, $event)" hidden="true" accept="image/*"
+               multiple required/>
+        <button mat-raised-button color="primary" (click)="setFile(fileInput)">Select File</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" [formGroup]="cuisineForm!">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Name in English</mat-label>
+          <input  matInput type="text" placeholder="Name in English" formControlName="nameEng" required/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Name in Arabic</mat-label>
+          <input  matInput type="text" placeholder="Name in Arabic" formControlName="nameArb" required/>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row" matDialogActions>
+    <div class="col-md-12">
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="createCuisine()"
+        [disabled]="cuisineForm!.invalid"
+      >
+        Create
+      </button>
+    </div>
+  </div>
+</div>

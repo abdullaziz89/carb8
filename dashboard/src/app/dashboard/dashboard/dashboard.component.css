@@ -1,0 +1,11 @@
+.col-md-4 {
+  margin: 10px;
+  padding: 20px;
+  border: 1px dashed #000;
+  border-radius: 10px;
+  background-color: cornflowerblue;
+}
+
+.col-md-4 > * {
+  color: #fff;
+}

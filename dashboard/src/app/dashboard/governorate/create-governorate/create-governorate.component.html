@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row" matDialogTitle>
+    <div class="col-md-6">
+      <h1>Create new Governorate</h1>
+    </div>
+    <div class="col-md-6">
+      <button color="warn" mat-icon-button matDialogClose style="float: right">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div [formGroup]="governorateForm!" matDialogContent>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Name in English</mat-label>
+          <input formControlName="nameEng" matInput name="nameEng" placeholder="Name in English" required>
+        </mat-form-field>
+        <div *ngIf="governorateForm!.get('nameEng')!.hasError('isExisting')">the name is existing</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Name in Arabic</mat-label>
+          <input formControlName="nameArb" matInput name="nameArb" placeholder="Name in Arabic" required>
+        </mat-form-field>
+        <div *ngIf="governorateForm!.get('nameEng')!.hasError('isExisting')">the name is existing</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <button (click)="create()" [disabled]="governorateForm!.invalid" color="primary" mat-raised-button>Create</button>
+    </div>
+  </div>
+</div>

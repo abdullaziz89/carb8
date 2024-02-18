@@ -1,0 +1,20 @@
+<div class="container" [formGroup]="roleForm">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Create Role</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Role Name</mat-label>
+        <input matInput placeholder="Role Name" formControlName="name">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <button mat-raised-button color="primary" (click)="update()">Update</button>
+    </div>
+  </div>
+</div>

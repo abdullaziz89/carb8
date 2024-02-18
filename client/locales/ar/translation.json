@@ -1,0 +1,9 @@
+{
+  "academy": {
+    "sportType": "نوع الرياضة",
+    "description": "الوصف",
+    "address": "العنوان",
+    "age": "من عمر {{from}} إلى {{to}}",
+    "classInMonth": "{{numberOfClass}} فصل في الشهر"
+  }
+}

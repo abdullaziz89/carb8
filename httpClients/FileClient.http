@@ -1,0 +1,11 @@
+### upload file to cloudflare CDN
+POST https://api.cloudflare.com/client/v4/accounts/57e1053c966079398a29ed2d928d1908/images/v1
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer rYAYR7h_6geIanjjIZWQ8mgTg6x6auTLxb0Vp4io
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="testupload1.png"
+Content-Type: image/png
+
+file=@/Users/abdullazizal-din/Downloads/testupload1.png
+directory=/allsports/sport-type/1234

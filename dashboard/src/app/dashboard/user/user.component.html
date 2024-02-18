@@ -1,0 +1,33 @@
+<div class="container">
+  <mat-table [dataSource]="users">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> NO.</mat-header-cell>
+      <mat-cell class="pointer-event" *matCellDef="let user" (click)="showUserDetails(user)"> {{users.data.indexOf(user) + 1}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+      <mat-cell class="pointer-event" *matCellDef="let user" (click)="showUserDetails(user)"> {{user.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef> Email</mat-header-cell>
+      <mat-cell class="pointer-event" *matCellDef="let user" (click)="showUserDetails(user)"> {{user.email}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        <button mat-icon-button>
+          <mat-icon>
+            more_vert
+          </mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let user; columns: displayedColumns"></mat-row>
+  </mat-table>
+
+</div>

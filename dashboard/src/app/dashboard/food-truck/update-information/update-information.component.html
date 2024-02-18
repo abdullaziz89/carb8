@@ -1,0 +1,53 @@
+<div [formGroup]="informationForm!" class="container">
+  <div class="row" matDialogTitle>
+    <div class="col-md-6">
+      Update Food Truck Information
+    </div>
+    <div class="col-md-6">
+      <button color="warn" mat-icon-button matDialogClose="true">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div matDialogContent>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field>
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option *ngFor="let gender of academyInformationGender!" [value]="gender">
+              {{gender}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field>
+          <mat-label>Days in Month</mat-label>
+          <input formControlName="daysInMonth" matInput type="number" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field>
+          <mat-label>Age From</mat-label>
+          <input formControlName="ageFrom" matInput type="number" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field>
+          <mat-label>Age To</mat-label>
+          <input formControlName="ageTo" matInput type="number" />
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <button (click)="updateInformation()" [disabled]="informationForm.invalid" color="primary" mat-raised-button>
+        Update
+      </button>
+    </div>
+  </div>
+</div>

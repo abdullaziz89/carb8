@@ -1,0 +1,32 @@
+<app-indicator *ngIf="isLoading"></app-indicator>
+<div class="container">
+  <div class="d-flex flex-row" matDialogTitle>
+    <div class="col-md-6">
+      <h3>Update Sport Type</h3>
+    </div>
+    <div class="col-md-6">
+      <button class="float-end" mat-icon-button color="warn" matDialogClose>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="row" matDialogContent>
+    <div [formGroup]="sportTypeForm!" class="col-md-12">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Name In English</mat-label>
+        <input formControlName="nameEng" matInput placeholder="Name in English" required type="text" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Name in Arabic</mat-label>
+        <input formControlName="nameArb" matInput maxlength="8" minlength="8" placeholder="Name in Arabic" required
+               type="tel" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row" matDialogActions>
+    <div class="col-md-12">
+      <button mat-raised-button color="accent" (click)="updateBusiness()">Update</button>
+    </div>
+  </div>
+</div>
+

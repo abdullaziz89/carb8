@@ -1,0 +1,16 @@
+### Create Package
+POST http://192.168.8.169:3001/package
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhN2U2MTQ0LWIzZmUtNDU0My1iYmEzLTM3NTU5OTA2NzQ3YyIsImVtYWlsIjoiaW1AYWJkdWxsYXppei5tZSIsImVuYWJsZSI6dHJ1ZSwibmFtZSI6IkFiZHVsIEF6aXoiLCJyb2xlSWQiOiJhMTlkZjM1ZS04ZDllLTQwYTItYWFmOC01ZjBkOWMzZWI0NWUiLCJidXNpbmVzc0lkIjpudWxsLCJpYXQiOjE2NzY0NTcyNTgsImV4cCI6MTY3NjQ2MDg1OH0._nhOEEDC_wb8V-eiP-juOzJzDLhea--Z6BwRGrV4LKE
+
+{
+  "name": "test",
+  "description": "test",
+  "price": 100,
+  "enable": true
+}
+
+### get all package
+GET http://192.168.8.169:3001/package
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM1MmQzMDc1LTk3OWUtNGY5ZS05YWJjLTZlZWQ1NmQyZjlmOSIsImVtYWlsIjoiaW1AYWJkdWxsYXppei5tZSIsImVuYWJsZSI6dHJ1ZSwibmFtZSI6IkFiZHVsIEF6aXoiLCJjcmVhdGVkRGF0ZSI6IjIwMjMtMDItMTJUMDk6Mjc6MTcuNjY4WiIsIm1vZGlmeURhdGUiOiIyMDIzLTAyLTEyVDA5OjI3OjE3LjY2OFoiLCJyb2xlSWQiOiI1ZjdkZmQyZC1hMGQ3LTQwNTUtYjU5ZS0yMWIzNDUzYzQxMTIiLCJpYXQiOjE2NzYyNjU1MTAsImV4cCI6MTY3NjI2OTExMH0.2VU6hIy9BekKcbYk82BuXWqfpzpRIrlgmoTCvFpDgmU

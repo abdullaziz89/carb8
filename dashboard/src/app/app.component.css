@@ -1,0 +1,29 @@
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer {
+  text-align: center;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
+mat-list-item {
+  color: white !important;
+  margin-left: 10px;
+  margin-top: 10px;
+  background-color: cornflowerblue;
+  border-radius: 10px;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
+mat-list-item:hover {
+  background-color: rgba(100, 149, 237, 0.7) !important;
+}
+
+mat-icon {
+  margin-right: 10px !important;
+}
+

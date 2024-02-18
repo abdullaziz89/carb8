@@ -1,0 +1,103 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+  <mat-toolbar class="toolbar">
+    <!--  <mat-toolbar class="toolbar" [ngClass]="mobileQuery.matches ? 'fixed-top': ''"-->
+    <!--               [style.justify-content]="mobileQuery.matches ? 'space-between': 'center'">-->
+    <!--    <button mat-icon-button [style.display]="mobileQuery.matches ? 'block': 'none'" (click)="sidenav.toggle()">-->
+    <!--      <mat-icon>menu</mat-icon>-->
+    <!--    </button>-->
+    <div class="col-md-2">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+    <div class="col-md-10" style="text-align: left;">
+      <h2 class="logo">{{title}}</h2>
+    </div>
+    <!--    later add app logo-->
+    <!--    <a href="#">-->
+    <!--      <img class="img-fluid logo" src="../assets/img/logo-02-resize.png" alt="logo">-->
+    <!--    </a>-->
+  </mat-toolbar>
+
+  <mat-sidenav-container class="example-sidenav-container" autosize>
+    <mat-sidenav #sidenav
+                 style="width: 180px;"
+                 [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+                 [attr.role]="mobileQuery.matches ? 'dialog' : 'navigation'"
+                 [opened]="!mobileQuery.matches"
+                 [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches">
+      <mat-nav-list>
+        <mat-list-item *ngIf="!isUserLogin" (click)="openLogin()">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </mat-list-item>
+        <div *ngIf="isUserLogin">
+          <mat-list-item (click)="goTo('/dashboard')">
+            <mat-icon>dashboard</mat-icon>
+            <span>Dashboard</span>
+          </mat-list-item>
+          <mat-list-item *ngIf="userIsSuper()" (click)="goTo('/users')">
+            <mat-icon>group</mat-icon>
+            <span>Users</span>
+          </mat-list-item>
+          <mat-list-item *ngIf="userIsSuper()" (click)="goTo('/roles')">
+            <mat-icon>
+              settings_accessibility
+            </mat-icon>
+            <span>Roles</span>
+          </mat-list-item>
+          <mat-list-item (click)="goTo('/cuisine')">
+            <mat-icon>
+              sports_tennis
+            </mat-icon>
+            <span>Cuisine</span>
+          </mat-list-item>
+          <mat-list-item (click)="goTo('/food-truck')">
+            <mat-icon>
+              school
+            </mat-icon>
+            <span>Food Truck</span>
+          </mat-list-item>
+          <mat-list-item (click)="goTo('/events')">
+            <mat-icon>
+              event_incoming
+            </mat-icon>
+            <span>Events</span>
+          </mat-list-item>
+          <mat-list-item (click)="goTo('/governorate')">
+            <mat-icon>
+              address
+            </mat-icon>
+            <span>Governorates</span>
+          </mat-list-item>
+          <mat-list-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </mat-list-item>
+        </div>
+        <mat-list-item (click)="openLogin()">
+          <mat-icon>support</mat-icon>
+          <span>Support</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content
+      style="margin-top: 50px;"
+      [style.height.px]="screenHeight"
+    >
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+<div class="footer">
+  <p>
+    Copyright ©{{currentYear}} All rights reserved
+    <br />
+    <span style="color: darkred">
+      made &#x2765;
+    </span>
+    <a href="https://abdullaziz.me" target="_blank">iDeveloprs Co.</a>
+  </p>
+</div>

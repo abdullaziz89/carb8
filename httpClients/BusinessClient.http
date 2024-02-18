@@ -1,0 +1,70 @@
+### Create Business
+POST http://192.168.8.169:3001/business
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhN2U2MTQ0LWIzZmUtNDU0My1iYmEzLTM3NTU5OTA2NzQ3YyIsImVtYWlsIjoiaW1AYWJkdWxsYXppei5tZSIsImVuYWJsZSI6dHJ1ZSwibmFtZSI6IkFiZHVsIEF6aXoiLCJyb2xlSWQiOiJhMTlkZjM1ZS04ZDllLTQwYTItYWFmOC01ZjBkOWMzZWI0NWUiLCJidXNpbmVzc0lkIjpudWxsLCJpYXQiOjE2NzY0NTcyNTgsImV4cCI6MTY3NjQ2MDg1OH0._nhOEEDC_wb8V-eiP-juOzJzDLhea--Z6BwRGrV4LKE
+
+{
+  "user": {
+    "name": "test",
+    "email": "abdullaziz89@hotmail.com",
+    "password": "test",
+    "roleId": "11c88c08-2b26-421a-b0ac-8285324a65b6",
+    "enable": true
+  },
+  "business": {
+    "name": "test",
+    "phone": "test",
+    "email": "abdullaziz89@hotmail.com",
+    "iban": "test",
+    "enable": true,
+    "subscriptionId": "34abd777-bbbc-4fcc-a3b7-0868a58404b4"
+  }
+}
+
+### get all Business
+GET http://192.168.8.169:3001/business/all
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0ZTZkODQzLWE2MDYtNDRhNy05Y2FmLWViYzIyNmM5OGJhOCIsImVtYWlsIjoiYWJkdWxsYXppejg5QGhvdG1haWwuY29tIiwiZW5hYmxlIjp0cnVlLCJuYW1lIjoidGVzdCIsInJvbGVJZCI6IjY3YjQ3MjNhLWMwZWItNGFiNC1hMGM3LTQ5YjI0N2ZmZGU3NiIsImJ1c2luZXNzSWQiOiJlODdhYTI0Yy1iYjM2LTRlYzUtYTc0Zi03MWU4OGM2MzJlMWQiLCJpYXQiOjE2NzY0NDYyMjksImV4cCI6MTY3NjQ0OTgyOX0.ARhp4jLRMDbE9njf6m_M3cqm-5dWMqfXcmsn_baoAAA
+
+### get create payment url
+GET http://192.168.8.169:3001/business/createPaymentURL
+Content-Type: application/json
+
+### create order
+POST http://192.168.8.133:3001/business/order
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmYWUwNDNkLTVhMWYtNGZkZi1hMzQyLTE2YzJlNGRmYTdiYSIsImVtYWlsIjoiYWJkdWxsYXppejg5QGhvdG1haWwuY29tIiwiZW5hYmxlIjp0cnVlLCJuYW1lIjoiQWJkdWwgYXppeiBBbCBEaW4iLCJyb2xlSWQiOiJkZjM0YTQ5NS1kZmRhLTQ5NzYtOGIyZS0zYjdiZDBjZjljY2YiLCJidXNpbmVzc0lkIjoiMGJjOWM1ZjctODc0Ni00MDhlLTg1MzYtN2ZmOWQwZGZmNTUzIiwiYnVzaW5lc3MiOnsibmFtZSI6IlNoYXdsIEtXIn0sImlhdCI6MTY3Njg2MjExOCwiZXhwIjoxNjc2ODY1NzE4fQ.ukHkTr1HHcmqpjPkELSaG4bBE4EJfHweXAHc-p871zA
+
+{
+  "customer": {
+    "name": "name",
+    "phone": "phone",
+    "email": "email",
+    "address": "address",
+    "enable": true,
+    "businessId": "0bc9c5f7-8746-408e-8536-7ff9d0dff553"
+  },
+  "products": [
+    {
+      "name": "name 1",
+      "price": 100,
+      "quantity": 1,
+      "description": "description 1",
+      "enable": true
+    },
+    {
+      "name": "name 2",
+      "price": 50,
+      "quantity": 1,
+      "description": "description 1",
+      "enable": true
+    },
+    {
+      "name": "name 3",
+      "price": 150,
+      "quantity": 1,
+      "description": "description 1",
+      "enable": true
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String     @id @default(uuid())
+  email       String     @unique
+  password    String
+  enable      Boolean    @default(false)
+  name        String?
+  createdDate DateTime   @default(now())
+  modifyDate  DateTime   @updatedAt
+  userRole    UserRole[]
+}
+
+model Role {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  enable      Boolean    @default(false)
+  createdDate DateTime   @default(now())
+  modifyDate  DateTime   @updatedAt
+  userRole    UserRole[]
+}
+
+// model for user role team relation
+model UserRole {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  role        Role     @relation(fields: [roleId], references: [id])
+  userId      String
+  roleId      String
+  createdDate DateTime @default(now())
+  modifyDate  DateTime @updatedAt
+}
+
+// model for cuisine type
+model Cuisine {
+  id          String       @id @default(uuid())
+  nameEng     String       @unique
+  nameArb     String       @unique
+  enable      Boolean      @default(false)
+  createdDate DateTime     @default(now())
+  modifyDate  DateTime     @updatedAt
+  foodTruck   FoodTruck[]
+  cuisineView CuisineView?
+}
+
+// model business related to CuisineService
+model FoodTruck {
+  id             String                @id @default(uuid())
+  nameEng        String                @unique
+  nameArb        String                @unique
+  descriptionEng String?               @db.VarChar(500)
+  descriptionArb String?               @db.VarChar(500)
+  enable         Boolean               @default(false)
+  createdDate    DateTime              @default(now())
+  modifyDate     DateTime              @updatedAt
+  Cuisine        Cuisine?              @relation(fields: [cuisineId], references: [id])
+  cuisineId      String?
+  address        Address?
+  foodTruckInfo  FoodTruckInformation?
+  foodTruckView  FoodTruckView?
+}
+
+model FoodTruckInformation {
+  id                  String                @id @unique @default(uuid())
+  phoneNumber         String?
+  instagramAccount    String?
+  foodTruck           FoodTruck             @relation(fields: [foodTruckId], references: [id])
+  foodTruckId         String                @unique
+  FoodTruckWorkingDay FoodTruckWorkingDay[]
+}
+
+// model for food turck working days and hours
+model FoodTruckWorkingDay {
+  id              String               @id @default(uuid())
+  day             String
+  workingFrom     String
+  workingTo       String
+  enable          Boolean              @default(false)
+  createdDate     DateTime             @default(now())
+  modifyDate      DateTime             @updatedAt
+  foodTruckInfo   FoodTruckInformation @relation(fields: [foodTruckInfoId], references: [id])
+  foodTruckInfoId String               @unique
+}
+
+// model for address Governorate
+model Governorate {
+  id          String    @id @default(uuid())
+  nameEng     String    @unique
+  nameArb     String    @unique
+  enable      Boolean   @default(false)
+  createdDate DateTime  @default(now())
+  modifyDate  DateTime  @updatedAt
+  addresses   Address[]
+}
+
+// mode for business address related to Governorate and Business
+model Address {
+  id             String       @id @default(uuid())
+  address        String
+  googleLocation String?
+  googleLat      Float?
+  googleLng      Float?
+  enable         Boolean      @default(false)
+  createdDate    DateTime     @default(now())
+  modifyDate     DateTime     @updatedAt
+  governorate    Governorate? @relation(fields: [governorateId], references: [id])
+  governorateId  String?
+  foodTruck      FoodTruck    @relation(fields: [foodTruckId], references: [id])
+  foodTruckId    String       @unique
+}
+
+// foodTruck number of views
+model FoodTruckView {
+  id          String    @id @default(uuid())
+  views       Int       @default(0)
+  foodTruck   FoodTruck @relation(fields: [foodTruckId], references: [id])
+  foodTruckId String    @unique
+  createdDate DateTime  @default(now())
+  modifyDate  DateTime  @updatedAt
+}
+
+// cuisine type number of views
+model CuisineView {
+  id          String   @id @default(uuid())
+  views       Int      @default(0)
+  cuisine     Cuisine  @relation(fields: [cuisineId], references: [id])
+  cuisineId   String   @unique
+  createdDate DateTime @default(now())
+  modifyDate  DateTime @updatedAt
+}
+
+model HeaderImage {
+  id             String           @id @default(uuid())
+  link           String?
+  linkType       LinkType?
+  imageUrl       String?
+  type           HeaderImageType?
+  numberOfClicks Int              @default(0)
+  order          Int              @default(0)
+  enable         Boolean          @default(false)
+  createdDate    DateTime         @default(now())
+  modifyDate     DateTime         @updatedAt
+}
+
+model Event {
+  id             String     @id @default(uuid())
+  nameEng        String     @unique
+  nameArb        String     @unique
+  descriptionEng String?
+  descriptionArb String?
+  startDate      DateTime
+  endDate        DateTime
+  location       String?
+  enable         Boolean    @default(false)
+  createdDate    DateTime   @default(now())
+  modifyDate     DateTime   @updatedAt
+  eventView      EventView?
+}
+
+model EventView {
+  id          String   @id @default(uuid())
+  views       Int      @default(0)
+  event       Event    @relation(fields: [eventId], references: [id])
+  eventId     String   @unique
+  createdDate DateTime @default(now())
+  modifyDate  DateTime @updatedAt
+}
+
+enum HeaderImageType {
+  ACADEMY
+  EVENT
+}
+
+enum LinkType {
+  EXTERNAL
+  INTERNAL
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  BOTH
+}

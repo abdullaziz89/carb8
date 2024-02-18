@@ -1,0 +1,9 @@
+{
+  "academy": {
+    "sportType": "Sport Type",
+    "description": "Description",
+    "address": "Address",
+    "age": "from {{from}} to {{to}}",
+    "classInMonth": "{{numberOfClass}} Class in month"
+  }
+}
