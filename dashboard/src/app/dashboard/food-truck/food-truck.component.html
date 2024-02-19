@@ -31,7 +31,7 @@
         </ng-container>
         <ng-container matColumnDef="sportType">
           <mat-header-cell *matHeaderCellDef> Cuisine</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.SportType.nameEng}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.Cuisine.nameEng}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="numberOfViews">
           <mat-header-cell *matHeaderCellDef> Number Of Views</mat-header-cell>
@@ -57,7 +57,7 @@
                 <mat-icon>edit</mat-icon>
                 <span>Edit</span>
               </button>
-              <button mat-menu-item>
+              <button mat-menu-item (click)="deleteFoodTruck(element)">
                 <mat-icon>delete</mat-icon>
                 <span>Delete</span>
               </button>

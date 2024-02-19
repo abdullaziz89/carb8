@@ -137,6 +137,7 @@ export class FoodTruckService {
     }
 
     async remove(id: string) {
+
         const deletedFoodTruck = await this.prismaService.foodTruck.delete({
             where: {id: id}
         });

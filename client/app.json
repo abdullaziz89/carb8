@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "allsportsclient",
+    "scheme": "kwftapp",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splashscreen.png",
@@ -11,53 +11,30 @@
       "favicon": "./assets/icon.png",
       "bundler": "metro"
     },
-    "name": "All Sports",
-    "slug": "all-sports",
+    "name": "KWFT",
+    "slug": "kwft",
     "android": {
-      "versionCode": 3,
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#000000"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.abdullaziz89.allsports"
+      "package": "com.ideveloprs.kwft"
     },
     "ios": {
-      "buildNumber": "1.0.2",
-      "bundleIdentifier": "com.abdullaziz89.allsports",
+      "buildNumber": "1.0.0",
+      "bundleIdentifier": "com.ideveloprs.kwft",
       "supportsTablet": false
     },
     "plugins": [
-      [
-        "onesignal-expo-plugin",
-        {
-          "mode": "production"
-        }
-      ],
       "expo-localization"
     ],
     "extra": {
-      "oneSignalAppId": "13fbcc1c-fbe5-4a3d-8c7c-9be8248a89e0",
       "eas": {
-        "build": {
-          "experimental": {
-            "ios": {
-              "appExtensions": [
-                {
-                  "targetName": "OneSignalNotificationServiceExtension",
-                  "bundleIdentifier": "com.abdullaziz89.allsports.OneSignalNotificationServiceExtension",
-                  "entitlements": {
-                    "com.apple.security.application-groups": [
-                      "group.com.abdullaziz89.allsports.onesignal"
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        },
-        "projectId": "2d33f0db-25a6-4260-8978-05da6dce8f38"
+        "projectId": "594d2682-1171-41ca-9dd6-7244480288b6"
       }
-    }
+    },
+    "owner": "abdullaziz89"
   }
 }

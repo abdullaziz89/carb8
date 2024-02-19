@@ -8,38 +8,16 @@ const { width, height } = Dimensions.get("window");
 
 export default (props) => {
 
-  // {filterFor: null, filterValue: null, isFilterActive: false}
-
-  const { setShowFilterOptions, academiesFilter, setAcademiesFilter } = props;
+  const { foodTrucksFilter } = props;
 
   const styles = useStyles();
 
-  const [genders, setGenders] = useState([]);
   const [governorates, setGovernorates] = useState([]);
   const [ageRange, setAgeRange] = useState([4, 45]);
 
-  const [selectedGender, setSelectedGender] = useState(academiesFilter.filterValue.gender);
-  const [selectedGovernorate, setSelectedGovernorate] = useState(academiesFilter.filterValue.governorate);
+  const [selectedGovernorate, setSelectedGovernorate] = useState(foodTrucksFilter.filterValue.governorate);
 
   useEffect(() => {
-
-    // set genders options
-    setGenders([
-      {
-        title: {
-          eng: "Male",
-          arb: "ذكور"
-        },
-        icon: () => <MaterialCommunityIcons name="gender-male" size={24} color="lightblue" />
-      },
-      {
-        title: {
-          eng: "Female",
-          arb: "إناث"
-        },
-        icon: () => <MaterialCommunityIcons name="gender-female" size={24} color="pink" />
-      }
-    ]);
 
     setGovernorates([
       {
@@ -82,17 +60,6 @@ export default (props) => {
 
   }, []);
 
-  const gendersMap = (index) => {
-      switch (index) {
-          case 0:
-            return 'MALE'
-          case 1:
-            return 'FEMALE'
-          default:
-            return 'BOTH'
-      }
-  };
-
   const governoratesMap = (index) => {
       switch (index) {
           case 0:
@@ -116,121 +83,6 @@ export default (props) => {
     <View
       style={styles.container}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          alignItems: "center"
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            alignSelf: "flex-start"
-          }}
-          onPress={() => setShowFilterOptions(false)}
-        >
-          <AntDesign name="closecircleo" size={24} color="#d9534f" />
-        </TouchableOpacity>
-      </View>
-
-      <View>
-        <Text
-          style={styles.title}
-        >
-          {i18n.language === "ar" ? "الجنس" : "Genders"}
-        </Text>
-        <FlatList
-          style={{
-            marginTop: 10
-          }}
-          contentContainerStyle={{
-            padding: 10,
-            flexDirection: i18n.language === "ar" ? "row-reverse" : "row"
-          }}
-          data={genders}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                marginRight: 10,
-                padding: 10,
-                backgroundColor: selectedGender === gendersMap(index) ? "#0275d8" : "#fff",
-                borderColor: "lightgray",
-                borderWidth: 1,
-                borderRadius: 10
-              }}
-              onPress={() => {
-
-                if (selectedGender === gendersMap(index)) {
-                  setSelectedGender('BOTH');
-                  setAcademiesFilter({
-                    filterValue: { ...academiesFilter.filterValue, gender: 'BOTH' },
-                    isFilterActive: true
-                  });
-                  return;
-                }
-
-                setSelectedGender(gendersMap(index));
-                setAcademiesFilter({
-                  filterValue: { ...academiesFilter.filterValue, gender: gendersMap(index) },
-                  isFilterActive: true
-                });
-              }}
-            >
-              {item.icon()}
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  color: selectedGender === gendersMap(index) ? "#fff" : "#0275d8",
-                  marginLeft: 10
-                }}
-              >
-                {i18n.language === "ar" ? item.title.arb : item.title.eng}
-              </Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal={true}
-        />
-      </View>
-
-      {/*<View*/}
-      {/*    style={styles.ageHolder}*/}
-      {/*>*/}
-      {/*    <Text*/}
-      {/*        style={[styles.title]}*/}
-      {/*    >*/}
-      {/*        Age*/}
-      {/*    </Text>*/}
-      {/*    <View*/}
-      {/*        style={styles.ageRangeHolder}*/}
-      {/*    >*/}
-      {/*        <View*/}
-      {/*            style={styles.ageRangeSubtitle}*/}
-      {/*        >*/}
-      {/*            <Text>From: {ageRange[0]}</Text>*/}
-      {/*            <Text>To: {ageRange[1]}</Text>*/}
-      {/*        </View>*/}
-      {/*        <MultiSlider*/}
-      {/*            containerStyle={{*/}
-      {/*                marginTop: 10*/}
-      {/*            }}*/}
-      {/*            isMarkersSeparated={true}*/}
-      {/*            values={[4, 45]}*/}
-      {/*            min={4}*/}
-      {/*            max={45}*/}
-      {/*            step={1}*/}
-      {/*            allowOverlap={false}*/}
-      {/*            snapped={true}*/}
-      {/*            onValuesChange={(values) => setAgeRange(values)}*/}
-      {/*        />*/}
-      {/*    </View>*/}
-      {/*</View>*/}
-
       <View>
         <Text
           style={styles.title}

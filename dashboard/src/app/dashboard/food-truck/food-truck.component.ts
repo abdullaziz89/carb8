@@ -67,6 +67,14 @@ export class FoodTruckComponent implements OnInit {
     });
   }
 
+  deleteFoodTruck(element: any) {
+    this.foodTruckService.delete(element.id).subscribe((data: any) => {
+      if (data) {
+        this.ngOnInit();
+      }
+    });
+  }
+
   getLogo(element: any) {
     return element.images.find((image: any) => {
       const split = image.split("/");

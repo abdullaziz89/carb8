@@ -3,7 +3,7 @@ import { View, Text, Dimensions, TouchableOpacity } from "react-native";
 import { CreateResponsiveStyle, DEVICE_SIZES } from "rn-responsive-styles";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { getAcademies } from "../services/AcademiesServices";
+import { getFoodTrucks } from "../services/FoodTruckServices";
 import { Image } from "expo-image";
 import { useTranslation } from "react-i18next";
 
@@ -15,19 +15,19 @@ export default (props) => {
   const router = useRouter();
 
   const styles = useStyles();
-  const { selectedSportType, sportsTypes, searchByName, academiesFilter } = props;
+  const { selectedCuisine, cuisines, searchByName, foodTrucksFilter } = props;
 
-  const [academies, setAcademies] = useState([]);
-  const [filteredAcademies, setFilteredAcademies] = useState([]);
+  const [foodTrucks, setFoodTrucks] = useState([]);
+  const [filteredFoodTrucks, setFilteredFoodTrucks] = useState([]);
 
   const [searching, setSearching] = useState(false);
 
   useEffect(() => {
 
-    getAcademies()
+    getFoodTrucks()
       .then(response => {
 
-        setAcademies(response);
+        setFoodTrucks(response);
       });
 
     // setFilteredAcademies(academiesSets);
@@ -35,35 +35,34 @@ export default (props) => {
 
   useEffect(() => {
 
-    if (selectedSportType !== null) {
+    if (selectedCuisine !== null) {
 
-      const filteredAcademies = academies.filter((item) => {
-        return item.SportType.id === selectedSportType;
+      const filteredFoodTrucks = foodTrucks.filter((item) => {
+        return item.Cuisine.id === selectedCuisine;
       });
 
-      setFilteredAcademies(filteredAcademies);
+      setFilteredFoodTrucks(filteredFoodTrucks);
     } else {
-      setFilteredAcademies(academies);
+      setFilteredFoodTrucks(foodTrucks);
     }
-  }, [selectedSportType, academies]);
+  }, [selectedCuisine, foodTrucks]);
 
   useEffect(() => {
 
     if (searchByName !== "") {
-      const filteredAcademies = academies.filter((item) => {
+      const filteredAcademies = foodTrucks.filter((item) => {
         return item.nameEng.toLowerCase().includes(searchByName.toLowerCase()) ||
           item.nameArb.toLowerCase().includes(searchByName.toLowerCase()) ||
-          item.academyInfo.gender.toLowerCase() === searchByName.toLowerCase() ||
           item.address.governorate.nameEng.toLowerCase().includes(searchByName.toLowerCase()) ||
           item.address.governorate.nameArb.toLowerCase().includes(searchByName.toLowerCase()) ||
-          item.SportType.nameEng.toLowerCase().includes(searchByName.toLowerCase()) ||
-          item.SportType.nameArb.toLowerCase().includes(searchByName.toLowerCase());
+          item.Cuisine.nameEng.toLowerCase().includes(searchByName.toLowerCase()) ||
+          item.Cuisine.nameArb.toLowerCase().includes(searchByName.toLowerCase());
       });
 
-      setFilteredAcademies(filteredAcademies);
+      setFilteredFoodTrucks(filteredAcademies);
       setSearching(true);
     } else {
-      setFilteredAcademies(academies);
+      setFilteredFoodTrucks(foodTrucks);
       setSearching(false);
     }
 
@@ -71,21 +70,18 @@ export default (props) => {
 
   useEffect(() => {
 
-    if (academiesFilter.isFilterActive) {
-      const fa = academies.filter((academy) => {
+    if (foodTrucksFilter.isFilterActive) {
+      const fa = foodTrucks.filter((foodTruck) => {
 
         return (
-          (academiesFilter.filterValue.gender === academy.academyInfo.gender || academiesFilter.filterValue.gender === "BOTH") &&
-          // (academy.ageFrom >= academiesFilter.filterValue.ageFrom || academiesFilter.filterValue.ageFrom !== '') ||
-          // (academy.ageTo <= academiesFilter.filterValue.ageTo || academiesFilter.filterValue.ageTo !== '')
-          (academiesFilter.filterValue.governorate === academy.address.governorate.nameEng || academiesFilter.filterValue.governorate === null)
+          (foodTrucksFilter.filterValue.governorate === foodTruck.address.governorate.nameEng || foodTrucksFilter.filterValue.governorate === null)
         );
       });
 
-      setFilteredAcademies(fa);
+      setFilteredFoodTrucks(fa);
     }
 
-  }, [academiesFilter]);
+  }, [foodTrucksFilter]);
 
   const findLogoImage = (images) => {
 
@@ -151,53 +147,7 @@ export default (props) => {
                 textAlign: i18n.language === "ar" ? "right" : "left"
               }}
             >
-              {i18n.language === "ar" ? item.SportType.nameArb : item.SportType.nameEng}
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-            justifyContent: "space-between",
-            width: "100%",
-            marginTop: 30
-          }}
-        >
-          {gendersIcons(item.academyInfo.gender)}
-          <View
-            style={{
-              flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-              alignItems: "center"
-            }}
-          >
-            <Ionicons name="ios-people-circle-outline" size={24} color="#5cb85c" />
-            <Text
-              style={[
-                {
-                  fontSize: 14,
-                  fontWeight: "normal"
-                },
-                i18n.language === "ar" ? { marginEnd: 10 } : { marginStart: 10 }
-              ]}
-            >
-              {/*from {item.academyInfo.ageFrom} to {item.academyInfo.ageTo}*/}
-              {t("academy.age", { from: item.academyInfo.ageFrom, to: item.academyInfo.ageTo })}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-              alignItems: "center"
-            }}
-          >
-            <Ionicons name="today-outline" size={24} color="#f0ad4e" />
-            <Text
-              style={
-                i18n.language === "ar" ? { marginEnd: 10 } : { marginStart: 10 }
-              }
-            >
-              {/*{item.academyInfo.daysInMonth} class in month*/}
-              {t("academy.classInMonth", { numberOfClass: item.academyInfo.daysInMonth })}
+              {i18n.language === "ar" ? item.Cuisine.nameArb : item.Cuisine.nameEng}
             </Text>
           </View>
         </View>
@@ -205,26 +155,14 @@ export default (props) => {
     );
   };
 
-  const gendersIcons = (gender) => {
-    switch (gender) {
-      case "MALE":
-        return <MaterialCommunityIcons name="gender-male" size={24} color="lightblue" />;
-      case "FEMALE":
-        return <MaterialCommunityIcons name="gender-female" size={24} color="pink" />;
-      case "BOTH":
-        return <MaterialCommunityIcons name="gender-male-female" size={24} color="lightgreen" />;
-      default:
-        return;
-    }
-  };
 
   return (
     <View
       style={styles.container}
     >
       {
-        filteredAcademies.length > 0 ?
-          filteredAcademies.map((item, index) => academyRenderItem({ item, index })) :
+        filteredFoodTrucks.length > 0 ?
+          filteredFoodTrucks.map((item, index) => academyRenderItem({ item, index })) :
           searching ? <Text>No academies found</Text> : <Text>
             {i18n.language === "ar" ? "لا يوجد أكاديميات" : "No academies"}
           </Text>

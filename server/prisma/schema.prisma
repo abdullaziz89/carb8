@@ -74,7 +74,7 @@ model FoodTruckInformation {
   id                  String                @id @unique @default(uuid())
   phoneNumber         String?
   instagramAccount    String?
-  foodTruck           FoodTruck             @relation(fields: [foodTruckId], references: [id])
+  foodTruck           FoodTruck             @relation(fields: [foodTruckId], references: [id], onDelete: Cascade)
   foodTruckId         String                @unique
   FoodTruckWorkingDay FoodTruckWorkingDay[]
 }
@@ -88,7 +88,7 @@ model FoodTruckWorkingDay {
   enable          Boolean              @default(false)
   createdDate     DateTime             @default(now())
   modifyDate      DateTime             @updatedAt
-  foodTruckInfo   FoodTruckInformation @relation(fields: [foodTruckInfoId], references: [id])
+  foodTruckInfo   FoodTruckInformation @relation(fields: [foodTruckInfoId], references: [id], onDelete: Cascade)
   foodTruckInfoId String               @unique
 }
 
@@ -115,7 +115,7 @@ model Address {
   modifyDate     DateTime     @updatedAt
   governorate    Governorate? @relation(fields: [governorateId], references: [id])
   governorateId  String?
-  foodTruck      FoodTruck    @relation(fields: [foodTruckId], references: [id])
+  foodTruck      FoodTruck    @relation(fields: [foodTruckId], references: [id], onDelete: Cascade)
   foodTruckId    String       @unique
 }
 
@@ -123,7 +123,7 @@ model Address {
 model FoodTruckView {
   id          String    @id @default(uuid())
   views       Int       @default(0)
-  foodTruck   FoodTruck @relation(fields: [foodTruckId], references: [id])
+  foodTruck   FoodTruck @relation(fields: [foodTruckId], references: [id], onDelete: Cascade)
   foodTruckId String    @unique
   createdDate DateTime  @default(now())
   modifyDate  DateTime  @updatedAt

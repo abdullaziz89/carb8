@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import CustomCarousel from "./CustomCarousel";
 import { Entypo, EvilIcons, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { getAcademy, updateAcademyView } from "../services/AcademiesServices";
+import { getFoodTruck, updateFoodTruckView } from "../services/FoodTruckServices";
 import { LinearGradient } from "expo-linear-gradient";
 import HeaderTitleView from "./HeaderTitleView";
 import { useTranslation } from "react-i18next";
@@ -44,13 +44,13 @@ export default (props) => {
     setShowIndicator(true);
 
     if (params.academy) {
-      getAcademy(params.academy)
+      getFoodTruck(params.academy)
         .then((response) => {
 
           setAcademy(response);
           setLogo(findLogoImage(response.images));
           setShowIndicator(false);
-          updateAcademyView(response.id);
+          updateFoodTruckView(response.id);
         })
         .catch((error) => {
           router.push("/");

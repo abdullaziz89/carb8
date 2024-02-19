@@ -11,15 +11,13 @@ import {
 import { Link, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { getHeadersImages } from "../services/HeadersImagesServices";
-import { getSportsTypes, updateSportTypeView } from "../services/SportTypesServices";
-import AcademyList from "./academy-list";
+import { getCuisine, updateCuisineView } from "../services/CuisineServices";
+import FoodTruckList from "./food-truck-list";
 import { CreateResponsiveStyle, DEVICE_SIZES, useDeviceSize } from "rn-responsive-styles";
 import { Feather, FontAwesome } from "@expo/vector-icons";
-import AcademiesFilterOptions from "./AcademiesFilterOptions";
+import FoodTrucksFilterOptions from "./FoodTrucksFilterOptions";
 import { Image } from "expo-image";
 import CustomCarousel from "./CustomCarousel";
-import OneSignal from "react-native-onesignal";
-import Constants from "expo-constants";
 import { forkJoin } from "rxjs";
 import "../config/i18n";
 import { useTranslation } from "react-i18next";
@@ -34,16 +32,13 @@ export default function Home() {
   const styles = useStyles();
 
   const [headerImages, setHeaderImages] = useState([]);
-  const [sportsTypes, setSportsTypes] = useState([]);
-  const [selectedSportType, setSelectedSportType] = useState(null);
+  const [cuisines, setCuisines] = useState([]);
+  const [selectedCuisine, setSelectedCuisine] = useState(null);
   const [searchNameValue, setSearchNameValue] = useState("");
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [academiesFilter, setAcademiesFilter] = useState({
+  const [FoodTrucksFilter, setFoodTrucksFilter] = useState({
     filterValue: {
-      gender: "BOTH",
-      ageFrom: "",
-      ageTo: "",
       governorate: null
     }, isFilterActive: false
   });
@@ -52,29 +47,29 @@ export default function Home() {
 
   useEffect(() => {
 
-    // OneSignal.SetLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.DEBUG);
-    console.log(Constants.manifest.extra.oneSignalAppId);
-    OneSignal.setAppId(Constants.manifest.extra.oneSignalAppId);
-
-    OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-      console.log("User response to push notification permission prompt:", response);
-    });
-
-    //Method for handling notifications received while app in foreground
-    OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-      console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
-      let notification = notificationReceivedEvent.getNotification();
-      console.log("notification: ", notification);
-      const data = notification.additionalData;
-      console.log("additionalData: ", data);
-      // Complete with null means don't show a notification.
-      notificationReceivedEvent.complete(notification);
-    });
-
-    //Method for handling notifications opened
-    OneSignal.setNotificationOpenedHandler(notification => {
-      console.log("OneSignal: notification opened:", notification);
-    });
+    // // OneSignal.SetLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.DEBUG);
+    // console.log(Constants.manifest.extra.oneSignalAppId);
+    // OneSignal.setAppId(Constants.manifest.extra.oneSignalAppId);
+    //
+    // OneSignal.promptForPushNotificationsWithUserResponse((response) => {
+    //   console.log("User response to push notification permission prompt:", response);
+    // });
+    //
+    // //Method for handling notifications received while app in foreground
+    // OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
+    //   console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
+    //   let notification = notificationReceivedEvent.getNotification();
+    //   console.log("notification: ", notification);
+    //   const data = notification.additionalData;
+    //   console.log("additionalData: ", data);
+    //   // Complete with null means don't show a notification.
+    //   notificationReceivedEvent.complete(notification);
+    // });
+    //
+    // //Method for handling notifications opened
+    // OneSignal.setNotificationOpenedHandler(notification => {
+    //   console.log("OneSignal: notification opened:", notification);
+    // });
 
     fetchData(false);
 
@@ -111,13 +106,12 @@ export default function Home() {
       setIsRefreshing(true);
     }
 
-    forkJoin([getSportsTypes(), getHeadersImages()])
-      .subscribe(([sportsTypes, headersImages]) => {
+    forkJoin([getCuisine(), getHeadersImages()])
+      .subscribe(([cuisines, headersImages]) => {
         setIsRefreshing(false);
-        setSportsTypes(sportsTypes);
+        setCuisines(cuisines);
         setHeaderImages(headersImages);
       });
-
   };
 
   useEffect(() => {
@@ -140,7 +134,7 @@ export default function Home() {
 
   const currentYear = new Date().getFullYear();
 
-  const sportTypeRenderItem = ({ item, index }) => {
+  const cuisineRenderItem = ({ item, index }) => {
 
     const isFirst = index === 0;
 
@@ -155,8 +149,8 @@ export default function Home() {
         }}
         onPress={() => {
           // set selected sport type
-          updateSportTypeView(item.id);
-          setSelectedSportType(item.id);
+          updateCuisineView(item.id);
+          setSelectedCuisine(item.id);
         }}
       >
         <Image
@@ -191,10 +185,10 @@ export default function Home() {
         <Animated.View
           style={[styles.filterOptionsModal, { backgroundColor: color }]}
         >
-          <AcademiesFilterOptions
+          <FoodTrucksFilterOptions
             setShowFilterOptions={setShowFilterOptions}
-            academiesFilter={academiesFilter}
-            setAcademiesFilter={setAcademiesFilter}
+            academiesFilter={FoodTrucksFilter}
+            setAcademiesFilter={setFoodTrucksFilter}
           />
         </Animated.View>
       </Modal>
@@ -264,10 +258,10 @@ export default function Home() {
         <CustomCarousel images={headerImages} clickable={true} />
 
         <View
-          style={styles.sportTypesHeaderHolder}
+          style={styles.cuisinesHeaderHolder}
         >
           <View
-            style={styles.sportTypesHeader}
+            style={styles.cuisinesHeader}
           >
             <View
               style={{
@@ -286,14 +280,14 @@ export default function Home() {
                 {i18n.language === "ar" ? "الرياضات" : "Sports Types"}
               </Text>
               {
-                selectedSportType !== null &&
+                selectedCuisine !== null &&
                 <TouchableOpacity
                   style={{
                     marginStart: 20
                   }}
                   onPress={() => {
                     // clear selected sport type
-                    setSelectedSportType(null);
+                    setSelectedCuisine(null);
                   }}
                 >
                   <Text
@@ -316,8 +310,8 @@ export default function Home() {
               padding: 10
               // flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
             }}
-            data={sportsTypes}
-            renderItem={sportTypeRenderItem}
+            data={cuisines}
+            renderItem={cuisineRenderItem}
             keyExtractor={(item, index) => index.toString()}
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -347,15 +341,15 @@ export default function Home() {
           />
         </View>
         <View
-          style={[styles.academiesHeaderHolder, { flexDirection: i18n.language === "ar" ? "row-reverse" : "row" }]}
+          style={[styles.foodTrucksHeaderHolder, { flexDirection: i18n.language === "ar" ? "row-reverse" : "row" }]}
         >
           <Text
-            style={styles.academiesHeader}
+            style={styles.foodTrucksHeader}
           >
             {i18n.language === "ar" ? "الأكاديميات" : "Academies"}
           </Text>
           {
-            sportsTypes.length > 0 && <TouchableOpacity
+            cuisines.length > 0 && <TouchableOpacity
               onPress={() => {
                 setShowFilterOptions(true);
               }}
@@ -365,7 +359,7 @@ export default function Home() {
           }
         </View>
         {
-          sportsTypes.length > 0 ?
+          cuisines.length > 0 ?
             <View
               style={{
                 flex: 1,
@@ -373,11 +367,11 @@ export default function Home() {
                 marginTop: 30
               }}
             >
-              <AcademyList
+              <FoodTruckList
                 searchByName={searchNameValue}
-                selectedSportType={selectedSportType}
-                sportsTypes={sportsTypes}
-                academiesFilter={academiesFilter}
+                selectedCuisine={selectedCuisine}
+                cuisines={cuisines}
+                foodTrucksFilter={FoodTrucksFilter}
               />
               {modelView()}
             </View> :
@@ -397,7 +391,7 @@ export default function Home() {
                   textAlign: "center"
                 }}
               >
-                {i18n.language === "ar" ? "لا يوجد أكاديميات" : "No Academies"}
+                {i18n.language === "ar" ? "لا توجد عربات" : "No Food Trucks"}
               </Text>
             </View>
         }
@@ -413,7 +407,7 @@ export default function Home() {
               justifyContent: "center"
             }}
           >
-            <Text>All rights reserved © All Sports Club {currentYear}</Text>
+            <Text>All rights reserved © Kuwait Food Trucks {currentYear}</Text>
             <Text
               style={{
                 marginTop: 10,
@@ -441,7 +435,7 @@ export default function Home() {
 
 const useStyles = CreateResponsiveStyle(
   {
-    sportTypesHeader: {
+    cuisinesHeader: {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
@@ -449,12 +443,12 @@ const useStyles = CreateResponsiveStyle(
       paddingStart: 10,
       paddingEnd: 10
     },
-    sportTypesHeaderHolder: {
+    cuisinesHeaderHolder: {
       width: width,
       height: 160,
       marginTop: 30
     },
-    academiesHeaderHolder: {
+    foodTrucksHeaderHolder: {
       justifyContent: "space-between",
       alignItems: "center",
       width: width,
@@ -463,7 +457,7 @@ const useStyles = CreateResponsiveStyle(
       paddingStart: 10,
       paddingEnd: 10
     },
-    academiesHeader: {
+    foodTrucksHeader: {
       fontSize: 20,
       fontWeight: "bold"
     },
