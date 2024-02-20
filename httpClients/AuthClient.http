@@ -1,5 +1,5 @@
 ### create new user
-POST http://192.168.3.8:3000/authenticate/register
+POST http://192.168.8.134:3000/authenticate/register
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
     "password": "Aziz98877449@?",
     "enable": true
   },
-  "roleId": "533b59c8-a573-498a-b094-efa8389ddb7e"
+  "roleId": "d0ce2346-80b9-4969-acac-b432c347692d"
 }
 
 ### create new user - online
