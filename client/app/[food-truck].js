@@ -130,7 +130,7 @@ export default (props) => {
         <Image
           source={{ uri: logo }}
           style={{ width: 50, height: 50, borderRadius: 25 }}
-          placeholder={require("../assets/allsports-placeholder.png")}
+          placeholder={require("../assets/kwft-logo-placeholder.png")}
         />
         {
           academy !== null && (
@@ -272,7 +272,7 @@ export default (props) => {
                   borderRadius: 32
                 }}
                 contentFit={"cover"}
-                placeholder={require("../assets/allsports-placeholder.png")}
+                placeholder={require("../assets/kwft-logo-placeholder.png")}
               />
               <Text
                 style={[

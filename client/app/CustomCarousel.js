@@ -5,7 +5,7 @@ import {CreateResponsiveStyle, DEVICE_SIZES} from "rn-responsive-styles";
 import {useRouter} from "expo-router";
 import {useEffect, useState} from "react";
 import {updateHeaderImageView} from "../services/HeadersImagesServices";
-import AllSportsPlaceholderImage from "../assets/allsports-placeholder.png";
+import AllSportsPlaceholderImage from "../assets/kwft-logo-placeholder.png";
 
 const {width, height} = Dimensions.get("window");
 const isWeb = Platform.OS === "web";
@@ -28,6 +28,8 @@ export default (props) => {
                 })
 
             setFilteredImages(filteredImages);
+        } else {
+            setFilteredImages([AllSportsPlaceholderImage]);
         }
     }, [images]);
 
@@ -40,7 +42,7 @@ export default (props) => {
                         style={styles.carouselImage}
                         contentFit={"fill"}
                         contentPosition={"center"}
-                        placeholder={require("../assets/allsports-placeholder.png")}
+                        placeholder={require("../assets/kwft-logo-placeholder.png")}
                     />
                 );
             } else {
@@ -65,7 +67,7 @@ export default (props) => {
                             style={styles.carouselImage}
                             contentFit={"cover"}
                             contentPosition={"center"}
-                            placeholder={require("../assets/allsports-placeholder.png")}
+                            placeholder={require("../assets/kwft-logo-placeholder.png")}
                         />
                     </TouchableOpacity>
                 );
@@ -77,7 +79,7 @@ export default (props) => {
                     style={styles.carouselImage}
                     contentFit={"fill"}
                     contentPosition={"center"}
-                    placeholder={require("../assets/allsports-placeholder.png")}
+                    placeholder={require("../assets/kwft-logo-placeholder.png")}
                 />
             );
         }
@@ -108,12 +110,22 @@ const useStyles = CreateResponsiveStyle(
     {
         carousel: {
             width: width,
-            height: 250
+            height: 250,
+            backgroundColor: "#f8b91c",
         },
         carouselImage: {
-          width: width + 10,
-          height: 250,
-          borderRadius: 10,
+            width: width + 10,
+            height: 250,
+            borderRadius: 15,
+            // drop shadow
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
         },
     },
     {
@@ -124,7 +136,7 @@ const useStyles = CreateResponsiveStyle(
             },
             carouselImage: {
                 width: width * 0.75,
-                height:  width * 0.75 * 0.5
+                height: width * 0.75 * 0.5
             }
         },
         [DEVICE_SIZES.LARGE_DEVICE]: {

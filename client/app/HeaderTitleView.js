@@ -19,7 +19,7 @@ export default (props) => {
                 logo && <Image
           source={localLogo ? logo : { uri: logo }}
           style={{ width: 35, height: 35, borderRadius: 17.5 }}
-          placeholder={require("../assets/allsports-placeholder.png")}
+          placeholder={require("../assets/kwft-logo-placeholder.png")}
                 />
             }
             <Text style={{fontSize: 20, fontWeight: "bold", marginLeft: 15}}>{title}</Text>

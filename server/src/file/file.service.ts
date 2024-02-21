@@ -69,6 +69,6 @@ export class FileService {
   }
 
   getFileUrl(path: string, filename: string) {
-    return `http://192.168.8.134:8083/${path}/${filename}`;
+    return `http://192.168.3.8:8081/${path}/${filename}`;
   }
 }
