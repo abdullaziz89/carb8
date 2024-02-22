@@ -8,13 +8,13 @@ import {
     Modal,
     Animated, SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground
 } from "react-native";
-import {Link, Stack} from "expo-router";
-import {useEffect, useState} from "react";
+import {Link, SplashScreen, Stack} from "expo-router";
+import {useCallback, useEffect, useState} from "react";
 import {getHeadersImages} from "../services/HeadersImagesServices";
 import {getCuisine, updateCuisineView} from "../services/CuisineServices";
 import FoodTruckList from "./food-truck-list";
 import {CreateResponsiveStyle, DEVICE_SIZES, useDeviceSize} from "rn-responsive-styles";
-import {Feather, FontAwesome} from "@expo/vector-icons";
+import {AntDesign, Feather, FontAwesome} from "@expo/vector-icons";
 import FoodTrucksFilterOptions from "./FoodTrucksFilterOptions";
 import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
@@ -22,10 +22,33 @@ import {forkJoin} from "rxjs";
 import "../config/i18n";
 import {useTranslation} from "react-i18next";
 import HeaderTitleView from "./HeaderTitleView";
+import {
+    useFonts,
+    BalsamiqSans_400Regular,
+    BalsamiqSans_400Regular_Italic,
+    BalsamiqSans_700Bold,
+    BalsamiqSans_700Bold_Italic,
+} from '@expo-google-fonts/balsamiq-sans';
+
+SplashScreen.preventAutoHideAsync();
+
 
 const {width, height} = Dimensions.get("window");
 
 export default function Home() {
+
+    const [fontsLoaded, fontError] = useFonts({
+        BalsamiqSans_400Regular,
+        BalsamiqSans_400Regular_Italic,
+        BalsamiqSans_700Bold,
+        BalsamiqSans_700Bold_Italic,
+    });
+
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded || fontError) {
+            await SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded, fontError]);
 
     const {i18n} = useTranslation();
 
@@ -195,8 +218,8 @@ export default function Home() {
                 >
                     <FoodTrucksFilterOptions
                         setShowFilterOptions={setShowFilterOptions}
-                        academiesFilter={FoodTrucksFilter}
-                        setAcademiesFilter={setFoodTrucksFilter}
+                        foodTrucksFilter={FoodTrucksFilter}
+                        setFoodTruckFilter={setFoodTrucksFilter}
                     />
                 </Animated.View>
             </Modal>
@@ -233,6 +256,7 @@ export default function Home() {
                 backgroundColor: "white",
                 width: width
             }}
+            onLayout={onLayoutRootView}
         >
             <ScrollView
                 style={{
@@ -255,7 +279,7 @@ export default function Home() {
                 <Stack.Screen
                     options={{
                         headerLargeTitle: true,
-                        title: "All Sports",
+                        title: "Kuwait Food Trucks",
                         headerTitle: () => Platform.OS !== "ios" &&
                             <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../assets/icon.png")}
                                              localLogo={true}/>,
@@ -287,9 +311,10 @@ export default function Home() {
                                 style={{
                                     fontSize: 20,
                                     fontWeight: "bold",
+                                    fontFamily: 'BalsamiqSans_400Regular',
                                 }}
                             >
-                                {i18n.language === "ar" ? "المأكولات" : "Cuisines"}
+                                {i18n.language === "ar" ? "الأقسام" : "Categories"}
                             </Text>
                             {
                                 selectedCuisine !== null &&
@@ -302,14 +327,7 @@ export default function Home() {
                                         setSelectedCuisine(null);
                                     }}
                                 >
-                                    <Text
-                                        style={{
-                                            fontSize: 14,
-                                            color: "#d9534f"
-                                        }}
-                                    >
-                                        {i18n.language === "ar" ? "إلغاء" : "Clear"}
-                                    </Text>
+                                    <AntDesign name="closecircle" size={20} color="#f8b91c" />
                                 </TouchableOpacity>
                             }
                         </View>
@@ -487,6 +505,7 @@ const useStyles = CreateResponsiveStyle(
             width: 100,
             height: 140,
             paddingTop: 15,
+            marginEnd: 20,
             borderRadius: 35,
             // drop shadow
             shadowColor: "#000",

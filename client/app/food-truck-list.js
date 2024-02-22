@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
 import {View, Text, Dimensions, TouchableOpacity} from "react-native";
 import {CreateResponsiveStyle, DEVICE_SIZES} from "rn-responsive-styles";
-import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import {useRouter} from "expo-router";
 import {getFoodTrucks} from "../services/FoodTruckServices";
 import {Image} from "expo-image";
 import {useTranslation} from "react-i18next";
+import {DAYS} from "../utils/Utils";
+import {Entypo, EvilIcons} from "@expo/vector-icons";
 
 const {width} = Dimensions.get("window");
 
@@ -91,12 +92,30 @@ export default (props) => {
         });
     };
 
-    const academyRenderItem = ({item, index}) => {
+    const checkClosed = (foodTruckWorkingDay) => {
+        let isClosed = false;
+        const day = new Date().getDay();
+        for (let i = 0; i < foodTruckWorkingDay.length; i++) {
+            // get hour from string date and set to variable
+            const workingFrom = foodTruckWorkingDay[i].workingFrom;
+            const workingTo = foodTruckWorkingDay[i].workingTo;
 
+            if (foodTruckWorkingDay[i].day === 'All Days' || 'Week Days' || 'Weekend') {
+                // check now time if between start and end time
+                isClosed = !(workingFrom <= new Date().getHours() && (workingTo) >= new Date().getHours());
+            } else {
+                // check if today day is equal to food truck working day then check the time
+                isClosed = !(DAYS[day].name === foodTruckWorkingDay[i].day && workingFrom <= new Date().getHours() && workingTo >= new Date().getHours());
+            }
+        }
+        return isClosed;
+    }
+
+    const academyRenderItem = ({item, index}) => {
         return (
             <TouchableOpacity
                 key={index}
-                style={styles.academyItem}
+                style={styles.foodTruckItem}
                 onPress={() => {
                     router.push(`/${item.id}`);
                 }}
@@ -105,15 +124,17 @@ export default (props) => {
                     style={{
                         flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
                         justifyContent: "flex-start",
-                        width: "100%"
+                        width: "100%",
+                        height: "100%",
+                        padding: 12,
                     }}
                 >
                     <Image
                         source={{uri: findLogoImage(item.images)}}
                         style={[
                             {
-                                width: 64,
-                                height: 64,
+                                width: 120,
+                                height: 120,
                                 borderRadius: 10
                             }
                         ]}
@@ -122,32 +143,70 @@ export default (props) => {
                     <View
                         style={[
                             {
+                                flex: 1,
                                 flexDirection: "column",
-                                alignItems: "flex-start"
+                                alignItems: "flex-start",
+
                             },
                             i18n.language === "ar" ? {marginEnd: 10} : {marginStart: 10}
                         ]}
                     >
                         <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: "bold",
-                                marginTop: 5
-                            }}
+                            style={[
+                                {
+                                    fontSize: 24,
+                                    fontWeight: "bold",
+                                    marginTop: 5,
+                                    width: "100%",
+                                },
+                                i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
+                            ]}
                         >
                             {i18n.language === "ar" ? item.nameArb : item.nameEng}
                         </Text>
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 18,
                                 fontWeight: "normal",
                                 marginTop: 5,
-                                color: "lightgrey",
                                 width: "100%",
-                                textAlign: i18n.language === "ar" ? "right" : "left"
+                                textAlign: i18n.language === "ar" ? "right" : "left",
+                            }}
+                            numberOfLines={3}
+                        >
+                            {i18n.language === "ar" ? item.descriptionEng : item.descriptionArb}
+                        </Text>
+                        <View
+                            style={{
+                                marginTop: 5,
+                                width: "100%",
+                                flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
                             }}
                         >
-                            {i18n.language === "ar" ? item.Cuisine.nameArb : item.Cuisine.nameEng}
+                            <Entypo name="location-pin" size={18} color="#f8b91c"/>
+                            <Text style={{textAlign: i18n.language === "ar" ? "right" : "left"}}>{i18n.language === "ar" ? item.address.governorate.nameArb : item.address.governorate.nameEng}</Text>
+                        </View>
+                    </View>
+                    <View
+                        style={{
+                            position: "absolute",
+                            top: 10,
+                            right: 10,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#f8b91c",
+                            padding: 5,
+                            borderRadius: 10
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 10,
+                                fontWeight: "bold",
+                            }}
+                        >
+                            {checkClosed(item.foodTruckInfo.FoodTruckWorkingDay) ? "CLOSED" : "OPEN"}
                         </Text>
                     </View>
                 </View>
@@ -178,15 +237,13 @@ const useStyles = CreateResponsiveStyle(
             alignItems: "center",
             justifyContent: "center",
             width: width,
-            paddingTop: 10,
             paddingBottom: 10,
         },
-        academyItem: {
+        foodTruckItem: {
             flexDirection: "column",
             alignItems: "center",
             width: width - 20,
             height: 150,
-            padding: 10,
             borderRadius: 10,
             backgroundColor: "white",
             shadowColor: "#000",
@@ -207,7 +264,7 @@ const useStyles = CreateResponsiveStyle(
                 flexDirection: "row",
                 padding: 8
             },
-            academyItem: {
+            foodTruckItem: {
                 width: width / 3.25,
                 alignSelf: "flex-start"
             }
@@ -219,7 +276,7 @@ const useStyles = CreateResponsiveStyle(
                 flexDirection: "row",
                 padding: 8
             },
-            academyItem: {
+            foodTruckItem: {
                 width: width / 3.25,
                 alignSelf: "flex-start"
             }

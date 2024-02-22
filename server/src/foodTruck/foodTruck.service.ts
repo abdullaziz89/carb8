@@ -163,9 +163,13 @@ export class FoodTruckService {
                         governorate: true
                     }
                 },
-                foodTruckInfo: true,
+                foodTruckInfo: {
+                    include: {
+                        FoodTruckWorkingDay: true
+                    }
+                },
                 Cuisine: true,
-                foodTruckView: true
+                foodTruckView: true,
             }
         });
 
