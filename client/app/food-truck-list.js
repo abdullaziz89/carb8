@@ -16,7 +16,7 @@ export default (props) => {
     const router = useRouter();
 
     const styles = useStyles();
-    const {selectedCuisine, cuisines, searchByName, foodTrucksFilter} = props;
+    const {selectedCuisine, cuisines, searchByName, foodTrucksFilter, isRefreshing} = props;
 
     const [foodTrucks, setFoodTrucks] = useState([]);
     const [filteredFoodTrucks, setFilteredFoodTrucks] = useState([]);
@@ -25,14 +25,15 @@ export default (props) => {
 
     useEffect(() => {
 
-        getFoodTrucks()
-            .then(response => {
-
-                setFoodTrucks(response);
-            });
-
-        // setFilteredAcademies(academiesSets);
+        fetchFoodTrucks();
     }, []);
+
+    useEffect(() => {
+
+            if (isRefreshing) {
+                fetchFoodTrucks();
+            }
+    }, [isRefreshing]);
 
     useEffect(() => {
 
@@ -84,6 +85,13 @@ export default (props) => {
 
     }, [foodTrucksFilter]);
 
+    const fetchFoodTrucks = async () => {
+        await getFoodTrucks()
+            .then(response => {
+                setFoodTrucks(response);
+            });
+    }
+
     const findLogoImage = (images) => {
 
         return images.find((image) => {
@@ -111,7 +119,7 @@ export default (props) => {
         return isClosed;
     }
 
-    const academyRenderItem = ({item, index}) => {
+    const foodTruckRenderItem = ({item, index}) => {
         return (
             <TouchableOpacity
                 key={index}
@@ -221,7 +229,7 @@ export default (props) => {
         >
             {
                 filteredFoodTrucks.length > 0 ?
-                    filteredFoodTrucks.map((item, index) => academyRenderItem({item, index})) :
+                    filteredFoodTrucks.map((item, index) => foodTruckRenderItem({item, index})) :
                     searching ? <Text>No academies found</Text> : <Text>
                         {i18n.language === "ar" ? "لا توجد عربات" : "No Food Trucks Found"}
                     </Text>

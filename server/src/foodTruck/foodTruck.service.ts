@@ -18,6 +18,10 @@ export class FoodTruckService {
             const createFoodTruck = await prisma.foodTruck.create({
                 data: payload.foodTruck
             });
+
+            payload.address.googleLat = parseFloat(String(payload.address.googleLat));
+            payload.address.googleLng = parseFloat(String(payload.address.googleLng));
+
             await prisma.address.create({
                 data: {...payload.address, foodTruckId: createFoodTruck.id}
             });

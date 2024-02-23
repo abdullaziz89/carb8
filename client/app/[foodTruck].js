@@ -22,7 +22,6 @@ import { useTranslation } from "react-i18next";
 const { width } = Dimensions.get("window");
 const isWeb = Platform.OS === "web";
 
-
 export default (props) => {
 
   const params = useSearchParams();
@@ -30,7 +29,7 @@ export default (props) => {
   const { t, i18n } = useTranslation();
 
   const [showIndicator, setShowIndicator] = useState(false);
-  const [academy, setAcademy] = useState(null);
+  const [foodTruck, setFoodTruck] = useState(null);
   const [logo, setLogo] = useState(null);
 
   const router = useRouter();
@@ -41,13 +40,14 @@ export default (props) => {
 
   useEffect(() => {
 
+    console.log(params)
     setShowIndicator(true);
 
-    if (params.academy) {
-      getFoodTruck(params.academy)
+    if (params.foodTruck) {
+      getFoodTruck(params.foodTruck)
         .then((response) => {
 
-          setAcademy(response);
+          setFoodTruck(response);
           setLogo(findLogoImage(response.images));
           setShowIndicator(false);
           updateFoodTruckView(response.id);
@@ -58,7 +58,7 @@ export default (props) => {
     } else {
       // router.push("/");
     }
-  }, [params.academy]);
+  }, [params.foodTruck]);
 
   const findLogoImage = (images) => {
 
@@ -73,19 +73,6 @@ export default (props) => {
       <ActivityIndicator size="large" color="#0000ff" />
     </View>
   ) : null;
-
-  const gendersIcons = (gender) => {
-    switch (gender) {
-      case "MALE":
-        return <MaterialCommunityIcons name="gender-male" size={24} color="lightblue" />;
-      case "FEMALE":
-        return <MaterialCommunityIcons name="gender-female" size={24} color="pink" />;
-      case "BOTH":
-        return <MaterialCommunityIcons name="gender-male-female" size={24} color="lightgreen" />;
-      default:
-        return;
-    }
-  };
 
   const filterImage = (images) => {
     return images.filter((image) => {
@@ -118,7 +105,7 @@ export default (props) => {
     Linking.openURL(url);
   };
 
-  const viewTitle = (academy) => {
+  const viewTitle = (foodTruck) => {
     return (
       <View
         style={{
@@ -133,9 +120,9 @@ export default (props) => {
           placeholder={require("../assets/kwft-logo-placeholder.png")}
         />
         {
-          academy !== null && (
+          foodTruck !== null && (
             <Text style={{ fontSize: 20, fontWeight: "bold", marginLeft: 15 }}>
-              {i18n.language === "ar" ? academy.nameArb : academy.nameEng}
+              {i18n.language === "ar" ? foodTruck.nameArb : foodTruck.nameEng}
             </Text>
           )
         }
@@ -149,6 +136,11 @@ export default (props) => {
   };
 
   const openInstagram = (instagramAccount) => {
+
+    if (instagramAccount.includes("http")) {
+      Linking.openURL(instagramAccount);
+      return;
+    }
 
     if (isWeb) {
       window.open(`https://www.instagram.com/${instagramAccount}`, "_blank");
@@ -167,14 +159,14 @@ export default (props) => {
       <Stack.Screen
         options={{
           headerLargeTitle: false,
-          title: academy && academy.nameEng,
-          headerTitle: () => academy !== null && <HeaderTitleView title={academy.nameEng} logo={logo} />
+          title: foodTruck && foodTruck.nameEng,
+          headerTitle: () => foodTruck !== null && <HeaderTitleView title={foodTruck.nameEng} logo={logo} />
         }}
       />
 
       {indicator}
 
-      {academy !== null && (
+      {foodTruck !== null && (
         <ScrollView
           style={{
             flex: 1,
@@ -188,62 +180,22 @@ export default (props) => {
         >
 
           {
-            filterImage(academy.images).length > 0 && (
+            filterImage(foodTruck.images).length > 0 && (
               <View
                 style={{
                   alignItems: "center"
                 }}
               >
                 <CustomCarousel
-                  images={academy.images}
+                  images={foodTruck.images}
                 />
               </View>
             )
           }
 
+          {/*cuisine*/}
           <View
-            style={[styles.informationContainer, { flexDirection: i18n.language === "ar" ? "row-reverse" : "row" }]}
-          >
-            {gendersIcons(academy.academyInfo.gender)}
-            <View
-              style={{
-                flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                alignItems: "center"
-              }}
-            >
-              <Ionicons name="ios-people-circle-outline" size={24} color="#5cb85c" />
-              <Text
-                style={[
-                  {
-                    fontSize: 14,
-                    fontWeight: "normal"
-                  },
-                  i18n.language === "ar" ? { marginEnd: 10 } : { marginStart: 10 }
-                ]}
-              >
-                {t("academy.age", { from: academy.academyInfo.ageFrom, to: academy.academyInfo.ageTo })}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                alignItems: "center"
-              }}
-            >
-              <Ionicons name="today-outline" size={24} color="#f0ad4e" />
-              <Text
-                style={
-                  i18n.language === "ar" ? { marginEnd: 10 } : { marginStart: 10 }
-                }
-              >
-                {t("academy.classInMonth", { numberOfClass: academy.academyInfo.daysInMonth })}
-              </Text>
-            </View>
-          </View>
-
-          {/*sport type*/}
-          <View
-            style={styles.sportTypeContainer}
+            style={styles.cuisineContainer}
           >
             <Text
               style={{
@@ -253,7 +205,7 @@ export default (props) => {
                 textAlign: i18n.language === "ar" ? "right" : "left"
               }}
             >
-              {t("academy.sportType")}
+              {t("foodTruck.cuisine")}
             </Text>
             <View
               style={{
@@ -265,7 +217,7 @@ export default (props) => {
               }}
             >
               <Image
-                source={{ uri: academy.SportType.image }}
+                source={{ uri: foodTruck.Cuisine.image }}
                 style={{
                   width: 64,
                   height: 64,
@@ -283,7 +235,7 @@ export default (props) => {
                   i18n.language === "ar" ? { marginEnd: 10 } : { marginStart: 10 }
                 ]}
               >
-                {i18n.language === "ar" ? academy.SportType.nameArb : academy.SportType.nameEng}
+                {i18n.language === "ar" ? foodTruck.Cuisine.nameArb : foodTruck.Cuisine.nameEng}
               </Text>
             </View>
           </View>
@@ -302,7 +254,7 @@ export default (props) => {
                 i18n.language === "ar" ? { textAlign: "right" } : { textAlign: "left" }
               ]}
             >
-              {t("academy.description")}
+              {t("foodTruck.description")}
             </Text>
             <Text
               style={[
@@ -313,7 +265,7 @@ export default (props) => {
                 i18n.language === "ar" ? { textAlign: "right" } : { textAlign: "left" }
               ]}
             >
-              {i18n.language === "ar" ? academy.descriptionArb : academy.descriptionEng}
+              {i18n.language === "ar" ? foodTruck.descriptionArb : foodTruck.descriptionEng}
             </Text>
           </View>
 
@@ -336,21 +288,21 @@ export default (props) => {
                   marginBottom: 10
                 }}
               >
-                {t("academy.address")}
+                {t("foodTruck.address")}
               </Text>
               {/*{*/}
-              {/*    academy.address.googleLat !== 0 && academy.address.googleLang !== 0 && (*/}
+              {/*    foodTruck.address.googleLat !== 0 && foodTruck.address.googleLang !== 0 && (*/}
               {/*        <TouchableOpacity*/}
-              {/*            onPress={() => openGps(academy.address.googleLat, academy.address.googleLang)}*/}
+              {/*            onPress={() => openGps(foodTruck.address.googleLat, foodTruck.address.googleLang)}*/}
               {/*        >*/}
               {/*            <Entypo name="location" size={24} color="#5bc0de"/>*/}
               {/*        </TouchableOpacity>*/}
               {/*    )*/}
               {/*}*/}
               {
-                academy.address.googleLocation.length > 0 && (
+                foodTruck.address.googleLocation.length > 0 && (
                   <TouchableOpacity
-                    onPress={() => openGoogleLocation(academy.address.googleLocation)}
+                    onPress={() => openGoogleLocation(foodTruck.address.googleLocation)}
                   >
                     <Entypo name="location" size={24} color="#5bc0de" />
                   </TouchableOpacity>
@@ -366,7 +318,7 @@ export default (props) => {
                 i18n.language === "ar" ? { textAlign: "right" } : { textAlign: "left" }
               ]}
             >
-              {academy.address.address}
+              {foodTruck.address.address}
             </Text>
           </View>
 
@@ -375,7 +327,7 @@ export default (props) => {
           >
             <TouchableOpacity
               style={[styles.contactItem, { backgroundColor: "#405de6" }]}
-              onPress={() => openPhoneCall(academy.academyInfo.phoneNumber)}
+              onPress={() => openPhoneCall(foodTruck.foodTruckInfo.phoneNumber)}
             >
               <Ionicons name="call-outline" size={24} color="white" />
             </TouchableOpacity>
@@ -388,7 +340,7 @@ export default (props) => {
             >
               <TouchableOpacity
                 style={styles.contactItem}
-                onPress={() => openInstagram(academy.academyInfo.instagramAccount)}
+                onPress={() => openInstagram(foodTruck.foodTruckInfo.instagramAccount)}
               >
                 <Entypo name="instagram" size={24} color="white" />
               </TouchableOpacity>
@@ -400,8 +352,8 @@ export default (props) => {
           {/*  provider={PROVIDER_GOOGLE}*/}
           {/*  style={{ height: 300, width: width * 0.8, marginTop: 20 }}*/}
           {/*  region={{*/}
-          {/*    latitude: academy.address.googleLat,*/}
-          {/*    longitude: academy.address.googleLng*/}
+          {/*    latitude: foodTruck.address.googleLat,*/}
+          {/*    longitude: foodTruck.address.googleLng*/}
           {/*  }}*/}
           {/*/>*/}
         </ScrollView>
@@ -424,7 +376,7 @@ const useStyles = CreateResponsiveStyle(
       width: "100%",
       marginTop: 20
     },
-    sportTypeContainer: {
+    cuisineContainer: {
       width: "100%",
       marginTop: 20
     },
@@ -456,7 +408,7 @@ const useStyles = CreateResponsiveStyle(
       informationContainer: {
         width: "50%"
       },
-      sportTypeContainer: {
+      cuisineContainer: {
         width: "50%"
       },
       descriptionContainer: {

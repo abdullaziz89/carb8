@@ -1,9 +1,7 @@
 {
-  "academy": {
-    "sportType": "نوع الرياضة",
+  "foodTruck": {
+    "cuisine": "الأقسام",
     "description": "الوصف",
-    "address": "العنوان",
-    "age": "من عمر {{from}} إلى {{to}}",
-    "classInMonth": "{{numberOfClass}} فصل في الشهر"
+    "address": "العنوان"
   }
 }

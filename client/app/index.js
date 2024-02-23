@@ -111,19 +111,6 @@ export default function Home() {
     }, []);
 
     const fetchData = (fromRefreshing) => {
-        // setIsRefreshing(true)
-        // get sports types
-        // getSportsTypes()
-        //     .then((data) => {
-        //             setSportsTypes(data);
-        //             setIsRefreshing(false)
-        //         }
-        //     );
-        //
-        // getHeadersImages()
-        //     .then((data) => {
-        //         setHeaderImages(data);
-        //     });
 
         if (fromRefreshing) {
             setIsRefreshing(true);
@@ -403,6 +390,7 @@ export default function Home() {
                                 selectedCuisine={selectedCuisine}
                                 cuisines={cuisines}
                                 foodTrucksFilter={FoodTrucksFilter}
+                                isRefreshing={isRefreshing}
                             />
                             {modelView()}
                         </View> :

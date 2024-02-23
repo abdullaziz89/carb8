@@ -4,5 +4,8 @@
   "academy.classInMonth": "academy.classInMonth",
   "academy.classes": "academy.classes",
   "academy.description": "academy.description",
-  "academy.sportType": "academy.sportType"
+  "academy.sportType": "academy.sportType",
+  "foodTruck.address": "foodTruck.address",
+  "foodTruck.cuisine": "foodTruck.cuisine",
+  "foodTruck.description": "foodTruck.description"
 }

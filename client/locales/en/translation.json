@@ -1,9 +1,7 @@
 {
-  "academy": {
-    "sportType": "Sport Type",
+  "foodTruck": {
+    "cuisine": "Caregory",
     "description": "Description",
-    "address": "Address",
-    "age": "from {{from}} to {{to}}",
-    "classInMonth": "{{numberOfClass}} Class in month"
+    "address": "Address"
   }
 }
