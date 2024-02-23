@@ -20,12 +20,25 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.ideveloprs.kwft"
+      "package": "com.ideveloprs.kwft",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ"
+        }
+      }
     },
     "ios": {
       "buildNumber": "1.0.0",
       "bundleIdentifier": "com.ideveloprs.kwft",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app requires access to your location to function properly.",
+        "NSLocationAlwaysUsageDescription": "This app requires access to your location to function properly."
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ",
+        "usesNonExemptEncryption": false
+      }
     },
     "plugins": [
       "expo-localization"

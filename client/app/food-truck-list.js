@@ -1,12 +1,13 @@
 import {useEffect, useState} from "react";
-import {View, Text, Dimensions, TouchableOpacity} from "react-native";
+import {ActivityIndicator, Dimensions, Text, TouchableOpacity, View} from "react-native";
 import {CreateResponsiveStyle, DEVICE_SIZES} from "rn-responsive-styles";
 import {useRouter} from "expo-router";
 import {getFoodTrucks} from "../services/FoodTruckServices";
 import {Image} from "expo-image";
 import {useTranslation} from "react-i18next";
 import {DAYS} from "../utils/Utils";
-import {Entypo, EvilIcons} from "@expo/vector-icons";
+import {Entypo} from "@expo/vector-icons";
+import * as Location from "expo-location";
 
 const {width} = Dimensions.get("window");
 
@@ -23,16 +24,21 @@ export default (props) => {
 
     const [searching, setSearching] = useState(false);
 
+    const [currentLocation, setCurrentLocation] = useState(null);
+    const [initialRegion, setInitialRegion] = useState(null);
+    const [calculateDistanceLoading, setCalculateDistanceLoading] = useState(true);
+
     useEffect(() => {
 
         fetchFoodTrucks();
+
     }, []);
 
     useEffect(() => {
 
-            if (isRefreshing) {
-                fetchFoodTrucks();
-            }
+        if (isRefreshing) {
+            fetchFoodTrucks();
+        }
     }, [isRefreshing]);
 
     useEffect(() => {
@@ -44,8 +50,20 @@ export default (props) => {
             });
 
             setFilteredFoodTrucks(filteredFoodTrucks);
+            if (currentLocation !== null) {
+                for (let i = 0; i < filteredFoodTrucks.length; i++) {
+                    const item = filteredFoodTrucks[i];
+                    getDistance(currentLocation, item.id, item.address.googleLat, item.address.googleLng);
+                }
+            }
         } else {
             setFilteredFoodTrucks(foodTrucks);
+            if (currentLocation !== null) {
+                for (let i = 0; i < foodTrucks.length; i++) {
+                    const item = foodTrucks[i];
+                    getDistance(currentLocation, item.id, item.address.googleLat, item.address.googleLng);
+                }
+            }
         }
     }, [selectedCuisine, foodTrucks]);
 
@@ -88,9 +106,36 @@ export default (props) => {
     const fetchFoodTrucks = async () => {
         await getFoodTrucks()
             .then(response => {
-                setFoodTrucks(response);
+                let data = response.map((item) => {
+                    return {
+                        ...item,
+                        distance: 0
+                    }
+                });
+
+                setFoodTrucks(data);
+                setFilteredFoodTrucks(data);
+
+                getLocation()
+                    .then((location) => {
+                        setCurrentLocation(location.coords);
+                        for (let i = 0; i < data.length; i++) {
+                            const item = data[i];
+                            getDistance(location.coords, item.id, item.address.googleLat, item.address.googleLng);
+                        }
+                    });
             });
     }
+
+    const getLocation = async () => {
+        let {status} = await Location.requestForegroundPermissionsAsync();
+
+        if (status !== "granted") {
+            console.log("Permission to access location was denied");
+        } else {
+            return await Location.getCurrentPositionAsync({});
+        }
+    };
 
     const findLogoImage = (images) => {
 
@@ -117,6 +162,36 @@ export default (props) => {
             }
         }
         return isClosed;
+    }
+
+    const getDistance = (coords, id, lat, lng) => {
+        const calculateDistance = async () => {
+
+            const KEY = "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ"
+            const startLoc = `${coords.latitude},${coords.longitude}`;
+            const destinationLoc = `${lat},${lng}`;
+            const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&key=${KEY}`;
+            let resp = await fetch(url);
+            let respJson = await resp.json();
+            // get how many km the route is
+            let fullDistance = respJson.routes[0].legs[0].distance.text;
+            return fullDistance.split(' ')[0];
+        }
+
+        calculateDistance()
+            .then((distance) => {
+                setFilteredFoodTrucks((prev) => {
+                    return prev.map((item) => {
+                        if (item.id === id) {
+                            return {
+                                ...item,
+                                distance: distance
+                            }
+                        }
+                        return item;
+                    });
+                });
+            })
     }
 
     const foodTruckRenderItem = ({item, index}) => {
@@ -192,7 +267,8 @@ export default (props) => {
                             }}
                         >
                             <Entypo name="location-pin" size={18} color="#f8b91c"/>
-                            <Text style={{textAlign: i18n.language === "ar" ? "right" : "left"}}>{i18n.language === "ar" ? item.address.governorate.nameArb : item.address.governorate.nameEng}</Text>
+                            <Text
+                                style={{textAlign: i18n.language === "ar" ? "right" : "left"}}>{i18n.language === "ar" ? item.address.governorate.nameArb : item.address.governorate.nameEng}</Text>
                         </View>
                     </View>
                     <View
@@ -217,11 +293,35 @@ export default (props) => {
                             {checkClosed(item.foodTruckInfo.FoodTruckWorkingDay) ? "CLOSED" : "OPEN"}
                         </Text>
                     </View>
+                    <View
+                        style={{
+                            position: "absolute",
+                            bottom: 10,
+                            right: 10,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            padding: 5,
+                            borderRadius: 10
+                        }}
+                    >
+                        {
+                            item.distance > 0 ?
+                                <Text
+                                    style={{
+                                        fontSize: 10,
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    {item.distance} km
+                                </Text> :
+                                <ActivityIndicator size="small" color="#000"/>
+                        }
+                    </View>
                 </View>
             </TouchableOpacity>
         );
     };
-
 
     return (
         <View
