@@ -1,6 +1,6 @@
 import {Stack, useRouter, useSearchParams} from "expo-router";
 import {useEffect, useState} from "react";
-import {getEvent} from "../../services/EventsServices";
+import {getEvent} from "../../../services/EventsServices";
 import {
     Dimensions,
     SafeAreaView,
@@ -13,7 +13,7 @@ import {
     TouchableOpacity, RefreshControl
 } from "react-native";
 import {CreateResponsiveStyle} from "rn-responsive-styles";
-import {getHeaderImage} from "../../services/HeadersImagesServices";
+import {getHeaderImage} from "../../../services/HeadersImagesServices";
 import CustomCarousel from "../CustomCarousel";
 import {format, parseISO} from "date-fns";
 import {Entypo} from "@expo/vector-icons";

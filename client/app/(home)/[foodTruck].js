@@ -14,7 +14,7 @@ import {useEffect, useState} from "react";
 import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
 import {Entypo, EvilIcons, Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
-import {getFoodTruck, updateFoodTruckView} from "../services/FoodTruckServices";
+import {getFoodTruck, updateFoodTruckView} from "../../services/FoodTruckServices";
 import {LinearGradient} from "expo-linear-gradient";
 import HeaderTitleView from "./HeaderTitleView";
 import {useTranslation} from "react-i18next";
@@ -117,7 +117,7 @@ export default (props) => {
                 <Image
                     source={{uri: logo}}
                     style={{width: 50, height: 50, borderRadius: 25}}
-                    placeholder={require("../assets/kwft-logo-placeholder.png")}
+                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
                 />
                 {
                     foodTruck !== null && (
@@ -224,7 +224,7 @@ export default (props) => {
                                     borderRadius: 32
                                 }}
                                 contentFit={"cover"}
-                                placeholder={require("../assets/kwft-logo-placeholder.png")}
+                                placeholder={require("../../assets/kwft-logo-placeholder.png")}
                             />
                             <Text
                                 style={[

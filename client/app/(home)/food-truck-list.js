@@ -2,10 +2,10 @@ import {useEffect, useState} from "react";
 import {ActivityIndicator, Dimensions, Text, TouchableOpacity, View} from "react-native";
 import {CreateResponsiveStyle, DEVICE_SIZES} from "rn-responsive-styles";
 import {useRouter} from "expo-router";
-import {getFoodTrucks} from "../services/FoodTruckServices";
+import {getFoodTrucks} from "../../services/FoodTruckServices";
 import {Image} from "expo-image";
 import {useTranslation} from "react-i18next";
-import {DAYS} from "../utils/Utils";
+import {DAYS} from "../../utils/Utils";
 import {Entypo} from "@expo/vector-icons";
 import * as Location from "expo-location";
 
@@ -221,7 +221,7 @@ export default (props) => {
                                 borderRadius: 10
                             }
                         ]}
-                        placeholder={require("../assets/kwft-logo-placeholder.png")}
+                        placeholder={require("../../assets/kwft-logo-placeholder.png")}
                     />
                     <View
                         style={[

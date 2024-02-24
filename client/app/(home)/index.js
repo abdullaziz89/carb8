@@ -5,13 +5,12 @@ import {
     View,
     Text,
     ScrollView,
-    Modal,
-    Animated, SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground
+    Modal,SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground
 } from "react-native";
 import {Link, SplashScreen, Stack} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
-import {getHeadersImages} from "../services/HeadersImagesServices";
-import {getCuisine, updateCuisineView} from "../services/CuisineServices";
+import {getHeadersImages} from "../../services/HeadersImagesServices";
+import {getCuisine, updateCuisineView} from "../../services/CuisineServices";
 import FoodTruckList from "./food-truck-list";
 import {CreateResponsiveStyle, DEVICE_SIZES, useDeviceSize} from "rn-responsive-styles";
 import {AntDesign, Feather, FontAwesome} from "@expo/vector-icons";
@@ -19,7 +18,7 @@ import FoodTrucksFilterOptions from "./FoodTrucksFilterOptions";
 import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
 import {forkJoin} from "rxjs";
-import "../config/i18n";
+import "../../config/i18n";
 import {useTranslation} from "react-i18next";
 import HeaderTitleView from "./HeaderTitleView";
 import {
@@ -29,9 +28,9 @@ import {
     BalsamiqSans_700Bold,
     BalsamiqSans_700Bold_Italic,
 } from '@expo-google-fonts/balsamiq-sans';
+import Animated, {interpolate, useSharedValue, withTiming} from "react-native-reanimated";
 
 SplashScreen.preventAutoHideAsync();
-
 
 const {width, height} = Dimensions.get("window");
 
@@ -66,7 +65,7 @@ export default function Home() {
         }, isFilterActive: false
     });
 
-    const [modelViewScale, setModelViewScale] = useState(new Animated.Value(0));
+    const modelViewScale = useSharedValue(0)
 
     useEffect(() => {
 
@@ -127,17 +126,17 @@ export default function Home() {
     useEffect(() => {
 
         if (showFilterOptions) {
-            Animated.timing(modelViewScale, {
+            withTiming(modelViewScale.value, {
                 toValue: 1,
                 duration: 200,
                 useNativeDriver: false
-            }).start();
+            })
         } else {
-            Animated.timing(modelViewScale, {
+            withTiming(modelViewScale.value, {
                 toValue: 0,
                 duration: 200,
                 useNativeDriver: false
-            }).start();
+            })
         }
 
     }, [showFilterOptions]);
@@ -171,7 +170,7 @@ export default function Home() {
                         selectedCuisine === item.id ? {borderRadius: 22, backgroundColor: "white"} : {}
                     ]}
                     contentFit={"cover"}
-                    placeholder={require("../assets/kwft-logo-placeholder.png")}
+                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
                 />
                 <Text
                     style={{
@@ -189,10 +188,11 @@ export default function Home() {
 
     const modelView = () => {
 
-        const color = modelViewScale.interpolate({
-            inputRange: [0, 1],
-            outputRange: ["rgba(255,255,255,0.5)", "rgba(0,0,0,0.5)"]
-        });
+        const color = interpolate(
+            modelViewScale.value,
+            [0, 1],
+            ["rgba(255,255,255,0.5)", "rgba(0,0,0,0.5)"]
+        );
 
         return (
             <Modal
@@ -268,7 +268,7 @@ export default function Home() {
                         headerLargeTitle: true,
                         title: "Kuwait Food Trucks",
                         headerTitle: () => Platform.OS !== "ios" &&
-                            <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../assets/icon.png")}
+                            <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../../assets/icon.png")}
                                              localLogo={true}/>,
                         headerRight: () => rightHeader(),
                         headerBackTitleVisible: false,
