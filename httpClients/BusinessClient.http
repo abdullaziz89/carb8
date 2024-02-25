@@ -74,3 +74,6 @@ GET http://localhost:3000/cuisine/enabled
 
 ### fetch data
 GET http://localhost:3000/food-truck/enabled
+
+### fetch data
+GET http://localhost:3000/governorate/enabled

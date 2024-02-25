@@ -25,8 +25,6 @@ export class GovernorateController {
   }
 
   @Get("/enabled")
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(["SUPER_ADMIN", "ADMIN"])
   findAllEnabled() {
     return this.governorateService.findAllEnabled();
   }

@@ -22,13 +22,13 @@ import "../../config/i18n";
 import {useTranslation} from "react-i18next";
 import HeaderTitleView from "./HeaderTitleView";
 import {
-    useFonts,
     BalsamiqSans_400Regular,
     BalsamiqSans_400Regular_Italic,
     BalsamiqSans_700Bold,
     BalsamiqSans_700Bold_Italic,
 } from '@expo-google-fonts/balsamiq-sans';
 import Animated, {interpolate, useSharedValue, withTiming} from "react-native-reanimated";
+import {useFonts} from "expo-font";
 
 SplashScreen.preventAutoHideAsync();
 

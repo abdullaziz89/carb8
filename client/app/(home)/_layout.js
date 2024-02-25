@@ -28,6 +28,10 @@ export default function Layout() {
   return(
       <Animated.View
         style={[{flex: 1}, viewAnimStyle]}
+        screenOptions={{
+          statusBarHidden: false,
+          statusBarStyle: "dark",
+        }}
       >
         <Stack />
       </Animated.View>

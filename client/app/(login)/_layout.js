@@ -30,10 +30,30 @@ export default function LoginLayout () {
             style={[{flex: 1}, viewAnimStyle]}
         >
             <Stack
-                initialRouteName="login"
+                initialRouteName="register"
+                screenOptions={{
+                    statusBarHidden: false,
+                    statusBarStyle: "dark",
+                }}
             >
                 <Stack.Screen
                     name="login"
+                />
+                <Stack.Screen
+                    name="register"
+                    initialParams={{
+                        selectedGovernorate: null
+                    }}
+                />
+                <Stack.Screen
+                    name="governorates"
+                    options={{
+                        headerTitle: "Governorates",
+                        presentation: "modal"
+                    }}
+                    initialParams={{
+                        selectedGovernorate: null
+                    }}
                 />
             </Stack>
         </Animated.View>
