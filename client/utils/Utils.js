@@ -1,3 +1,6 @@
+import {useEffect, useState} from "react";
+import {Keyboard} from "react-native";
+
 const DAYS = [
     {id: 0, name: "All Days"},
     {id: 1, name: "Week Days"},

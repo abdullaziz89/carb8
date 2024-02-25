@@ -2,13 +2,15 @@
 import {FlatList, Modal, TouchableOpacity, View, Text} from "react-native";
 import {useEffect, useState} from "react";
 import {getGovernorate} from "../../services/GovernorateService";
-import {useRouter} from "expo-router";
+import {useNavigation, useRouter, useSearchParams} from "expo-router";
 import TextWithFont from "../../component/TextWithFont";
 
 export default function Governorates() {
 
+    const navigation = useNavigation();
     const router = useRouter();
     const [governorates, setGovernorates] = useState([]);
+    const params = useSearchParams();
 
     useEffect(() => {
         getGovernorate()
@@ -38,18 +40,17 @@ export default function Governorates() {
                             borderBottomColor: "#f1f1f1"
                         }}
                         onPress={() => {
-                            router.replace("register", {
-                                selectedGovernorate: item
-                            })
+                            navigation.getState().routes[1].params.setSelectedGovernorate(item);
+                            navigation.goBack();
                         }}
                     >
-                            <TextWithFont
-                                text={item.nameEng}
-                                style={{
-                                    fontSize: 18,
-                                    fontWeight: "bold",
-                                }}
-                            />
+                        <TextWithFont
+                            text={item.nameEng}
+                            style={{
+                                fontSize: 18,
+                                fontWeight: "bold",
+                            }}
+                        />
                     </TouchableOpacity>
                 )
             }}
