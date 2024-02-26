@@ -1,22 +1,102 @@
-import {Injectable} from "@nestjs/common";
+import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {FoodTruck, Address} from "@prisma/client";
 import {PrismaService} from "../prisma/prisma.service";
 import {FileService} from "../file/file.service";
+import {encodePassword} from "../utils/bcrypt";
+import {MailService} from "../mail/mail.service";
+import {v4 as uuid} from 'uuid';
 
 @Injectable()
 export class FoodTruckService {
 
     constructor(
         private prismaService: PrismaService,
-        private fileService: FileService
+        private fileService: FileService,
+        private mailService: MailService
     ) {
     }
 
-    async create(payload: { foodTruck: FoodTruck, address: Address, information: any }, files: any) {
+    async create(payload: {
+        foodTruck: FoodTruck,
+        address: Address,
+        information: any,
+        user?: { email: string, password: string }
+    }, files: any) {
 
         payload.foodTruck = await this.prismaService.$transaction(async (prisma) => {
+
+            if (payload.user) {
+
+                const userExist = await prisma.user.findUnique({
+                    where: {email: payload.user.email}
+                });
+
+                if (userExist) {
+                    throw new HttpException('User already exist', HttpStatus.BAD_REQUEST);
+                }
+
+                let clientRole = await prisma.role.findFirst({
+                    where: {name: "FOOD_TRUCK_OWNER"}
+                });
+
+                console.log(clientRole);
+
+                // if role not exist create it
+                if (!clientRole) {
+                    clientRole = await prisma.role.create({
+                        data: {
+                            id: uuid(),
+                            name: "FOOD_TRUCK_OWNER",
+                            enable: true
+                        }
+                    });
+                }
+
+                await prisma.user.create({
+                    data: {
+                        email: payload.user.email,
+                        password: encodePassword(payload.user.password),
+                        enable: false,
+                        userRole: {
+                            create: {
+                                role: {
+                                    connect: {
+                                        id: clientRole.id
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const user = await prisma.user.findUnique({
+                where: {email: payload.user.email}
+            });
+
+            const foodTruckExist = await prisma.foodTruck.findUnique({
+                where: {
+                    nameEng: payload.foodTruck.nameEng,
+                    OR: [
+                        {nameArb: payload.foodTruck.nameArb}
+                    ]
+                },
+            });
+
+            if (foodTruckExist) {
+                throw new HttpException('Food Truck already exist', HttpStatus.BAD_REQUEST);
+            }
+
             const createFoodTruck = await prisma.foodTruck.create({
-                data: payload.foodTruck
+                data: {
+                    ...payload.foodTruck,
+                    enable: !payload.user,
+                    User: {
+                        connect: {
+                            id: user.id
+                        }
+                    }
+                },
             });
 
             payload.address.googleLat = parseFloat(String(payload.address.googleLat));
@@ -71,6 +151,19 @@ export class FoodTruckService {
         if (files) {
             images = await this.fileService.uploadFiles(files, `foodTruck/${payload.foodTruck.id}`);
         }
+
+        const otp = await this.prismaService.oTP.create({
+            data: {
+                id: uuid(),
+                code: this.generateOTP(),
+                email: payload.user.email,
+            }
+        })
+
+        await this.mailService.sendEmailOTPCode(payload.user.email, otp.code);
+
+        // remove user from payload
+        delete payload.user;
 
         return {...payload, images};
     }
@@ -215,5 +308,10 @@ export class FoodTruckService {
 
     count() {
         return this.prismaService.foodTruck.count();
+    }
+
+    private generateOTP() {
+        // generate opt code from 6 digits
+        return Math.floor(100000 + Math.random() * 900000).toString();
     }
 }

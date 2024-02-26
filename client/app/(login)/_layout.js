@@ -30,7 +30,7 @@ export default function LoginLayout () {
             style={[{flex: 1}, viewAnimStyle]}
         >
             <Stack
-                initialRouteName="register"
+                initialRouteName="otp"
                 screenOptions={{
                     statusBarHidden: false,
                     statusBarStyle: "dark",
@@ -43,6 +43,12 @@ export default function LoginLayout () {
                     name="register"
                     initialParams={{
                         selectedGovernorate: null
+                    }}
+                />
+                <Stack.Screen
+                    name="otp"
+                    initialParams={{
+                        email: null
                     }}
                 />
                 <Stack.Screen

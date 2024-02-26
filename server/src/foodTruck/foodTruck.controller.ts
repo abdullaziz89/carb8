@@ -30,6 +30,11 @@ export class FoodTruckController {
         return this.foodTruckService.create(JSON.parse(payload), files);
     }
 
+    @Post('user')
+    createWithUser(@Body("payload") payload: any, @UploadedFiles() files: any) {
+        return this.foodTruckService.create(JSON.parse(payload), files);
+    }
+
     @Get()
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(["SUPER_ADMIN", "ADMIN"])

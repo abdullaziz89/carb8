@@ -19,6 +19,8 @@ model User {
   createdDate DateTime   @default(now())
   modifyDate  DateTime   @updatedAt
   userRole    UserRole[]
+  foodTruck   FoodTruck? @relation(fields: [foodTruckId], references: [id])
+  foodTruckId String?    @unique
 }
 
 model Role {
@@ -68,6 +70,7 @@ model FoodTruck {
   address        Address?
   foodTruckInfo  FoodTruckInformation?
   foodTruckView  FoodTruckView?
+  User           User?
 }
 
 model FoodTruckInformation {
@@ -172,6 +175,15 @@ model EventView {
   views       Int      @default(0)
   event       Event    @relation(fields: [eventId], references: [id])
   eventId     String   @unique
+  createdDate DateTime @default(now())
+  modifyDate  DateTime @updatedAt
+}
+
+model OTP {
+  id          String   @id @default(uuid())
+  code        String
+  email       String
+  verified    Boolean  @default(false)
   createdDate DateTime @default(now())
   modifyDate  DateTime @updatedAt
 }

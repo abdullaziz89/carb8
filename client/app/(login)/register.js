@@ -8,7 +8,7 @@ import {
     FlatList,
     ScrollView,
     Modal,
-    Dimensions, Keyboard
+    Dimensions, Keyboard, ActivityIndicator
 } from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import HeaderTitleView from "../(home)/HeaderTitleView";
@@ -21,6 +21,7 @@ import * as ImagePicker from "expo-image-picker";
 import TextWithFont from "../../component/TextWithFont";
 import {getCuisine, updateCuisineView} from "../../services/CuisineServices";
 import {DAYS} from "../../utils/Utils";
+import {registerFoodTruck} from "../../services/FoodTruckServices";
 
 const placeholderImage = require("../../assets/set-logo-placeholder.png");
 const {width, height} = Dimensions.get("window");
@@ -40,6 +41,7 @@ export default () => {
     const [selectedFoodTruckWorkingDays, setSelectedFoodTruckWorkingDays] = useState(null);
     const [foodTruckWorkingDaysModelShow, setFoodTruckWorkingDaysModelShow] = useState(false);
     const [showDaysModal, setShowDaysModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [keyboardHeight, setKeyboardHeight] = useState(0);
 
@@ -90,41 +92,109 @@ export default () => {
 
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
         defaultValues: {
-            userAuth: {
-                email: "",
-                password: "",
+            user: {
+                email: "abdullaziz89@hotmail.com",
+                password: "1234",
             },
             foodTruck: {
-                nameEng: "",
-                nameArb: "",
-                descriptionEng: "",
-                descriptionArb: "",
-                cuisineId: "",
+                nameEng: "Test Food Truck",
+                nameArb: "فود تراك تجريبي",
+                descriptionEng: "Test Food Truck Description",
+                descriptionArb: "وصف فود تراك تجريبي",
             },
             address: {
-                address: "",
+                address: "Test Address",
                 googleLocation: "",
                 googleLat: 0,
                 googleLng: 0
             },
             information: {
-                phoneNumber: "",
-                instagramAccount: "",
+                phoneNumber: "12345678",
+                instagramAccount: "test",
             }
         }
     });
 
-    const onSubmit = (data) => {
-        console.log("data")
-        console.log(data);
+    const onSubmit = async (data) => {
+
+        // if image is not selected
+        if (!selectedImage) {
+            alert("Please select your food truck logo");
+            return;
+        }
+
+        // if cuisine is not selected
+        if (!selectedCuisine) {
+            alert("Please select your food cuisine");
+            return;
+        }
+
+        // if governorate is not selected
+        if (!selectedGovernorate) {
+            alert("Please select your governorate");
+            return;
+        }
+
+        setIsLoading(true);
+        data = {
+            ...data,
+            foodTruck: {
+                ...data.foodTruck,
+                cuisineId: selectedCuisine,
+            },
+            address: {
+                ...data.address,
+                governorateId: selectedGovernorate.id,
+            },
+            information: {
+                ...data.information,
+                FoodTruckWorkingDay: foodTruckWorkingDays.map((item) => {
+                    return {
+                        day: item.day,
+                        workingFrom: item.from,
+                        workingTo: String(item.to)
+                    }
+                })
+            }
+        }
+
+        const formData = new FormData();
+        formData.append("payload", JSON.stringify(data));
+
+        // upload image with form data
+        if (selectedImage) {
+            formData.append("files", {
+                uri: Platform.OS === 'ios' ?
+                    selectedImage.replace('file://', '')
+                    : selectedImage,
+                type: "image/jpeg",
+                name: "logo.jpg"
+            });
+        }
+
+        await registerFoodTruck(formData)
+            .then((response) => {
+                setIsLoading(false);
+                router.push("otp", {
+                    email: data.user.email,
+                });
+            })
+            .catch((error) => {
+                const message = error.response.data.message;
+                setIsLoading(false);
+                alert(message);
+            });
     };
 
     // pick image from gallery
     const pickImage = async () => {
+
+        // image aspect ratio rounded logo
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [1, 1],
             quality: 1,
         });
 
@@ -298,6 +368,7 @@ export default () => {
                                     temp[objIndex].from = text;
                                     setFoodTruckWorkingDays(temp);
                                 }}
+                                keyboardType={"number-pad"}
                             />
                             <TextWithFont
                                 text={"To"}
@@ -325,6 +396,7 @@ export default () => {
                                     temp[objIndex].to = text;
                                     setFoodTruckWorkingDays(temp);
                                 }}
+                                keyboardType={"number-pad"}
                             />
                         </View>
                         <TouchableOpacity
@@ -493,6 +565,30 @@ export default () => {
         )
     }
 
+    const indicatorView = () => {
+        return (
+            <View
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    backgroundColor: "rgba(0,0,0,0.5)",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <ActivityIndicator
+                    size={"large"}
+                    color={"#f8b91c"}
+                />
+            </View>
+        )
+    }
+
+    if (isLoading) {
+        return indicatorView();
+    }
+
     return (
         <KeyboardAwareScrollView
             style={{
@@ -569,9 +665,9 @@ export default () => {
                             <Image
                                 source={selectedImage ? {uri: selectedImage} : placeholderImage}
                                 style={{
-                                    width: 130,
-                                    height: 130,
-                                    borderRadius: 65,
+                                    width: 135,
+                                    height: 135,
+                                    borderRadius: 100,
                                 }}
                             />
                         </TouchableOpacity>
@@ -967,7 +1063,8 @@ export default () => {
                             onBlur={onBlur}
                             onChangeText={value => onChange(value)}
                             value={value}
-                            placeholder={"Enter google latitude"}
+                            placeholder={"Enter Phone Number"}
+                            keyboardType={"phone-pad"}
                         />
                     )}
                     name="information.phoneNumber"
@@ -1012,7 +1109,7 @@ export default () => {
                             onBlur={onBlur}
                             onChangeText={value => onChange(value)}
                             value={value}
-                            placeholder={"Enter google latitude"}
+                            placeholder={"Enter Instagram Account"}
                         />
                     )}
                     name="information.instagramAccount"
@@ -1123,9 +1220,10 @@ export default () => {
                             onChangeText={value => onChange(value)}
                             value={value}
                             placeholder={"Enter Email"}
+                            keyboardType={"email-address"}
                         />
                     )}
-                    name="userAuth.email"
+                    name="user.email"
                     rules={{
                         required: "Email is required",
                         pattern: {
@@ -1134,11 +1232,11 @@ export default () => {
                         }
                     }}
                 />
-                {errors.userAuth?.email && <Text style={{
+                {errors.user?.email && <Text style={{
                     color: "red",
                     marginTop: 5,
                     marginLeft: 5
-                }}>{errors.userAuth?.email.message}</Text>}
+                }}>{errors.user?.email.message}</Text>}
                 {/*email patterns error*/}
                 <TextWithFont
                     text={"Password"}
@@ -1163,12 +1261,13 @@ export default () => {
                             onChangeText={value => onChange(value)}
                             value={value}
                             placeholder={"Enter Password"}
+                            secureTextEntry={true}
                         />
                     )}
-                    name="userAuth.password"
+                    name="user.password"
                     rules={{required: "Password is required"}}
                 />
-                {errors.userAuth?.password &&
+                {errors.user?.password &&
                     <Text
                         style={{
                             color: "red",
@@ -1176,8 +1275,8 @@ export default () => {
                             marginLeft: 5
                         }}
                     >
-                    {errors.userAuth?.password.message}
-                </Text>
+                        {errors.user?.password.message}
+                    </Text>
                 }
             </View>
             {/*submit view*/}

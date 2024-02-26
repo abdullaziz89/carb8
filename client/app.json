@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "kwftapp",
+    "scheme": "KWFTApp",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splashscreen.png",
@@ -25,7 +25,27 @@
         "googleMaps": {
           "apiKey": "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ"
         }
-      }
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "kwft.page.link"
+            },
+            {
+              "scheme": "https",
+              "host": "kwftapp.page.link"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "ios": {
       "buildNumber": "1.0.0",
@@ -38,7 +58,11 @@
       "config": {
         "googleMapsApiKey": "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ",
         "usesNonExemptEncryption": false
-      }
+      },
+      "associatedDomains": [
+        "applinks:kwftapp.page.link",
+        "applinks:kwft.page.link"
+      ]
     },
     "plugins": [
       "expo-localization",

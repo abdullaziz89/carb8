@@ -3,6 +3,18 @@ import APIClient from "../config/axios";
 
 const apiUrl = `${environment.apiUrl}/food-truck`;
 
+export const registerFoodTruck = async (foodTruck) => {
+    const response = await APIClient.post(`${apiUrl}/user`, foodTruck, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        transformRequest: (data, headers) => {
+            return foodTruck; // this is doing the trick
+        },
+    });
+    return response.data;
+};
+
 export const getFoodTrucks = async () => {
     const response = await APIClient.get(`${apiUrl}/enabled`);
     return response.data;

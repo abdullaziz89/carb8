@@ -77,4 +77,9 @@ export class AuthController {
 
         return res.status(HttpStatus.OK).redirect('http://localhost:3001');
     }
+
+    @Post('verify')
+    async verify(@Body() body) {
+        return this.authService.verifyEmail(body.code, body.email);
+    }
 }
