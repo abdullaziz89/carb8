@@ -1,21 +1,41 @@
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {Keyboard, TextInput, TouchableOpacity, View} from "react-native";
 import TextWithFont from "../../component/TextWithFont";
-import {Stack, useSearchParams} from "expo-router";
+import {Stack, useNavigation, useRouter, useSearchParams} from "expo-router";
 import {useEffect, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {MaterialIcons} from "@expo/vector-icons";
+import {useAppStateStore} from "../../store/app-store";
+import {OTPVerify, sendOTP} from "../../services/OTPService";
 
 export default () => {
 
-    const {email} = useSearchParams();
+    const navigation = useNavigation();
+    const {getUser, setVerified} = useAppStateStore();
+    const [user, setUser] = useState(getUser());
+
+    const router = useRouter();
     const [keyboardHeight, setKeyboardHeight] = useState(0);
 
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
         defaultValues: {
             otp: '',
+            email: user.email
         }
     });
+
+    useEffect(() => {
+
+        sendOTP({email: user.email})
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+                const message = error.response.data.message;
+                alert(message)
+            });
+    }, []);
 
     useEffect(() => {
         function onKeyboardDidShow(e) { // Remove type here if not using TypeScript
@@ -35,10 +55,26 @@ export default () => {
     }, []);
 
     const onSubmit = (data) => {
-        console.log(data);
+
+        if (data.otp) {
+            // verify OTP
+            OTPVerify(data)
+                .then((response) => {
+                    // set verified to true
+                    setVerified(true);
+                    // navigate to home
+                    router.replace('(user)');
+                })
+                .catch((error) => {
+                    console.log(error);
+                    const message = error.response.data.message;
+                    alert(message);
+                });
+        }
     }
 
     const replaceEmail = (email) => {
+
         // replace some part of email with asterisk
         const parts = email.split('@');
         const username = parts[0];
@@ -89,7 +125,7 @@ export default () => {
             />
             <View>
                 <TextWithFont
-                    text={`We have sent an OTP to \n ${replaceEmail(email)}`}
+                    text={`We have sent an OTP to \n ${replaceEmail(user.email)}`}
                     style={{
                         fontSize: 20,
                         fontWeight: 'bold',

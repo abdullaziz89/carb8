@@ -1,21 +1,26 @@
-import {View, Text, Platform, TouchableOpacity, TextInput, StyleSheet} from "react-native";
+import {View, Text, Platform, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator} from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import HeaderTitleView from "../(home)/HeaderTitleView";
 import {Stack, useNavigation, useRouter} from "expo-router";
 import {MaterialIcons} from "@expo/vector-icons";
 import {Image} from "expo-image";
 import {Controller, useForm} from "react-hook-form";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import {login} from "../../services/UserService";
+import {useAppStateStore} from "../../store/app-store";
 
 export default () => {
 
     const navigation = useNavigation();
     const router = useRouter();
 
+    const [isLoading, setIsLoading] = useState(false);
+    const {getUser, setLogin, setUser, setUsername, setVerified, setToken} = useAppStateStore();
+
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
         defaultValues: {
-            username: "",
-            password: ""
+            username: "abdullaziz89@hotmail.com",
+            password: "1234"
         },
     });
 
@@ -32,7 +37,42 @@ export default () => {
             required: true,
             secureTextEntry: true
         }
-    ]
+    ];
+
+    const onSubmit = (data) => {
+        setIsLoading(true);
+        // check data not empty
+        if (data.username && data.password) {
+            login(data)
+                .then(async (response) => {
+                    setIsLoading(false);
+                    // console.log('login.js response', response);
+                    const token = response.data.token;
+                    const user = response.data.user;
+                    setToken(token);
+                    setUser(user);
+                    setVerified(true);
+                    setLogin(true);
+                    router.replace('(user)/profile');
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+
+                    let response = error.response.data;
+
+                    // if response has entity
+                    if (response.username) {
+                        if (!response.enable) {
+                            setUsername(response.username);
+                            navigation.navigate('otp');
+                            return;
+                        }
+                    } else {
+                        alert(response.message);
+                    }
+                });
+        }
+    }
 
     const inputItem = ({name, label, required, secureTextEntry}, index) => {
         return (
@@ -56,13 +96,39 @@ export default () => {
                             value={value}
                             placeholder={label}
                             secureTextEntry={secureTextEntry}
+                            keyboardType={name === 'username' ? 'email-address' : 'default'}
                         />
                     )}
                     name={name}
-                    rules={{required: required}}
+                    rules={{
+                        required: required ? `${label} is required` : false
+                    }}
                 />
             </View>
         )
+    }
+
+    const indicatorView = () => {
+        return (
+            <View
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <ActivityIndicator size="large" color="#f8b91c"/>
+            </View>
+        )
+    }
+
+    if (isLoading) {
+        return indicatorView();
     }
 
     return (
@@ -75,6 +141,7 @@ export default () => {
                 justifyContent: "center",
                 alignItems: "center"
             }}
+            scrollEnabled={true}
         >
             <Stack.Screen
                 options={{
@@ -138,9 +205,7 @@ export default () => {
                 }
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={handleSubmit(data => {
-                        console.log(data);
-                    })}
+                    onPress={handleSubmit(onSubmit)}
                 >
                     <Text
                         style={{

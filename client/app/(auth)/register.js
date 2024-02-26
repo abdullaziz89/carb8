@@ -22,21 +22,21 @@ import TextWithFont from "../../component/TextWithFont";
 import {getCuisine, updateCuisineView} from "../../services/CuisineServices";
 import {DAYS} from "../../utils/Utils";
 import {registerFoodTruck} from "../../services/FoodTruckServices";
+import {useAppState, useAppStateStore} from "../../store/app-store";
 
 const placeholderImage = require("../../assets/set-logo-placeholder.png");
 const {width, height} = Dimensions.get("window");
 
 export default () => {
 
-    // FoodTruckWorkingDays
-
+    const {setUser, setUserType, getSelectedGovernorate, setSelectedGovernorateOpt} = useAppStateStore()
     const navigation = useNavigation();
     const router = useRouter();
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [cuisines, setCuisines] = useState([]);
     const [selectedCuisine, setSelectedCuisine] = useState(null);
-    const [selectedGovernorate, setSelectedGovernorate] = useState(null);
+    const [selectedGovernorate, setSelectedGovernorate] = useState(getSelectedGovernorate());
     const [foodTruckWorkingDays, setFoodTruckWorkingDays] = useState([]);
     const [selectedFoodTruckWorkingDays, setSelectedFoodTruckWorkingDays] = useState(null);
     const [foodTruckWorkingDaysModelShow, setFoodTruckWorkingDaysModelShow] = useState(false);
@@ -44,6 +44,15 @@ export default () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+    useEffect(() => {
+
+        if (getSelectedGovernorate() !== null) {
+            setSelectedGovernorate(getSelectedGovernorate());
+            setSelectedGovernorateOpt(null);
+        }
+
+    }, [getSelectedGovernorate()]);
 
     useEffect(() => {
         function onKeyboardDidShow(e) { // Remove type here if not using TypeScript
@@ -175,9 +184,9 @@ export default () => {
         await registerFoodTruck(formData)
             .then((response) => {
                 setIsLoading(false);
-                router.push("otp", {
-                    email: data.user.email,
-                });
+                setUser(response);
+                setUserType("foodTruck");
+                router.push("otp");
             })
             .catch((error) => {
                 const message = error.response.data.message;
@@ -875,9 +884,7 @@ export default () => {
                         justifyContent: "center"
                     }}
                     onPress={() => {
-                        navigation.navigate("governorates", {
-                            setSelectedGovernorate: (gov) => setSelectedGovernorateCallback(gov)
-                        });
+                        navigation.navigate("governorates");
                     }}
                 >
                     {

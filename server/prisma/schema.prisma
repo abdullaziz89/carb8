@@ -21,6 +21,7 @@ model User {
   userRole    UserRole[]
   foodTruck   FoodTruck? @relation(fields: [foodTruckId], references: [id])
   foodTruckId String?    @unique
+  Device      Device[]
 }
 
 model Role {
@@ -186,6 +187,22 @@ model OTP {
   verified    Boolean  @default(false)
   createdDate DateTime @default(now())
   modifyDate  DateTime @updatedAt
+}
+
+model Device {
+  id          String     @id @default(uuid())
+  token       String
+  deviceType  DeviceType
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String
+  createdDate DateTime   @default(now())
+  modifyDate  DateTime   @updatedAt
+}
+
+enum DeviceType {
+  IOS
+  ANDROID
+  WEB
 }
 
 enum HeaderImageType {

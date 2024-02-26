@@ -10,6 +10,7 @@ import { AuthController } from './auth.controller';
 import { RoleService } from "../role/role.service";
 import { PrismaService } from "../prisma/prisma.service";
 import {GoogleStrategy} from "../strategies/google.strategy";
+import {MailService} from "../mail/mail.service";
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import {GoogleStrategy} from "../strategies/google.strategy";
       signOptions: {expiresIn: '60m'}
     }),
   ],
-  providers: [AuthService, RoleService, PrismaService, LocalStrategy, JwtStrategy, GoogleStrategy],
+  providers: [AuthService, RoleService, PrismaService, LocalStrategy, JwtStrategy, GoogleStrategy, MailService],
   exports: [AuthService],
   controllers: [AuthController]
 })

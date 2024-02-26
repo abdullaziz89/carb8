@@ -5,7 +5,7 @@ import {
     View,
     Text,
     ScrollView,
-    Modal,SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground
+    Modal, SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground
 } from "react-native";
 import {Link, SplashScreen, Stack} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
@@ -29,6 +29,8 @@ import {
 } from '@expo-google-fonts/balsamiq-sans';
 import Animated, {interpolate, useSharedValue, withTiming} from "react-native-reanimated";
 import {useFonts} from "expo-font";
+import {LogLevel, OneSignal} from 'react-native-onesignal';
+import Constants from "expo-constants";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -69,8 +71,8 @@ export default function Home() {
 
     useEffect(() => {
 
-        // // OneSignal.SetLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.DEBUG);
-        // console.log(Constants.manifest.extra.oneSignalAppId);
+        // OneSignal.SetLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.DEBUG);
+        console.log(Constants.manifest.extra.oneSignalAppId);
         // OneSignal.setAppId(Constants.manifest.extra.oneSignalAppId);
         //
         // OneSignal.promptForPushNotificationsWithUserResponse((response) => {
@@ -92,6 +94,12 @@ export default function Home() {
         // OneSignal.setNotificationOpenedHandler(notification => {
         //   console.log("OneSignal: notification opened:", notification);
         // });
+
+        OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+        OneSignal.initialize(Constants.expoConfig.extra.oneSignalAppId);
+
+        // Also need enable notifications to complete OneSignal setup
+        OneSignal.Notifications.requestPermission(true);
 
         fetchData(false);
 
@@ -314,7 +322,7 @@ export default function Home() {
                                         setSelectedCuisine(null);
                                     }}
                                 >
-                                    <AntDesign name="closecircle" size={20} color="#f8b91c" />
+                                    <AntDesign name="closecircle" size={20} color="#f8b91c"/>
                                 </TouchableOpacity>
                             }
                         </View>

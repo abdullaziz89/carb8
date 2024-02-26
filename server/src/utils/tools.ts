@@ -69,3 +69,8 @@ export const exclude = (obj, keys) => {
     }
     return obj;
 };
+
+export const generateOTP = () => {
+    // generate opt code from 6 digits
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}

@@ -56,10 +56,24 @@ export class UserService {
                     include: {
                         role: true,
                     }
+                },
+                foodTruck: {
+                    include: {
+                        Cuisine: true,
+                        address: {
+                            include: {
+                                governorate: true,
+                            }
+                        },
+                        foodTruckInfo: {
+                            include: {
+                                FoodTruckWorkingDay: true
+                            }
+                        },
+                    }
                 }
             }
         });
-
 
         // if user not exist
         if (!user) {

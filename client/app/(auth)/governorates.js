@@ -4,9 +4,11 @@ import {useEffect, useState} from "react";
 import {getGovernorate} from "../../services/GovernorateService";
 import {useNavigation, useRouter, useSearchParams} from "expo-router";
 import TextWithFont from "../../component/TextWithFont";
+import {useAppStateStore} from "../../store/app-store";
 
 export default function Governorates() {
 
+    const {setSelectedGovernorateOpt} = useAppStateStore()
     const navigation = useNavigation();
     const router = useRouter();
     const [governorates, setGovernorates] = useState([]);
@@ -40,7 +42,7 @@ export default function Governorates() {
                             borderBottomColor: "#f1f1f1"
                         }}
                         onPress={() => {
-                            navigation.getState().routes[1].params.setSelectedGovernorate(item);
+                            setSelectedGovernorateOpt(item);
                             navigation.goBack();
                         }}
                     >

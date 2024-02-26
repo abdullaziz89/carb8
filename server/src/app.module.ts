@@ -17,6 +17,7 @@ import {FileService} from "./file/file.service";
 import {EventModule} from './event/event.module';
 import {MailModule} from './mail/mail.module';
 import {ConfigModule} from "@nestjs/config";
+import { DeviceModule } from './device/device.module';
 
 @Module({
     imports: [
@@ -34,6 +35,7 @@ import {ConfigModule} from "@nestjs/config";
         ConfigModule.forRoot({
             isGlobal: true,
         }),
+        DeviceModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService, RoleService, FoodTruckService, FileService],

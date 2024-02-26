@@ -1,5 +1,5 @@
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
-import {FoodTruck, Address} from "@prisma/client";
+import {FoodTruck, Address, User} from "@prisma/client";
 import {PrismaService} from "../prisma/prisma.service";
 import {FileService} from "../file/file.service";
 import {encodePassword} from "../utils/bcrypt";
@@ -22,7 +22,7 @@ export class FoodTruckService {
         information: any,
         user?: { email: string, password: string }
     }, files: any) {
-
+        let user: User;
         payload.foodTruck = await this.prismaService.$transaction(async (prisma) => {
 
             if (payload.user) {
@@ -70,7 +70,7 @@ export class FoodTruckService {
                 });
             }
 
-            const user = await prisma.user.findUnique({
+            user = await prisma.user.findUnique({
                 where: {email: payload.user.email}
             });
 
@@ -102,8 +102,9 @@ export class FoodTruckService {
             payload.address.googleLat = parseFloat(String(payload.address.googleLat));
             payload.address.googleLng = parseFloat(String(payload.address.googleLng));
 
-            await prisma.address.create({
-                data: {...payload.address, foodTruckId: createFoodTruck.id}
+            payload.address = await prisma.address.create({
+                data: {...payload.address, foodTruckId: createFoodTruck.id},
+                include: {governorate: true}
             });
 
             const {FoodTruckWorkingDay, ...information} = payload.information;
@@ -152,20 +153,14 @@ export class FoodTruckService {
             images = await this.fileService.uploadFiles(files, `foodTruck/${payload.foodTruck.id}`);
         }
 
-        const otp = await this.prismaService.oTP.create({
-            data: {
-                id: uuid(),
-                code: this.generateOTP(),
-                email: payload.user.email,
-            }
-        })
-
-        await this.mailService.sendEmailOTPCode(payload.user.email, otp.code);
-
         // remove user from payload
-        delete payload.user;
+        const userObj = {
+            id: user.id,
+            email: user.email
+        }
 
-        return {...payload, images};
+        delete payload.user;
+        return {...payload, images, user: userObj};
     }
 
     async findAll() {
@@ -308,10 +303,5 @@ export class FoodTruckService {
 
     count() {
         return this.prismaService.foodTruck.count();
-    }
-
-    private generateOTP() {
-        // generate opt code from 6 digits
-        return Math.floor(100000 + Math.random() * 900000).toString();
     }
 }

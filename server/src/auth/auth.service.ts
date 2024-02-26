@@ -3,9 +3,11 @@ import {JwtService} from "@nestjs/jwt";
 import {UserService} from "src/user/user.service";
 import {RoleService} from "../role/role.service";
 import {comparePasswords} from "../utils/bcrypt";
-import {cleanObj, exclude, existsRecord} from "../utils/tools";
+import {cleanObj, exclude, existsRecord, generateOTP} from "../utils/tools";
 import {PrismaService} from "../prisma/prisma.service";
 import {User} from "@prisma/client";
+import {v4 as uuid} from "uuid";
+import {MailService} from "../mail/mail.service";
 
 @Injectable()
 export class AuthService {
@@ -14,7 +16,8 @@ export class AuthService {
         private usersService: UserService,
         private jwtTokenService: JwtService,
         private roleService: RoleService,
-        private prismaService: PrismaService
+        private prismaService: PrismaService,
+        private mailService: MailService
     ) {
     }
 
@@ -66,18 +69,19 @@ export class AuthService {
         let payload = await this.validateUserCredentials(user.username, user.password);
 
         if (!payload) {
-            throw new HttpException("User not exist", HttpStatus.UNAUTHORIZED);
+            throw new HttpException({message: "User not exist"}, HttpStatus.UNAUTHORIZED);
         }
 
         if (!payload.enable) {
-            throw new HttpException("user not enabled", HttpStatus.UNAUTHORIZED);
+            throw new HttpException({message: "user not enabled", enable: payload.enable, username: user.username}, HttpStatus.UNAUTHORIZED);
         }
 
         let roles = payload.userRole.map((item: any) => item.role.name);
 
         let tbr = {
-            token: this.jwtTokenService.sign(exclude(cleanObj(payload), ["userRole", "createdDate", "modifyDate"])),
-            roles: roles
+            token: this.jwtTokenService.sign({username: user.username, id: payload.id, enable: payload.enable}),
+            roles: roles,
+            user: payload
         };
 
         return tbr;
@@ -123,6 +127,30 @@ export class AuthService {
         });
         return findUserRoleByUsername;
     }
+
+    async sendOTPEmail(email: string) {
+
+        // check email exist
+        const user = await this.prismaService.user.findFirst({
+            where: {
+                email: email
+            }
+        });
+
+        if (!user) {
+            throw new HttpException("User not already exist", HttpStatus.BAD_REQUEST);
+        }
+
+        const otp = await this.prismaService.oTP.create({
+            data: {
+                id: uuid(),
+                code: generateOTP(),
+                email:email,
+            }
+        })
+
+        await this.mailService.sendEmailOTPCode(email, otp.code);
+    };
 
     async verifyEmail(otp: string, email: string) {
 
@@ -182,4 +210,5 @@ export class AuthService {
 
         return true;
     }
+
 }

@@ -34,7 +34,7 @@ export class AuthController {
      * @return Promise<{accessToken: string}>
      */
     @Post('login')
-    async login(@Body() body, @Req() req, @Res({passthrough: true}) res: any) {
+    async login(@Body() body, @Req() req, @Res() res: any) {
 
         // check later about the white label
         if (!whiteLabel.dashboard.some((item) => item === req.headers.host)) {
@@ -46,7 +46,9 @@ export class AuthController {
             });
         }
 
-        return this.authService.loginWithCredentials(body);
+        const response = await this.authService.loginWithCredentials(body);
+
+        return res.status(HttpStatus.OK).json(response);
     }
 
     /**
@@ -80,6 +82,11 @@ export class AuthController {
 
     @Post('verify')
     async verify(@Body() body) {
-        return this.authService.verifyEmail(body.code, body.email);
+        return this.authService.verifyEmail(body.otp, body.email);
+    }
+
+    @Post('send-otp')
+    async sendOTP(@Body() body) {
+        return this.authService.sendOTPEmail(body.email);
     }
 }

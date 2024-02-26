@@ -1,9 +1,8 @@
-import {View} from "react-native";
-import {Stack} from "expo-router";
 import {useDrawerProgress} from "@react-navigation/drawer";
 import Animated, {interpolate, useAnimatedStyle} from "react-native-reanimated";
+import {Stack} from "expo-router";
 
-export default function LoginLayout () {
+export default function UserLayout() {
     const drawerProgress = useDrawerProgress();
 
     const viewAnimStyle = useAnimatedStyle(() => {
@@ -30,38 +29,12 @@ export default function LoginLayout () {
             style={[{flex: 1}, viewAnimStyle]}
         >
             <Stack
-                initialRouteName="otp"
+                initialRouteName="login"
                 screenOptions={{
                     statusBarHidden: false,
                     statusBarStyle: "dark",
                 }}
-            >
-                <Stack.Screen
-                    name="login"
-                />
-                <Stack.Screen
-                    name="register"
-                    initialParams={{
-                        selectedGovernorate: null
-                    }}
-                />
-                <Stack.Screen
-                    name="otp"
-                    initialParams={{
-                        email: null
-                    }}
-                />
-                <Stack.Screen
-                    name="governorates"
-                    options={{
-                        headerTitle: "Governorates",
-                        presentation: "modal"
-                    }}
-                    initialParams={{
-                        selectedGovernorate: null
-                    }}
-                />
-            </Stack>
+            />
         </Animated.View>
     )
 }

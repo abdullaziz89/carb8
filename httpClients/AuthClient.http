@@ -36,10 +36,10 @@ Content-Type: application/json
 }
 
 ### login as business
-POST http://192.168.8.133:3001/authenticate/login
+POST http://192.168.3.8:3000/authenticate/login
 Content-Type: application/json
 
 {
-  "email": "abdullaziz89@hotmail.com",
+  "username": "abdullaziz89@hotmail.com",
   "password": "1234"
 }
