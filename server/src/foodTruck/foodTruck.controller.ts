@@ -52,11 +52,26 @@ export class FoodTruckController {
         return this.foodTruckService.findOne(id);
     }
 
+    @Get("views/:id")
+    getViews(@Param("id") id: string) {
+        return this.foodTruckService.getFoodTruckViews(id);
+    }
+
     @Patch()
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(["SUPER_ADMIN", "ADMIN"])
     update(@Body() foodTruck: FoodTruck) {
         return this.foodTruckService.update(foodTruck);
+    }
+
+    @Patch('user')
+    updateWithUser(@Body() payload: {foodTruck: FoodTruck, user: {id: string, email: string}}) {
+        return this.foodTruckService.updateWithUser(payload);
+    }
+
+    @Patch("user/logo")
+    updateLogo(@Body() payload: { id: string, logo: string }, @UploadedFiles() files: any) {
+        return this.foodTruckService.updateLogo(payload.id, files);
     }
 
     @Patch("status/:id")

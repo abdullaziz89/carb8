@@ -67,6 +67,7 @@ model FoodTruck {
   createdDate    DateTime              @default(now())
   modifyDate     DateTime              @updatedAt
   Cuisine        Cuisine?              @relation(fields: [cuisineId], references: [id])
+  orderInView    Int                   @default(0)
   cuisineId      String?
   address        Address?
   foodTruckInfo  FoodTruckInformation?

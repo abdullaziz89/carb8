@@ -5,7 +5,7 @@ import {zustandStorage} from "./mmkv";
 export const useAppStateStore = create(
     persist(
         (set, get) => ({
-            login: false,
+            isLogin: false,
             verified: false,
             welcomePreviews: false,
             token: null,
@@ -57,7 +57,7 @@ export const useAppStateStore = create(
                 selectedGovernorate: null,
             },
             setLogin: (login) => set((state) => {
-                return {login: login}
+                return {isLogin: login}
             }),
             setToken: (token) => set({token}),
             getToken: () => get().token,

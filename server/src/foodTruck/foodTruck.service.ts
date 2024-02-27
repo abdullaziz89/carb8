@@ -228,6 +228,32 @@ export class FoodTruckService {
         };
     }
 
+    async updateWithUser(payload: { foodTruck: FoodTruck, user: { id: string, email: string } }) {
+        const foodTruckUpdated = await this.prismaService.foodTruck.update({
+            where: {id: payload.foodTruck.id},
+            data: payload.foodTruck
+        });
+
+        return {
+            ...foodTruckUpdated,
+            images: await this.fileService.getFiles("foodTruck", payload.foodTruck.id)
+        };
+    }
+
+    // update food truck logo
+    async updateLogo(id: string, file: any) {
+        const foodTruck = await this.prismaService.foodTruck.findUnique({
+            where: {id: id}
+        });
+
+        // check if food truck exist
+        if (!foodTruck) {
+            throw new HttpException('Food truck not found', HttpStatus.NOT_FOUND);
+        }
+
+        return await this.fileService.uploadFiles([file], `foodTruck/${id}`);
+    }
+
     async remove(id: string) {
 
         const deletedFoodTruck = await this.prismaService.foodTruck.delete({
@@ -262,6 +288,9 @@ export class FoodTruckService {
                 },
                 Cuisine: true,
                 foodTruckView: true,
+            },
+            orderBy: {
+                orderInView: 'desc'
             }
         });
 
@@ -293,6 +322,13 @@ export class FoodTruckService {
             where: {foodTruckId: id},
             update: {views: {increment: 1}},
             create: {foodTruckId: id, views: 1}
+        });
+    }
+
+    async getFoodTruckViews(id: string) {
+        return this.prismaService.foodTruckView.findUnique({
+            where: {foodTruckId: id},
+            select: {views: true}
         });
     }
 

@@ -389,8 +389,7 @@ export default function Home() {
                         <View
                             style={{
                                 flex: 1,
-                                alignItems: "center",
-                                marginTop: 30
+                                minHeight: height / 2,
                             }}
                         >
                             <FoodTruckList

@@ -165,40 +165,45 @@ export default (props) => {
     }
 
     const getDistance = (coords, id, lat, lng) => {
-        const calculateDistance = async () => {
 
-            const KEY = "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ"
-            const startLoc = `${coords.latitude},${coords.longitude}`;
-            const destinationLoc = `${lat},${lng}`;
-            const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&key=${KEY}`;
-            let resp = await fetch(url);
-            let respJson = await resp.json();
-            // get how many km the route is
-            let fullDistance = respJson.routes[0].legs[0].distance.text;
-            return fullDistance.split(' ')[0];
-        }
-
-        calculateDistance()
-            .then((distance) => {
-                setFilteredFoodTrucks((prev) => {
-                    return prev.map((item) => {
-                        if (item.id === id) {
-                            return {
-                                ...item,
-                                distance: distance
-                            }
-                        }
-                        return item;
-                    });
-                });
-            })
+        return 0;
+        // const calculateDistance = async () => {
+        //
+        //     const KEY = "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ"
+        //     const startLoc = `${coords.latitude},${coords.longitude}`;
+        //     const destinationLoc = `${lat},${lng}`;
+        //     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&key=${KEY}`;
+        //     let resp = await fetch(url);
+        //     let respJson = await resp.json();
+        //     // get how many km the route is
+        //     let fullDistance = respJson.routes[0].legs[0].distance.text;
+        //     return fullDistance.split(' ')[0];
+        // }
+        //
+        // calculateDistance()
+        //     .then((distance) => {
+        //         setFilteredFoodTrucks((prev) => {
+        //             return prev.map((item) => {
+        //                 if (item.id === id) {
+        //                     return {
+        //                         ...item,
+        //                         distance: distance
+        //                     }
+        //                 }
+        //                 return item;
+        //             });
+        //         });
+        //     })
     }
 
     const foodTruckRenderItem = ({item, index}) => {
         return (
             <TouchableOpacity
                 key={index}
-                style={styles.foodTruckItem}
+                style={[
+                    styles.foodTruckItem,
+                    item.index !== 0 && {marginTop: 20}
+                ]}
                 onPress={() => {
                     router.push(`/${item.id}`);
                 }}
@@ -330,7 +335,7 @@ export default (props) => {
             {
                 filteredFoodTrucks.length > 0 ?
                     filteredFoodTrucks.map((item, index) => foodTruckRenderItem({item, index})) :
-                    searching ? <Text>No academies found</Text> : <Text>
+                    searching ? <Text>No food truck found</Text> : <Text>
                         {i18n.language === "ar" ? "لا توجد عربات" : "No Food Trucks Found"}
                     </Text>
             }
@@ -343,9 +348,8 @@ const useStyles = CreateResponsiveStyle(
         container: {
             flex: 1,
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             width: width,
-            paddingBottom: 10,
         },
         foodTruckItem: {
             flexDirection: "column",

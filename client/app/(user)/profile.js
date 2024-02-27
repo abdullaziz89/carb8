@@ -14,13 +14,14 @@ import {
 import {Stack, useNavigation, useRouter} from "expo-router";
 import {getCuisine} from "../../services/CuisineServices";
 import {Controller, useForm} from "react-hook-form";
-import {registerFoodTruck} from "../../services/FoodTruckServices";
+import {registerFoodTruck, updateFoodTruck, updateLogo} from "../../services/FoodTruckServices";
 import * as ImagePicker from "expo-image-picker";
 import {Image} from "expo-image";
 import {MaterialIcons} from "@expo/vector-icons";
 import TextWithFont from "../../component/TextWithFont";
 import {DAYS} from "../../utils/Utils";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import Constants from "expo-constants";
 
 const placeholderImage = require("../../assets/set-logo-placeholder.png");
 const {width, height} = Dimensions.get("window");
@@ -36,14 +37,15 @@ export default () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [cuisines, setCuisines] = useState([]);
     const [selectedCuisine, setSelectedCuisine] = useState(user.foodTruck.cuisineId);
-    const [selectedGovernorate, setSelectedGovernorate] = useState(user.foodTruck.address.governorateId);
-    const [foodTruckWorkingDays, setFoodTruckWorkingDays] = useState([]);
+    const [selectedGovernorate, setSelectedGovernorate] = useState(user.foodTruck.address.governorate);
+    const [foodTruckWorkingDays, setFoodTruckWorkingDays] = useState(user.foodTruck.foodTruckInfo.FoodTruckWorkingDay);
     const [selectedFoodTruckWorkingDays, setSelectedFoodTruckWorkingDays] = useState(null);
     const [foodTruckWorkingDaysModelShow, setFoodTruckWorkingDaysModelShow] = useState(false);
     const [showDaysModal, setShowDaysModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const [keyboardHeight, setKeyboardHeight] = useState(0);
+    const [host, setHost] = useState(null);
 
     useEffect(() => {
         function onKeyboardDidShow(e) { // Remove type here if not using TypeScript
@@ -63,7 +65,9 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        console.log("user", user.foodTruck.address);
+
+        setHost(Constants.manifest.extra.host.dev)
+        setSelectedImage(`${Constants.manifest.extra.host.dev}:8081/foodTruck/${user.foodTruck.id}/logo.jpg`)
         // if user is not verified send to otp
         if (!isVerified()) {
             router.replace("(auth)/otp");
@@ -71,6 +75,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
+        console.log("user", user.foodTruck);
         fetchData();
     }, []);
 
@@ -99,36 +104,30 @@ export default () => {
     };
 
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
-        // defaultValues: {
-        //     user: {
-        //         email: user.email,
-        //     },
-        //     foodTruck: {
-        //         nameEng: user.foodTruck.nameEng,
-        //         nameArb: user.foodTruck.nameArb,
-        //         descriptionEng: user.foodTruck.descriptionEng,
-        //         descriptionArb: user.foodTruck.descriptionArb,
-        //     },
-        //     address: {
-        //         address: user.address.address,
-        //         googleLocation: user.address.googleLocation,
-        //         googleLat: user.address.googleLat,
-        //         googleLng: user.address.googleLng,
-        //     },
-        //     information: {
-        //         phoneNumber: user.information.phoneNumber,
-        //         instagramAccount: user.information.instagramAccount,
-        //     }
-        // }
+        defaultValues: {
+            user: {
+                email: user.email,
+            },
+            foodTruck: {
+                nameEng: user.foodTruck.nameEng,
+                nameArb: user.foodTruck.nameArb,
+                descriptionEng: user.foodTruck.descriptionEng,
+                descriptionArb: user.foodTruck.descriptionArb,
+            },
+            address: {
+                address: user.foodTruck.address.address,
+                googleLocation: user.foodTruck.address.googleLocation,
+                googleLat: user.foodTruck.address.googleLat,
+                googleLng: user.foodTruck.address.googleLng,
+            },
+            information: {
+                phoneNumber: user.foodTruck.foodTruckInfo.phoneNumber,
+                instagramAccount: user.foodTruck.foodTruckInfo.instagramAccount,
+            }
+        }
     });
 
     const onSubmit = async (data) => {
-
-        // if image is not selected
-        if (!selectedImage) {
-            alert("Please select your food truck logo");
-            return;
-        }
 
         // if cuisine is not selected
         if (!selectedCuisine) {
@@ -144,46 +143,30 @@ export default () => {
 
         setIsLoading(true);
         data = {
-            ...data,
             foodTruck: {
                 ...data.foodTruck,
                 cuisineId: selectedCuisine,
-            },
-            address: {
-                ...data.address,
-                governorateId: selectedGovernorate.id,
-            },
-            information: {
-                ...data.information,
-                FoodTruckWorkingDay: foodTruckWorkingDays.map((item) => {
-                    return {
-                        day: item.day,
-                        workingFrom: item.from,
-                        workingTo: String(item.to)
-                    }
-                })
+                address: {
+                    ...data.address,
+                    governorateId: selectedGovernorate.id,
+                },
+                information: {
+                    ...data.information,
+                    FoodTruckWorkingDay: foodTruckWorkingDays.map((item) => {
+                        return {
+                            day: item.day,
+                            workingFrom: item.from,
+                            workingTo: String(item.to)
+                        }
+                    })
+                }
             }
         }
 
-        const formData = new FormData();
-        formData.append("payload", JSON.stringify(data));
-
-        // upload image with form data
-        if (selectedImage) {
-            formData.append("files", {
-                uri: Platform.OS === 'ios' ?
-                    selectedImage.replace('file://', '')
-                    : selectedImage,
-                type: "image/jpeg",
-                name: "logo.jpg"
-            });
-        }
-
-        await registerFoodTruck(formData)
+        await updateFoodTruck(data)
             .then((response) => {
                 setIsLoading(false);
                 setUser(response.data);
-                router.push("otp");
             })
             .catch((error) => {
                 const message = error.response.data.message;
@@ -205,7 +188,35 @@ export default () => {
         });
 
         if (!result.canceled) {
-            setSelectedImage(result.assets[0].uri);
+            setIsLoading(true);
+            await updateLogo(result.assets[0].uri)
+                .then((response) => {
+                    setSelectedImage(imageURLFormat(response.data, "LOGO"));
+                    setIsLoading(false);
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    const message = error.response.data.message;
+                    alert(message);
+                });
+        }
+    }
+
+    const imageURLFormat = (images, type) => {
+
+        if (type === 'LOGO') {
+            const imgs = images.map((image) => {
+                const split = image.split("/");
+                return split[split.length - 1].split(".")[0] === "logo";
+            });
+            return `${host}:8081/foodTruck/${user.foodTruck.id}/${imgs}`;
+        } else {
+            return images.map((image) => {
+                const split = image.split("/");
+                return split[split.length - 1].split(".")[0] !== "logo";
+            }).map((image) => {
+                return `${host}:8081/foodTruck/${user.foodTruck.id}/${image}`;
+            });
         }
     }
 
@@ -371,7 +382,7 @@ export default () => {
 
                                     let temp = foodTruckWorkingDays;
                                     const objIndex = foodTruckWorkingDays.findIndex((item) => item.day === selectedFoodTruckWorkingDays.day);
-                                    temp[objIndex].from = text;
+                                    temp[objIndex].workingFrom = text;
                                     setFoodTruckWorkingDays(temp);
                                 }}
                                 keyboardType={"number-pad"}
@@ -399,7 +410,7 @@ export default () => {
 
                                     let temp = foodTruckWorkingDays;
                                     const objIndex = foodTruckWorkingDays.findIndex((item) => item.day === selectedFoodTruckWorkingDays.day);
-                                    temp[objIndex].to = text;
+                                    temp[objIndex].wokringTo = text;
                                     setFoodTruckWorkingDays(temp);
                                 }}
                                 keyboardType={"number-pad"}
@@ -526,6 +537,7 @@ export default () => {
     }
 
     const foodTruckWorkingDaysRenderItem = ({item, index}) => {
+        console.log("item", item)
         return (
             <View
                 style={{
@@ -554,14 +566,14 @@ export default () => {
                     }}
                 >
                     <TextWithFont
-                        text={item.from}
+                        text={item.workingFrom}
                         style={{
                             fontSize: 16,
                         }}
                     />
                     <Text>-</Text>
                     <TextWithFont
-                        text={item.to}
+                        text={item.workingTo}
                         style={{
                             fontSize: 16,
                         }}
@@ -611,7 +623,7 @@ export default () => {
             <Stack.Screen
                 options={{
                     headerLargeTitle: true,
-                    title: "Register",
+                    title: "Your Food Truck Profile",
                     headerLeft: () => {
                         // back icon button
                         return (
@@ -1244,46 +1256,6 @@ export default () => {
                     marginLeft: 5
                 }}>{errors.user?.email.message}</Text>}
                 {/*email patterns error*/}
-                <TextWithFont
-                    text={"Password"}
-                    style={{
-                        fontSize: 16,
-                        marginTop: 20
-                    }}
-                />
-                <Controller
-                    control={control}
-                    render={({field: {onChange, onBlur, value}}) => (
-                        <TextInput
-                            style={{
-                                borderColor: "black",
-                                borderRadius: 10,
-                                padding: 10,
-                                marginTop: 10,
-                                backgroundColor: "white",
-                                alignItems: "flex-start",
-                            }}
-                            onBlur={onBlur}
-                            onChangeText={value => onChange(value)}
-                            value={value}
-                            placeholder={"Enter Password"}
-                            secureTextEntry={true}
-                        />
-                    )}
-                    name="user.password"
-                    rules={{required: "Password is required"}}
-                />
-                {errors.user?.password &&
-                    <Text
-                        style={{
-                            color: "red",
-                            marginTop: 5,
-                            marginLeft: 5
-                        }}
-                    >
-                        {errors.user?.password.message}
-                    </Text>
-                }
             </View>
             {/*submit view*/}
             <View
