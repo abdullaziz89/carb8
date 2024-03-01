@@ -10,6 +10,7 @@ import {Entypo} from "@expo/vector-icons";
 import * as Location from "expo-location";
 
 const {width} = Dimensions.get("window");
+const deg2rad = require('deg2rad')
 
 export default (props) => {
 
@@ -166,7 +167,7 @@ export default (props) => {
 
     const getDistance = (coords, id, lat, lng) => {
 
-        return 0;
+        // return 0;
         // const calculateDistance = async () => {
         //
         //     const KEY = "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ"
@@ -179,21 +180,34 @@ export default (props) => {
         //     let fullDistance = respJson.routes[0].legs[0].distance.text;
         //     return fullDistance.split(' ')[0];
         // }
-        //
-        // calculateDistance()
-        //     .then((distance) => {
-        //         setFilteredFoodTrucks((prev) => {
-        //             return prev.map((item) => {
-        //                 if (item.id === id) {
-        //                     return {
-        //                         ...item,
-        //                         distance: distance
-        //                     }
-        //                 }
-        //                 return item;
-        //             });
-        //         });
-        //     })
+
+        const getDistance = () => {
+            const R = 6371; // Radius of the earth in km
+            const dLat = deg2rad(lat - coords.latitude);  // deg2rad below
+            const dLon = deg2rad(lng - coords.longitude);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(coords.latitude)) * Math.cos(deg2rad(lat)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+            ;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const d = R * c; // Distance in km
+
+            // return without decimals point
+            return Math.round(d);
+        }
+
+        setFilteredFoodTrucks((prev) => {
+            return prev.map((item) => {
+                if (item.id === id) {
+                    return {
+                        ...item,
+                        distance: getDistance()
+                    }
+                }
+                return item;
+            });
+        });
     }
 
     const foodTruckRenderItem = ({item, index}) => {

@@ -20,13 +20,13 @@ export default () => {
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
         defaultValues: {
             otp: '',
-            email: user.email
+            email: user.user.email
         }
     });
 
     useEffect(() => {
 
-        sendOTP({email: user.email})
+        sendOTP({email: user.user.email})
             .then((response) => {
                 console.log(response);
             })
@@ -125,7 +125,7 @@ export default () => {
             />
             <View>
                 <TextWithFont
-                    text={`We have sent an OTP to \n ${replaceEmail(user.email)}`}
+                    text={`We have sent an OTP to \n ${replaceEmail(user.user.email)}`}
                     style={{
                         fontSize: 20,
                         fontWeight: 'bold',

@@ -82,7 +82,7 @@
     "extra": {
       "oneSignalAppId": "41309cd4-f41f-4e4f-b8db-273628a801b6",
       "host": {
-        "dev": "http://192.168.3.8",
+        "dev": "http://192.168.8.133",
         "prod": "https://kwft.io"
       },
       "eas": {

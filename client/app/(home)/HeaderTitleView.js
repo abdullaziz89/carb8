@@ -2,15 +2,16 @@ import {Text, TouchableOpacity, View} from "react-native";
 import {Image} from "expo-image";
 import {useTranslation} from "react-i18next";
 import {useNavigation} from "expo-router";
+import TextWithFont from "../../component/TextWithFont";
 
 export default (props) => {
 
-    const {title, logo, localLogo} = props;
+    const {title, logo, localLogo, isProfile} = props;
     const {t, i18n} = useTranslation();
     const navigation = useNavigation();
 
     const headerLogo = () => {
-        return(
+        return (
             <TouchableOpacity
                 onPress={() => {
                     navigation.toggleDrawer();
@@ -34,9 +35,14 @@ export default (props) => {
             }}
         >
             {
-                logo && headerLogo()
+                !isProfile && logo && headerLogo()
             }
-            <Text style={{fontSize: 20, fontWeight: "bold", marginLeft: 15}}>{title}</Text>
+            <TextWithFont
+                text={title}
+                style={{
+                    fontSize: 20, marginLeft: !isProfile && logo ? 10 : 0,
+                }}
+            />
         </View>
     );
 }

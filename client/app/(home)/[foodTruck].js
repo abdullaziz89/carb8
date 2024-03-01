@@ -7,17 +7,18 @@ import {
     ScrollView,
     Platform,
     Linking,
-    TouchableOpacity
+    TouchableOpacity, FlatList, SectionList
 } from "react-native";
 import {Stack, useRouter, useSearchParams} from "expo-router";
 import {useEffect, useState} from "react";
 import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
-import {Entypo, EvilIcons, Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
+import {Entypo, EvilIcons, Ionicons, MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
 import {getFoodTruck, updateFoodTruckView} from "../../services/FoodTruckServices";
 import {LinearGradient} from "expo-linear-gradient";
 import HeaderTitleView from "./HeaderTitleView";
 import {useTranslation} from "react-i18next";
+import TextWithFont from "../../component/TextWithFont";
 
 const {width} = Dimensions.get("window");
 const isWeb = Platform.OS === "web";
@@ -31,6 +32,60 @@ export default (props) => {
     const [showIndicator, setShowIndicator] = useState(false);
     const [foodTruck, setFoodTruck] = useState(null);
     const [logo, setLogo] = useState(null);
+    const [foods, setFoods] = useState([
+        {
+            title: "Burger",
+            data: [
+                {
+                    name: "Cheese Burger",
+                    price: 1.5
+                },
+                {
+                    name: "Double Cheese Burger",
+                    price: 2.5
+                }
+            ]
+        },
+        {
+            title: "Pizza",
+            data: [
+                {
+                    name: "Cheese Pizza",
+                    price: 2.5
+                },
+                {
+                    name: "Pepperoni Pizza",
+                    price: 3.5
+                }
+            ]
+        },
+        {
+            title: "Drinks",
+            data: [
+                {
+                    name: "Pepsi",
+                    price: 0.5
+                },
+                {
+                    name: "Coca Cola",
+                    price: 0.5
+                }
+            ]
+        },
+        {
+            title: "Desserts",
+            data: [
+                {
+                    name: "Chocolate Cake",
+                    price: 2.5
+                },
+                {
+                    name: "Cheese Cake",
+                    price: 3.5
+                }
+            ]
+        }
+    ]);
 
     const router = useRouter();
 
@@ -153,212 +208,295 @@ export default (props) => {
             });
     };
 
-    return (
-        <View style={styles.container}>
-
-            <Stack.Screen
-                options={{
-                    headerLargeTitle: false,
-                    title: foodTruck && foodTruck.nameEng,
-                    headerTitle: () => foodTruck !== null && <HeaderTitleView title={foodTruck.nameEng} logo={logo}/>
+    const ListHeaderView = () => {
+        return (
+            <View
+                style={{
+                    width: "100%",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    backgroundColor: "#f8b91c",
+                    paddingHorizontal: 20,
+                    paddingVertical: 10,
+                    paddingTop: Platform.OS === "ios" ? 50 : 25,
+                    borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20,
+                    shadowRadius: 10,
+                    shadowColor: "black",
+                    shadowOffset: {width: 0, height: 0},
+                    shadowOpacity: 0.5,
+                    elevation: 10
                 }}
-            />
+            >
+                {
+                    filterImage(foodTruck.images).length > 0 && (
+                        <View
+                            style={{
+                                alignItems: "center"
+                            }}
+                        >
+                            <CustomCarousel
+                                images={foodTruck.images}
+                            />
+                        </View>
+                    )
+                }
 
-            {indicator}
-
-            {foodTruck !== null && (
-                <ScrollView
-                    style={{
-                        flex: 1,
-                        backgroundColor: "white",
-                        width: width
-                    }}
-                    contentContainerStyle={{
-                        alignItems: "center",
-                        padding: 15
-                    }}
+                {/*cuisine*/}
+                <View
+                    style={styles.cuisineContainer}
                 >
-
-                    {
-                        filterImage(foodTruck.images).length > 0 && (
-                            <View
-                                style={{
-                                    alignItems: "center"
-                                }}
-                            >
-                                <CustomCarousel
-                                    images={foodTruck.images}
-                                />
-                            </View>
-                        )
-                    }
-
-                    {/*cuisine*/}
+                    <TextWithFont
+                        text={t("foodTruck.cuisine")}
+                        style={{
+                            fontSize: 18,
+                            marginBottom: 10,
+                            fontWeight: "bold",
+                            textAlign: i18n.language === "ar" ? "right" : "left"
+                        }}
+                    />
                     <View
-                        style={styles.cuisineContainer}
+                        style={{
+                            width: "100%",
+                            flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                            marginTop: 10
+                        }}
+                    >
+                        <Image
+                            source={{uri: foodTruck.Cuisine.image}}
+                            style={{
+                                width: 64,
+                                height: 64,
+                                borderRadius: 32,
+                                backgroundColor: "white",
+                                padding: 5
+                            }}
+                            contentFit={"cover"}
+                            placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                        />
+                        <Text
+                            style={[
+                                {
+                                    fontSize: 18,
+                                    fontWeight: "bold"
+                                },
+                                i18n.language === "ar" ? {marginEnd: 10} : {marginStart: 10}
+                            ]}
+                        >
+                            {i18n.language === "ar" ? foodTruck.Cuisine.nameArb : foodTruck.Cuisine.nameEng}
+                        </Text>
+                    </View>
+                </View>
+
+                {/*description*/}
+                <View
+                    style={styles.descriptionContainer}
+                >
+                    <Text
+                        style={[
+                            {
+                                fontSize: 18,
+                                fontWeight: "bold",
+                                marginBottom: 10
+                            },
+                            i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
+                        ]}
+                    >
+                        {t("foodTruck.description")}
+                    </Text>
+                    <Text
+                        style={[
+                            {
+                                fontSize: 16,
+                                fontWeight: "normal"
+                            },
+                            i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
+                        ]}
+                    >
+                        {i18n.language === "ar" ? foodTruck.descriptionArb : foodTruck.descriptionEng}
+                    </Text>
+                </View>
+
+                {/*address*/}
+                <View
+                    style={styles.addressContainer}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
+                            alignItems: "center",
+                            justifyContent: "space-between"
+                        }}
                     >
                         <Text
                             style={{
                                 fontSize: 18,
                                 fontWeight: "bold",
-                                marginBottom: 10,
-                                textAlign: i18n.language === "ar" ? "right" : "left"
+                                marginBottom: 10
                             }}
                         >
-                            {t("foodTruck.cuisine")}
+                            {t("foodTruck.address")}
                         </Text>
-                        <View
-                            style={{
-                                width: "100%",
-                                flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                marginTop: 10
-                            }}
-                        >
-                            <Image
-                                source={{uri: foodTruck.Cuisine.image}}
-                                style={{
-                                    width: 64,
-                                    height: 64,
-                                    borderRadius: 32
-                                }}
-                                contentFit={"cover"}
-                                placeholder={require("../../assets/kwft-logo-placeholder.png")}
-                            />
-                            <Text
-                                style={[
-                                    {
-                                        fontSize: 18,
-                                        fontWeight: "bold"
-                                    },
-                                    i18n.language === "ar" ? {marginEnd: 10} : {marginStart: 10}
-                                ]}
-                            >
-                                {i18n.language === "ar" ? foodTruck.Cuisine.nameArb : foodTruck.Cuisine.nameEng}
-                            </Text>
-                        </View>
+                        {/*{*/}
+                        {/*    foodTruck.address.googleLat !== 0 && foodTruck.address.googleLang !== 0 && (*/}
+                        {/*        <TouchableOpacity*/}
+                        {/*            onPress={() => openGps(foodTruck.address.googleLat, foodTruck.address.googleLang)}*/}
+                        {/*        >*/}
+                        {/*            <Entypo name="location" size={24} color="#5bc0de"/>*/}
+                        {/*        </TouchableOpacity>*/}
+                        {/*    )*/}
+                        {/*}*/}
+                        {
+                            foodTruck.address.googleLocation.length > 0 && (
+                                <TouchableOpacity
+                                    onPress={() => openGoogleLocation(foodTruck.address.googleLocation)}
+                                >
+                                    <Entypo name="location" size={24} color="#5bc0de"/>
+                                </TouchableOpacity>
+                            )
+                        }
                     </View>
-
-                    {/*description*/}
-                    <View
-                        style={styles.descriptionContainer}
-                    >
-                        <Text
-                            style={[
-                                {
-                                    fontSize: 18,
-                                    fontWeight: "bold",
-                                    marginBottom: 10
-                                },
-                                i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
-                            ]}
-                        >
-                            {t("foodTruck.description")}
-                        </Text>
-                        <Text
-                            style={[
-                                {
-                                    fontSize: 16,
-                                    fontWeight: "normal"
-                                },
-                                i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
-                            ]}
-                        >
-                            {i18n.language === "ar" ? foodTruck.descriptionArb : foodTruck.descriptionEng}
-                        </Text>
-                    </View>
-
-                    {/*address*/}
-                    <View
-                        style={styles.addressContainer}
-                    >
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                                alignItems: "center",
-                                justifyContent: "space-between"
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 18,
-                                    fontWeight: "bold",
-                                    marginBottom: 10
-                                }}
-                            >
-                                {t("foodTruck.address")}
-                            </Text>
-                            {/*{*/}
-                            {/*    foodTruck.address.googleLat !== 0 && foodTruck.address.googleLang !== 0 && (*/}
-                            {/*        <TouchableOpacity*/}
-                            {/*            onPress={() => openGps(foodTruck.address.googleLat, foodTruck.address.googleLang)}*/}
-                            {/*        >*/}
-                            {/*            <Entypo name="location" size={24} color="#5bc0de"/>*/}
-                            {/*        </TouchableOpacity>*/}
-                            {/*    )*/}
-                            {/*}*/}
+                    <Text
+                        style={[
                             {
-                                foodTruck.address.googleLocation.length > 0 && (
-                                    <TouchableOpacity
-                                        onPress={() => openGoogleLocation(foodTruck.address.googleLocation)}
-                                    >
-                                        <Entypo name="location" size={24} color="#5bc0de"/>
-                                    </TouchableOpacity>
-                                )
-                            }
-                        </View>
-                        <Text
-                            style={[
-                                {
-                                    fontSize: 16,
-                                    fontWeight: "normal"
-                                },
-                                i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
-                            ]}
-                        >
-                            {foodTruck.address.address}
-                        </Text>
-                    </View>
+                                fontSize: 16,
+                                fontWeight: "normal"
+                            },
+                            i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
+                        ]}
+                    >
+                        {foodTruck.address.address}
+                    </Text>
+                </View>
 
-                    <View
-                        style={styles.contactContainer}
+                <View
+                    style={styles.contactContainer}
+                >
+                    <TouchableOpacity
+                        style={[styles.contactItem, {backgroundColor: "#405de6"}]}
+                        onPress={() => openPhoneCall(foodTruck.foodTruckInfo.phoneNumber)}
+                    >
+                        <Ionicons name="call-outline" size={24} color="white"/>
+                    </TouchableOpacity>
+                    <LinearGradient
+                        // Button Linear Gradient
+                        colors={["#405de6", "#5851db", "#833ab4", "#c13584", "#e1306c", "#fd1d1d"]}
+                        style={styles.contactItem}
+                        start={{x: 0, y: 0}}
+                        end={{x: 1, y: 1}}
                     >
                         <TouchableOpacity
-                            style={[styles.contactItem, {backgroundColor: "#405de6"}]}
-                            onPress={() => openPhoneCall(foodTruck.foodTruckInfo.phoneNumber)}
-                        >
-                            <Ionicons name="call-outline" size={24} color="white"/>
-                        </TouchableOpacity>
-                        <LinearGradient
-                            // Button Linear Gradient
-                            colors={["#405de6", "#5851db", "#833ab4", "#c13584", "#e1306c", "#fd1d1d"]}
                             style={styles.contactItem}
-                            start={{x: 0, y: 0}}
-                            end={{x: 1, y: 1}}
+                            onPress={() => openInstagram(foodTruck.foodTruckInfo.instagramAccount)}
                         >
-                            <TouchableOpacity
-                                style={styles.contactItem}
-                                onPress={() => openInstagram(foodTruck.foodTruckInfo.instagramAccount)}
+                            <Entypo name="instagram" size={24} color="white"/>
+                        </TouchableOpacity>
+                    </LinearGradient>
+                </View>
+            </View>
+        )
+    }
+
+    return (
+        <View style={styles.container}>
+            <Stack.Screen
+                options={{
+                    title: foodTruck && foodTruck.nameEng,
+                    headerTitle: () => foodTruck !== null && <HeaderTitleView title={foodTruck.nameEng} logo={logo} isProfile={true} />,
+                    headerStyle: {
+                        backgroundColor: "#f8b91c"
+                    }
+                }}
+            />
+
+            {indicator}
+
+            {foodTruck !== null && foods !== null && (
+                <SectionList
+                    data={foods}
+                    sections={foods}
+                    keyExtractor={(item, index) => item + index}
+                    renderSectionHeader={({section: {title}}) => {
+                        return (
+                            <View
+                                style={{
+                                    width: "100%",
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 10,
+                                    backgroundColor: "white",
+                                }}
                             >
-                                <Entypo name="instagram" size={24} color="white"/>
-                            </TouchableOpacity>
-                        </LinearGradient>
-                    </View>
-
-                    {/*check later for Google map*/}
-                    {/*<MapView*/}
-                    {/*  provider={PROVIDER_GOOGLE}*/}
-                    {/*  style={{ height: 300, width: width * 0.8, marginTop: 20 }}*/}
-                    {/*  region={{*/}
-                    {/*    latitude: foodTruck.address.googleLat,*/}
-                    {/*    longitude: foodTruck.address.googleLng*/}
-                    {/*  }}*/}
-                    {/*/>*/}
-                </ScrollView>
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    {title}
+                                </Text>
+                            </View>
+                        );
+                    }}
+                    renderItem={({item}) => {
+                        return (
+                            <View
+                                style={{
+                                    width: "100%",
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 10,
+                                    backgroundColor: "white",
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 16,
+                                        fontWeight: "normal"
+                                    }}
+                                >
+                                    {item.name}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: 16,
+                                        fontWeight: "normal"
+                                    }}
+                                >
+                                    {item.price} KD
+                                </Text>
+                            </View>
+                        );
+                    }}
+                    style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        width: "100%",
+                        height: "100%"
+                    }}
+                    contentContainerStyle={{
+                        backgroundColor: "#efefef",
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    ListHeaderComponent={ListHeaderView()}
+                    ListHeaderComponentStyle={{
+                        paddingBottom: 20,
+                        backgroundColor: "white",
+                    }}
+                    separatorComponent={() => {
+                        return (
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 1,
+                                    backgroundColor: "#efefef"
+                                }}
+                            />
+                        );
+                    }}
+                />
             )}
-
         </View>
     );
 }
