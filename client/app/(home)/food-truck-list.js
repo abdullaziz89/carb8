@@ -276,7 +276,7 @@ export default (props) => {
                             }}
                             numberOfLines={3}
                         >
-                            {i18n.language === "ar" ? item.descriptionEng : item.descriptionArb}
+                            {i18n.language === "ar" ? item.descriptionArb : item.descriptionEng}
                         </Text>
                         <View
                             style={{
