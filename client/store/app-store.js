@@ -9,6 +9,7 @@ export const useAppStateStore = create(
             verified: false,
             welcomePreviews: false,
             token: null,
+            cart: [],
             user: {
                 user: {
                     id: null,
@@ -59,6 +60,44 @@ export const useAppStateStore = create(
             setLogin: (login) => set((state) => {
                 return {isLogin: login}
             }),
+            setCart: (cart) => set({cart}),
+            getCart: () => get().cart,
+            addCartItem: (item) => set((state) => {
+                const cart = state.cart;
+
+                // check if the item is already in the cart and update the quantity
+                const index = cart.findIndex((cartItem) => cartItem.id === item.id);
+                if (index !== -1) {
+                    cart[index].quantity += 1;
+                    return {cart}
+                } else {
+                    cart.push({
+                        ...item,
+                        quantity: 1
+                    });
+                    return {cart}
+                }
+            }),
+            removeCartItem: (itemId) => set((state) => {
+
+                // check if the time is already in the cart and update the quantity, if the quantity is 1 remove the item else decrease the quantity
+                const cart = state.cart;
+                const index = cart.findIndex((cartItem) => cartItem.id === itemId);
+                if (index !== -1) {
+                    if (cart[index].quantity === 1) {
+                        cart.splice(index, 1);
+                    } else {
+                        cart[index].quantity -= 1;
+                    }
+                }
+                return {cart}
+            }),
+            quantityInCart: () => get().cart.reduce((acc, item) => acc + item.quantity, 0),
+            itemQuantityInCart: (itemId) => {
+                const itemIndex = get().cart.findIndex((cartItem) => cartItem.id === itemId);
+                return itemIndex !== -1 ? get().cart[itemIndex].quantity : 0;
+            },
+            totalPriceInCart: () => get().cart.reduce((acc, item) => acc + item.price * item.quantity, 0),
             setToken: (token) => set({token}),
             getToken: () => get().token,
             isVerified: () => get().verified,

@@ -9,7 +9,7 @@ import {
     Linking,
     TouchableOpacity, FlatList, SectionList
 } from "react-native";
-import {Stack, useRouter, useSearchParams} from "expo-router";
+import {Stack, useNavigation, useRouter, useSearchParams} from "expo-router";
 import {useEffect, useRef, useState} from "react";
 import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
@@ -22,6 +22,8 @@ import TextWithFont from "../../component/TextWithFont";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import deg2rad from "deg2rad";
 import * as Location from "expo-location";
+import {useAppStateStore} from "../../store/app-store";
+import {MotiView, useDynamicAnimation} from "moti";
 
 const {width} = Dimensions.get("window");
 const isWeb = Platform.OS === "web";
@@ -40,16 +42,17 @@ export default (props) => {
     const contactViewRef = useRef(null);
 
     const [foods, setFoods] = useState([
-
         {
             title: "Burger",
             data: [
                 {
+                    id: 1,
                     name: "Cheese Burger",
                     price: 1.5,
                     image: "https://s23209.pcdn.co/wp-content/uploads/2022/07/220602_DD_The-Best-Ever-Cheeseburger_267.jpg"
                 },
                 {
+                    id: 2,
                     name: "Double Cheese Burger",
                     price: 2.5,
                     image: "https://s7d1.scene7.com/is/image/mcdonalds/Header_DoubleCheeseburger_832x472:1-3-product-tile-desktop?wid=763&hei=472&dpr=off"
@@ -60,11 +63,13 @@ export default (props) => {
             title: "Pizza",
             data: [
                 {
+                    id: 3,
                     name: "Cheese Pizza",
                     price: 2.5,
                     image: "https://www.foodandwine.com/thmb/Wd4lBRZz3X_8qBr69UOu2m7I2iw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
                 },
                 {
+                    id: 4,
                     name: "Pepperoni Pizza",
                     price: 3.5,
                     image: "https://www.simplyrecipes.com/thmb/KE6iMblr3R2Db6oE8HdyVsFSj2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2019__09__easy-pepperoni-pizza-lead-3-1024x682-583b275444104ef189d693a64df625da.jpg"
@@ -75,11 +80,13 @@ export default (props) => {
             title: "Drinks",
             data: [
                 {
+                    id: 5,
                     name: "Pepsi",
                     price: 0.5,
                     image: "https://cdnprod.mafretailproxy.com/sys-master-root/he9/hd8/17543283703838/30203_main.jpg_480Wx480H"
                 },
                 {
+                    id: 6,
                     name: "Coca Cola",
                     price: 0.5,
                     image: "https://m.media-amazon.com/images/I/51v8nyxSOYL._SL1500_.jpg"
@@ -90,11 +97,13 @@ export default (props) => {
             title: "Desserts",
             data: [
                 {
+                    id: 7,
                     name: "Chocolate Cake",
                     price: 2.5,
                     image: "https://scientificallysweet.com/wp-content/uploads/2020/09/IMG_4087-feature-2.jpg"
                 },
                 {
+                    id: 8,
                     name: "Cheese Cake",
                     price: 3.5,
                     image: "https://sugarspunrun.com/wp-content/uploads/2019/01/Best-Cheesecake-Recipe-2-1-of-1-4-500x500.jpg"
@@ -103,11 +112,20 @@ export default (props) => {
         }
     ]);
 
+    const {quantityInCart, removeCartItem, addCartItem, itemQuantityInCart} = useAppStateStore()
+
     const router = useRouter();
 
     const styles = useStyles();
 
-    const {navigation} = props;
+    const navigation = useNavigation();
+
+    const checkoutAnimStyle = useDynamicAnimation(() => {
+        return {
+            opacity: 1,
+            translateY: 60,
+        }
+    });
 
     useEffect(() => {
 
@@ -131,8 +149,18 @@ export default (props) => {
     }, [params.foodTruck]);
 
     useEffect(() => {
-        console.log(contactViewRef.current);
-    }, [contactViewRef]);
+        if (quantityInCart() > 0) {
+            checkoutAnimStyle.animateTo((current) => ({
+                ...current,
+                translateY: 0,
+            }));
+        } else {
+            checkoutAnimStyle.animateTo((current) => ({
+                ...current,
+                translateY: 60,
+            }));
+        }
+    }, [quantityInCart()]);
 
     const findLogoImage = (images) => {
 
@@ -379,57 +407,48 @@ export default (props) => {
                 </View>
 
                 {/*address*/}
-                <View
-                    style={styles.addressContainer}
-                >
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                            alignItems: "center",
-                            justifyContent: "space-between"
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                marginBottom: 10
-                            }}
-                        >
-                            {t("foodTruck.address")}
-                        </Text>
-                        {/*{*/}
-                        {/*    foodTruck.address.googleLat !== 0 && foodTruck.address.googleLang !== 0 && (*/}
-                        {/*        <TouchableOpacity*/}
-                        {/*            onPress={() => openGps(foodTruck.address.googleLat, foodTruck.address.googleLang)}*/}
-                        {/*        >*/}
-                        {/*            <Entypo name="location" size={24} color="#5bc0de"/>*/}
-                        {/*        </TouchableOpacity>*/}
-                        {/*    )*/}
-                        {/*}*/}
-                        {
-                            foodTruck.address.googleLocation.length > 0 && (
-                                <TouchableOpacity
-                                    onPress={() => openGoogleLocation(foodTruck.address.googleLocation)}
-                                >
-                                    <Entypo name="location" size={24} color="#5bc0de"/>
-                                </TouchableOpacity>
-                            )
-                        }
-                    </View>
-                    <Text
-                        style={[
-                            {
-                                fontSize: 16,
-                                fontWeight: "normal"
-                            },
-                            i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
-                        ]}
-                    >
-                        {foodTruck.address.address}
-                    </Text>
-                </View>
+                {/*<View*/}
+                {/*    style={styles.addressContainer}*/}
+                {/*>*/}
+                {/*    <View*/}
+                {/*        style={{*/}
+                {/*            flex: 1,*/}
+                {/*            flexDirection: i18n.language === "ar" ? "row-reverse" : "row",*/}
+                {/*            alignItems: "center",*/}
+                {/*            justifyContent: "space-between"*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <Text*/}
+                {/*            style={{*/}
+                {/*                fontSize: 18,*/}
+                {/*                fontWeight: "bold",*/}
+                {/*                marginBottom: 10*/}
+                {/*            }}*/}
+                {/*        >*/}
+                {/*            {t("foodTruck.address")}*/}
+                {/*        </Text>*/}
+                {/*        /!*{*!/*/}
+                {/*        /!*    foodTruck.address.googleLat !== 0 && foodTruck.address.googleLang !== 0 && (*!/*/}
+                {/*        /!*        <TouchableOpacity*!/*/}
+                {/*        /!*            onPress={() => openGps(foodTruck.address.googleLat, foodTruck.address.googleLang)}*!/*/}
+                {/*        /!*        >*!/*/}
+                {/*        /!*            <Entypo name="location" size={24} color="#5bc0de"/>*!/*/}
+                {/*        /!*        </TouchableOpacity>*!/*/}
+                {/*        /!*    )*!/*/}
+                {/*        /!*}*!/*/}
+                {/*    </View>*/}
+                {/*    <Text*/}
+                {/*        style={[*/}
+                {/*            {*/}
+                {/*                fontSize: 16,*/}
+                {/*                fontWeight: "normal"*/}
+                {/*            },*/}
+                {/*            i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}*/}
+                {/*        ]}*/}
+                {/*    >*/}
+                {/*        {foodTruck.address.address}*/}
+                {/*    </Text>*/}
+                {/*</View>*/}
 
                 <View
                     style={styles.contactContainer}
@@ -505,15 +524,23 @@ export default (props) => {
                     renderItem={({item}) => {
                         return (
                             <View
-                                style={{
-                                    width: "100%",
-                                    backgroundColor: "white",
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    paddingHorizontal: 20,
-                                    paddingVertical: 20,
-                                }}
+                                style={[
+                                    {
+                                        width: "100%",
+                                        backgroundColor: "white",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        paddingHorizontal: 20,
+                                        paddingVertical: 20,
+                                    },
+                                    i18n.language === "ar" ? {flexDirection: "row-reverse"} : {flexDirection: "row"},
+                                    itemQuantityInCart(item.id) > 0 ? {
+                                        borderLeftWidth: 5,
+                                        borderLeftStyle: "solid",
+                                        borderLeftColor: "#f8b91c",
+                                    } : {}
+                                ]}
                             >
                                 <Image
                                     source={{uri: item.image}}
@@ -559,20 +586,53 @@ export default (props) => {
                                         borderRadius: 10,
                                     }}
                                 >
-                                    <TouchableOpacity
+                                    <View
                                         style={{
-                                            width: 40,
-                                            height: 40,
-                                            borderRadius: 20,
+                                            flexDirection: "column",
                                             alignItems: "center",
-                                            justifyContent: "center"
-                                        }}
-                                        onPress={() => {
-                                            console.log("Add to cart");
+                                            justifyContent: "center",
+                                            padding: 10,
                                         }}
                                     >
-                                        <MaterialCommunityIcons name="plus-circle" size={24} color="#f8b91c"/>
-                                    </TouchableOpacity>
+                                        {
+                                            itemQuantityInCart(item.id) > 0 ? (
+                                                <View
+                                                    style={{
+                                                        flexDirection: "column",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-around",
+                                                    }}
+                                                >
+                                                    <TouchableOpacity
+                                                        onPress={() => addCartItem(item)}
+                                                    >
+                                                        <MaterialCommunityIcons name="plus-circle" size={24}
+                                                                                color="#f8b91c"/>
+                                                    </TouchableOpacity>
+                                                    <TextWithFont
+                                                        text={itemQuantityInCart(item.id)}
+                                                        style={{
+                                                            fontSize: 16,
+                                                            fontWeight: "bold",
+                                                            color: "black",
+                                                        }}
+                                                    />
+                                                    <TouchableOpacity
+                                                        onPress={() => removeCartItem(item.id)}
+                                                    >
+                                                        <MaterialCommunityIcons name="minus-circle" size={24}
+                                                                                color="#f8b91c"/>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            ) : (
+                                                <TouchableOpacity
+                                                    onPress={() => addCartItem(item)}
+                                                >
+                                                    <MaterialIcons name="add-circle" size={24} color="#f8b91c"/>
+                                                </TouchableOpacity>
+                                            )
+                                        }
+                                    </View>
                                 </View>
                             </View>
                         );
@@ -606,10 +666,12 @@ export default (props) => {
                     stickySectionHeadersEnabled={true}
                 />
             )}
-            <View
+            <MotiView
+                state={checkoutAnimStyle}
+                delay={100}
                 style={{
                     width: "100%",
-                    height: 70,
+                    height: 60,
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: "#fff",
@@ -618,24 +680,27 @@ export default (props) => {
                     shadowColor: "black",
                     shadowOffset: {width: 0, height: 0},
                     shadowOpacity: 0.5,
-                    elevation: 10
+                    elevation: 10,
                 }}
             >
                 <TouchableOpacity
-                    style={{
-                        width: "80%",
-                        height: 50,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: "#f8b91c",
-                        borderRadius: 10,
-                    }}
+                    style={[
+                        {
+                            width: "80%",
+                            height: 40,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: 10,
+                        },
+                        quantityInCart() === 0 ? {backgroundColor: "grey"} : {backgroundColor: "#f8b91c"}
+                    ]}
                     onPress={() => {
-                        console.log("View");
+                        navigation.navigate("overview", {foodTruckParam: JSON.stringify(foodTruck)});
                     }}
+                    disabled={quantityInCart() === 0}
                 >
                     <TextWithFont
-                        text={"Checkout"}
+                        text={`Checkout (${quantityInCart()})`}
                         style={{
                             fontSize: 20,
                             fontWeight: "bold",
@@ -643,7 +708,7 @@ export default (props) => {
                         }}
                     />
                 </TouchableOpacity>
-            </View>
+            </MotiView>
         </View>
     );
 }
@@ -679,7 +744,7 @@ const useStyles = CreateResponsiveStyle(
             justifyContent: "space-around",
             width: "100%",
             marginTop: 20,
-            borderTopColor: "white",
+            borderTopColor: "rgba(255,255,255,0.5)",
             borderTopWidth: 1,
         },
         contactItem: {

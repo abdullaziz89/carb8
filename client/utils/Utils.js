@@ -15,3 +15,4 @@ const DAYS = [
 ];
 
 export { DAYS }
+
