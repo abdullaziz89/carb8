@@ -10,6 +10,7 @@ export const useAppStateStore = create(
             welcomePreviews: false,
             token: null,
             cart: [],
+            order: null,
             user: {
                 user: {
                     id: null,
@@ -115,6 +116,8 @@ export const useAppStateStore = create(
             setRefreshTokens: (refreshTokens) => set({refreshTokens}),
             getSelectedGovernorate: () => get().options.selectedGovernorate,
             setSelectedGovernorateOpt: (selectedGovernorate) => set({options: {selectedGovernorate}}),
+            setOrder: (order) => set({order}),
+            getOrder: () => get().order,
         }), {
             name: 'kwft-app-storage',
             storage: createJSONStorage(() => zustandStorage),

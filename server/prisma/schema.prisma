@@ -70,9 +70,13 @@ model FoodTruck {
   orderInView    Int                   @default(0)
   cuisineId      String?
   address        Address?
+  iban           String?
   foodTruckInfo  FoodTruckInformation?
   foodTruckView  FoodTruckView?
   User           User?
+  Customers      Customer[]
+  Order          Order[]
+  Voucher        Voucher[]
 }
 
 model FoodTruckInformation {
@@ -198,6 +202,99 @@ model Device {
   userId      String
   createdDate DateTime   @default(now())
   modifyDate  DateTime   @updatedAt
+}
+
+// Voucher model
+model Voucher {
+  id          String    @id @default(uuid())
+  code        String    @unique
+  description String?
+  discount    Float
+  enable      Boolean   @default(false)
+  fromDate    DateTime
+  toDate      DateTime
+  createdDate DateTime  @default(now())
+  modifyDate  DateTime  @updatedAt
+  Order       Order[]
+  FoodTruck   FoodTruck @relation(fields: [foodTruckId], references: [id])
+  foodTruckId String
+}
+
+// payment for each subscription
+model Payment {
+  id              String         @id @default(uuid())
+  createdDate     DateTime       @default(now())
+  modifyDate      DateTime       @updatedAt
+  PaymentStatus   PaymentStatus? @relation(fields: [paymentStatusId], references: [id])
+  paymentStatusId String?
+  Invoice         Invoice        @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId       String
+}
+
+// payment status
+model PaymentStatus {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  enable      Boolean   @default(true)
+  createdDate DateTime  @default(now())
+  modifyDate  DateTime  @updatedAt
+  Payment     Payment[]
+  Invoice     Invoice[]
+}
+
+// invoice for each payment
+model Invoice {
+  id              String        @id @default(uuid())
+  paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
+  createdDate     DateTime      @default(now())
+  modifyDate      DateTime      @updatedAt
+  paymentId       String
+  paymentStatusId String
+  Order           Order[]
+  Payment         Payment[]
+}
+
+model Customer {
+  id          String      @id @default(uuid())
+  phone       String      @unique
+  enable      Boolean     @default(false)
+  createdDate DateTime    @default(now())
+  modifyDate  DateTime    @updatedAt
+  Order       Order[]
+  FoodTurck   FoodTruck[]
+}
+
+// orders with produt and customer
+model Order {
+  id          String     @id @default(uuid())
+  customer    Customer?  @relation(fields: [customerId], references: [id])
+  product     Product[]
+  totalPrice  Float
+  quickOrder  Boolean    @default(false)
+  invoice     Invoice    @relation(fields: [invoiceId], references: [id])
+  enable      Boolean    @default(true)
+  createdDate DateTime   @default(now())
+  modifyDate  DateTime   @updatedAt
+  customerId  String?
+  invoiceId   String
+  FoodTurck   FoodTruck? @relation(fields: [foodTruckId], references: [id])
+  foodTruckId String?
+  Voucher     Voucher?   @relation(fields: [voucherId], references: [id])
+  voucherId   String?
+}
+
+// products
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  description String
+  quantity    Int
+  enable      Boolean  @default(true)
+  createdDate DateTime @default(now())
+  modifyDate  DateTime @updatedAt
+  Order       Order?   @relation(fields: [orderId], references: [id])
+  orderId     String?
 }
 
 enum DeviceType {

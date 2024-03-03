@@ -172,7 +172,7 @@ export default (props) => {
 
     const indicator = showIndicator ? (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <ActivityIndicator size="large" color="#0000ff"/>
+            <ActivityIndicator size="large" color="#f8b91c"/>
         </View>
     ) : null;
 

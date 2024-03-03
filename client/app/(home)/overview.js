@@ -1,13 +1,13 @@
 import {View, Text, ActivityIndicator, TouchableOpacity, Dimensions, TextInput, FlatList} from "react-native";
 import {useAppStateStore} from "../../store/app-store";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {SplashScreen, Stack, useLocalSearchParams, useSearchParams} from "expo-router";
+import {SplashScreen, Stack, useLocalSearchParams, useNavigation, useRouter, useSearchParams} from "expo-router";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {Image} from "expo-image";
 import TextWithFont from "../../component/TextWithFont";
 import {useTranslation} from "react-i18next";
 import ActionSheet from "react-native-actions-sheet";
-import {MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
+import {AntDesign, MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
 import HeaderTitleView from "./HeaderTitleView";
 
 SplashScreen.preventAutoHideAsync();
@@ -16,7 +16,9 @@ const {width, height} = Dimensions.get("window");
 
 export default () => {
 
-    const {getCart, itemQuantityInCart, addCartItem, removeCartItem, totalPriceInCart} = useAppStateStore();
+    const {getCart, itemQuantityInCart, addCartItem, removeCartItem, totalPriceInCart, setOrder} = useAppStateStore();
+    const navigation = useNavigation();
+
     const {foodTruckParam} = useLocalSearchParams();
     const [foodTruck, setFoodTruck] = useState(JSON.parse(foodTruckParam));
 
@@ -234,7 +236,7 @@ export default () => {
                         setTimeout(() => {
                             itemActionSheetRef.current?.hide();
                             setIsLoading(false);
-                        }, 1000);
+                        }, 500);
                     }}
                 >
                     <TextWithFont
@@ -299,11 +301,11 @@ export default () => {
                     }}
                     onPress={() => {
                         setIsLoading(true);
-                        setVouchers([...vouchers, selectedVoucher])
                         setTimeout(() => {
+                            setVouchers([...vouchers, selectedVoucher])
                             setIsLoading(false);
                             voucherActionSheetRef.current?.hide()
-                        }, 1000);
+                        }, 500);
                     }}
                 >
                     <TextWithFont
@@ -492,7 +494,9 @@ export default () => {
                 <FlatList
                     data={vouchers}
                     style={{
-                        width: "100%",
+                        flex: 1,
+                    }}
+                    contentContainerStyle={{
                         padding: 10,
                         backgroundColor: "white",
                         marginTop: 5,
@@ -503,9 +507,10 @@ export default () => {
                             <View
                                 key={index}
                                 style={{
+                                    width: width,
                                     flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
                                     alignItems: "center",
-                                    justifyContent: "space-around",
+                                    justifyContent: "flex-start",
                                     backgroundColor: "white",
                                     padding: 10,
                                     marginTop: 5,
@@ -514,10 +519,11 @@ export default () => {
                                 <MaterialCommunityIcons name="ticket-percent" size={20} color="#000"/>
                                 <View
                                     style={{
-                                        width: "50%",
+                                        width: width * 0.6,
                                         flexDirection: "row",
                                         alignItems: i18n.language === "ar" ? "flex-end" : "flex-start",
-                                        justifyContent: "flex-start",
+                                        justifyContent: "space-between",
+                                        marginStart: 15
                                     }}
                                 >
                                     <TextWithFont
@@ -542,6 +548,26 @@ export default () => {
                                         ]}
                                     />
                                 </View>
+                                {/* delete button */}
+                                <TouchableOpacity
+                                    style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 15,
+                                        alignItems: "center",
+                                        justifyContent: "flex-end",
+                                        marginStart: 10
+                                    }}
+                                    onPress={() => {
+                                        setIsLoading(true);
+                                        setTimeout(() => {
+                                            setVouchers(vouchers.filter((voucher) => voucher.code !== item.code));
+                                            setIsLoading(false);
+                                        }, 500);
+                                    }}
+                                >
+                                    <AntDesign name="delete" size={24} color="#dc3545"/>
+                                </TouchableOpacity>
                             </View>
                         )
                     }}
@@ -560,7 +586,7 @@ export default () => {
                                     setTimeout(() => {
                                         setIsLoading(false);
                                         voucherActionSheetRef.current?.show();
-                                    }, 1000);
+                                    }, 500);
                                 }}
                             >
                                 <TextWithFont
@@ -789,7 +815,17 @@ export default () => {
                     setIsLoading(true);
                     setTimeout(() => {
                         setIsLoading(false);
-                    }, 1000);
+                        setOrder({
+                            foodTruck: foodTruck,
+                            orderNote: orderNote,
+                            items: getCart(),
+                            vouchers: vouchers,
+                            subTotal: totalPriceInCart(),
+                            total: vouchers.length > 0 ? totalPriceInCart() - (totalPriceInCart() * vouchers[0].discount / 100) : totalPriceInCart(),
+                            createTime: new Date(),
+                        });
+                        navigation.navigate("checkout");
+                    }, 500);
                 }}
             >
                 {
