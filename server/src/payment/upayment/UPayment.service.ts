@@ -83,27 +83,51 @@ export class UPaymentService {
         products: any[],
         customer: any
     ) => {
-        return {
-            ...this.paymentObj,
-            order_id: order.id,
-            total_price: order.totalPrice,
-            ProductTitle: foodTruckDetails.name,
-            ProductName: products.map(product => product.name),
-            ProductPrice: products.map(product => product.price),
-            ProductQty: products.map(product => product.quantity),
-            CurrencyCode: "KWD",
-            CstFName: foodTruckDetails.name,
-            CstEmail: foodTruckDetails.email,
-            CstMobile: foodTruckDetails.phone,
-            reference: order.id,
-            ExtraMerchantsData: JSON.stringify({
-                amounts: [order.totalPrice],
-                charges: [0.250],
-                chargeType: ["fixed"],
-                cc_charges: [0.1],
-                cc_chargeType: ["fixed"],
-                ibans: [foodTruckDetails.iban]
-            })
+
+        const isMainIban = this.configService.get("MAIN_IBAN") === foodTruckDetails.iban;
+
+        let returnObj  = {
+            products: products.map(product => ({
+                name: product.name,
+                description: product.description, // No equivalent field in the existing data
+                price: product.price,
+                quantity: product.quantity
+            })),
+            order: {
+                id: order.id,
+                reference: order.id, // Assuming order.id is equivalent to reference
+                description: "", // No equivalent field in the existing data
+                currency: "KWD", // Hardcoded as in the existing data
+                amount: order.totalPrice
+            },
+            language: "en", // Hardcoded as there's no equivalent field in the existing data
+            reference: {
+                id: order.id // Assuming order.id is equivalent to reference id
+            },
+            customer: {
+                uniqueId: customer.id,
+                mobile: customer.phone
+            },
+            returnUrl: this.paymentObj.success_url,
+            cancelUrl: this.paymentObj.error_url,
+            notificationUrl: this.paymentObj.notifyURL,
+            customerExtraData: order.foodTruck.id, // No equivalent field in the existing data
         };
+
+        if (!isMainIban) {
+            return {
+                ...returnObj,
+                extraMerchantData: [{
+                    amount: order.totalPrice,
+                    knetCharge: 0.250, // Hardcoded as in the existing data
+                    knetChargeType: "fixed", // Hardcoded as in the existing data
+                    ccCharge: 3.0, // Hardcoded as in the existing data
+                    ccChargeType: "percentage", // Hardcoded as in the existing data
+                    ibanNumber: foodTruckDetails.iban
+                }]
+            }
+        } else {
+            return returnObj
+        }
     };
 }

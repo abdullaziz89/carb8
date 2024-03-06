@@ -2,12 +2,13 @@ import {useAppStateStore} from "../../store/app-store";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {Stack} from "expo-router";
 import HeaderTitleView from "./HeaderTitleView";
-import {ActivityIndicator, FlatList, TextInput, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, FlatList, TextInput, TouchableOpacity, View, StyleSheet} from "react-native";
 import TextWithFont from "../../component/TextWithFont";
 import {Image} from "expo-image";
 import {useEffect, useState} from "react";
 import {AntDesign} from "@expo/vector-icons";
 import {useTranslation} from "react-i18next";
+import axios from "axios";
 
 export default () => {
 
@@ -17,35 +18,131 @@ export default () => {
     const [logo, setLogo] = useState();
     const [customerPhone, setCustomerPhone] = useState("");
     const [paymentMethod, setPaymentMethod] = useState([]);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-
-    useEffect(() => {
-        setPaymentMethod([
-            {
-                id: 1,
-                key: "knet",
-                title: 'K-net',
-                icon: () => {
-                    return <Image
-                        source={require("../../assets/knet-logo.png")}
-                        style={{
+    const [paymentButtonsIcons, setPaymentButtonsIcons] = useState([
+        {
+            key: "knet",
+            label: "KNET",
+            icon: () => {
+                return <Image
+                    source={require("../../assets/paymentLogo/knet-logo.png")}
+                    style={[
+                        {
                             width: 24,
                             height: 24,
                             backgroundColor: "white",
                             padding: 5,
-                        }}
-                        contentFit={"contain"}
-                    />
-                },
+                        },
+                        styles.paymentButtonIcon
+                    ]}
+                    contentFit={"contain"}
+                />
             },
-            {
-                id: 2,
-                key: "creditCard",
-                title: 'Credit Card',
-                icon: () => <AntDesign name="creditcard" size={24} color="black"/>,
-            }
-        ]);
+        }, {
+            key: "apple_pay",
+            label: "Apple Pay",
+            icon: () => {
+                return <Image
+                    source={require("../../assets/paymentLogo/apple-pay.png")}
+                    style={[
+                        {
+                            width: 24,
+                            height: 24,
+                            backgroundColor: "white",
+                            padding: 5,
+                        },
+                        styles.paymentButtonIcon
+                    ]}
+                    contentFit={"contain"}
+                />
+            },
+        }, {
+            key: "google_pay",
+            label: "Google Pay",
+            icon: () => {
+                return <Image
+                    source={require("../../assets/paymentLogo/google-pay.png")}
+                    style={[
+                        {
+                            width: 24,
+                            height: 24,
+                            backgroundColor: "white",
+                            padding: 5,
+                        },
+                        styles.paymentButtonIcon
+                    ]}
+                    contentFit={"contain"}
+                />
+            },
+        },
+        {
+            key: "samsung_pay",
+            label: "Samsung Pay",
+            icon: () => {
+                return <Image
+                    source={require("../../assets/paymentLogo/samsung-pay.png")}
+                    style={[
+                        {
+                            width: 24,
+                            height: 24,
+                            backgroundColor: "white",
+                            padding: 5,
+                        },
+                        styles.paymentButtonIcon
+                    ]}
+                    contentFit={"contain"}
+                />
+            },
+        },
+        {
+            key: "credit_card",
+            label: "Credit Card",
+            icon: () => <AntDesign name="creditcard" size={24} color="black"/>,
+        }
+    ]);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
+    const [paymentButtonsLoading, setPaymentButtonsLoading] = useState(true);
+
+    useEffect(() => {
+
         setLogo(findLogoImage(foodTruck.images));
+
+        const getPaymentsButtons = async () => {
+
+            const headers = {
+                "Authorization": "Bearer 03795eea5d39bf173cb30cff404b51084f8f1b56",
+                "Accept": "application/json",
+            }
+
+            return await axios.get("https://uapi.upayments.com/api/v1/check-payment-button-status", {
+                headers: headers
+            });
+        }
+
+        getPaymentsButtons()
+            .then((response) => {
+
+                setPaymentButtonsLoading(false);
+                console.log('get payments buttons resp: ', response.data)
+
+                let payButton = response.data.data.payButtons;
+
+                // remove false value from the object
+                payButton = Object.keys(payButton).filter((key) => {
+                    return payButton[key];
+                })
+
+                setPaymentMethod(payButton.map((button) => {
+                    return paymentButtonsIcons.find((icon) => {
+                        return icon.key === button;
+                    })
+                }))
+
+            })
+            .catch((error) => {
+                setPaymentButtonsLoading(false);
+                console.log('get payments buttons error resp: ', error)
+            });
     }, []);
 
     const findLogoImage = (images) => {
@@ -263,46 +360,96 @@ export default () => {
                     }}
                 />
                 <FlatList
-                    data={paymentMethod}
+                    data={paymentButtonsLoading ? [{id: "loading"}] : paymentMethod}
                     style={{
                         width: "100%",
                     }}
                     scrollEnabled={false}
                     renderItem={({item, index}) => {
-                        return (
-                            <TouchableOpacity
-                                style={[
-                                    {
+                        if (paymentButtonsLoading) {
+                            return (
+                                <View
+                                    style={{
                                         width: "100%",
                                         flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
                                         alignItems: "center",
-                                        justifyContent: "flex-start",
+                                        justifyContent: "space-between",
                                         backgroundColor: "white",
                                         padding: 10,
-                                    },
-                                    selectedPaymentMethod && selectedPaymentMethod.id === item.id ? {backgroundColor: "#f8b91c"} : {}
-                                ]}
-                                onPress={() => {
-                                    setSelectedPaymentMethod(item);
-                                }}
-                            >
-                                {item.icon()}
-                                <TextWithFont
-                                    text={item.title}
+                                    }}
+                                >
+                                    <ActivityIndicator size="small" color="#0000ff"/>
+                                </View>
+                            )
+                        } else {
+                            return (
+                                <TouchableOpacity
                                     style={[
                                         {
-                                            fontSize: 16,
-                                            margin: 10,
-                                            marginStart: 10,
+                                            width: "100%",
+                                            flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
+                                            alignItems: "center",
+                                            justifyContent: "flex-start",
+                                            backgroundColor: "white",
+                                            padding: 10,
                                         },
-                                        selectedPaymentMethod && selectedPaymentMethod.id === item.id ? {color: "white"} : {color: "black"}
+                                        selectedPaymentMethod && selectedPaymentMethod.key === item.key ? {backgroundColor: "#f8b91c"} : {}
                                     ]}
-                                />
-                            </TouchableOpacity>
-                        )
+                                    onPress={() => {
+                                        setSelectedPaymentMethod(item);
+                                    }}
+                                >
+                                    {item.icon()}
+                                    <TextWithFont
+                                        text={item.label}
+                                        style={[
+                                            {
+                                                fontSize: 16,
+                                                margin: 10,
+                                                marginStart: 10,
+                                            },
+                                            selectedPaymentMethod && selectedPaymentMethod.key === item.key ? {color: "white"} : {color: "black"}
+                                        ]}
+                                    />
+                                </TouchableOpacity>
+                            )
+                        }
                     }}
                 />
             </View>
+            <TouchableOpacity
+                style={[
+                    {
+                        width: "100%",
+                        padding: 10,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 30,
+                    },
+                    selectedPaymentMethod === null || customerPhone === "" || customerPhone.length < 8 ? {backgroundColor: "gray"} : {backgroundColor: "#f8b91c"}
+                ]}
+                onPress={() => {
+
+                }}
+                disabled={selectedPaymentMethod === null || customerPhone === "" || customerPhone.length < 8}
+            >
+                <TextWithFont
+                    text={i18n.language === "ar" ? 'الدفع' : 'Checkout'}
+                    style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        color: "white"
+                    }}
+                />
+            </TouchableOpacity>
         </KeyboardAwareScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    paymentButtonIcon: {
+        aspectRatio: 1,
+        objectFit: "contain",
+        mixBlendMode: "color-burn",
+    }
+});
