@@ -11,7 +11,7 @@ export class PaymentController {
     }
 
     @Post('order')
-    createOrder(@Body() body:{ customer: Customer; products: Product[], foodTruckId: string, order: any }) {
+    createOrder(@Body() body:{ customer: Customer; products: Product[], foodTruckId: string, paymentMethod: string }) {
         return this.paymentService.createOrder(body);
     }
 
@@ -51,6 +51,7 @@ export class PaymentController {
 
     @Get('notify')
     paymentNotify(@Query() paymentResponse: any) {
+        console.log('notify', paymentResponse)
         if (!paymentResponse || !paymentResponse.OrderID) {
             throw new HttpException('Invalid payment response', 400);
         }

@@ -36,7 +36,7 @@ export function customDrawerContent(props, user, isLogin) {
     }, []);
 
     const getLogo = () => {
-        const logo = `http://192.168.8.133:8081/foodTruck/${user.foodTruck.id}/logo.jpg`
+        const logo = `http://192.168.3.8:8081/foodTruck/${user.foodTruck.id}/logo.jpg`
         return (
             <Image
                 source={{uri: logo}}

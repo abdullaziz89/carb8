@@ -223,6 +223,8 @@ model Voucher {
 // payment for each subscription
 model Payment {
   id              String         @id @default(uuid())
+  amount          Float
+  method          String
   createdDate     DateTime       @default(now())
   modifyDate      DateTime       @updatedAt
   PaymentStatus   PaymentStatus? @relation(fields: [paymentStatusId], references: [id])

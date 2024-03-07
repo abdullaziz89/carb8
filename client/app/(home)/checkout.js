@@ -1,6 +1,6 @@
 import {useAppStateStore} from "../../store/app-store";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {Stack} from "expo-router";
+import {Link, Stack} from "expo-router";
 import HeaderTitleView from "./HeaderTitleView";
 import {ActivityIndicator, FlatList, TextInput, TouchableOpacity, View, StyleSheet} from "react-native";
 import TextWithFont from "../../component/TextWithFont";
@@ -9,14 +9,17 @@ import {useEffect, useState} from "react";
 import {AntDesign} from "@expo/vector-icons";
 import {useTranslation} from "react-i18next";
 import axios from "axios";
+import {createOrder, payOrder} from "../../services/PaymentService";
+import ExpoWebBrowser from "expo-web-browser/src/ExpoWebBrowser";
+import * as WebBrowser from "expo-web-browser";
 
 export default () => {
 
-    const {getOrder} = useAppStateStore();
+    const {getOrder, getCart} = useAppStateStore();
     const foodTruck = getOrder().foodTruck;
     const {t, i18n} = useTranslation();
     const [logo, setLogo] = useState();
-    const [customerPhone, setCustomerPhone] = useState("");
+    const [customerPhone, setCustomerPhone] = useState("98877449");
     const [paymentMethod, setPaymentMethod] = useState([]);
     const [paymentButtonsIcons, setPaymentButtonsIcons] = useState([
         {
@@ -37,6 +40,7 @@ export default () => {
                     contentFit={"contain"}
                 />
             },
+            method: "knet"
         }, {
             key: "apple_pay",
             label: "Apple Pay",
@@ -55,6 +59,7 @@ export default () => {
                     contentFit={"contain"}
                 />
             },
+            method: " apple-pay"
         }, {
             key: "google_pay",
             label: "Google Pay",
@@ -73,6 +78,7 @@ export default () => {
                     contentFit={"contain"}
                 />
             },
+            method: "google-pay"
         },
         {
             key: "samsung_pay",
@@ -92,11 +98,13 @@ export default () => {
                     contentFit={"contain"}
                 />
             },
+            method: "samsung-pay"
         },
         {
             key: "credit_card",
             label: "Credit Card",
             icon: () => <AntDesign name="creditcard" size={24} color="black"/>,
+            method: "cc"
         }
     ]);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
@@ -151,6 +159,43 @@ export default () => {
             const split = image.split("/");
             return split[split.length - 1].split(".")[0] === "logo";
         });
+    }
+
+    const pay = () => {
+        const payload = {
+            paymentMethod: selectedPaymentMethod.method,
+            customer: {
+                phone: customerPhone,
+            },
+            products: getCart().map((item) => {
+                return {
+                    name: item.name,
+                    description: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                }
+            }),
+            foodTruckId: foodTruck.id,
+        }
+
+        console.log('pay payload: ', payload)
+
+        createOrder(payload)
+            .then((response) => {
+                console.log('create order resp: ', response)
+                payOrder(response.id)
+                    .then(async (response) => {
+                        console.log('pay order resp: ', response)
+
+                        await WebBrowser.openBrowserAsync(response.data.link);
+                    })
+                    .catch((error) => {
+                        console.log('pay order error resp: ', error)
+                    });
+            })
+            .catch((error) => {
+                console.log('create order error resp: ', error)
+            });
     }
 
     return (
@@ -428,9 +473,7 @@ export default () => {
                     },
                     selectedPaymentMethod === null || customerPhone === "" || customerPhone.length < 8 ? {backgroundColor: "gray"} : {backgroundColor: "#f8b91c"}
                 ]}
-                onPress={() => {
-
-                }}
+                onPress={pay}
                 disabled={selectedPaymentMethod === null || customerPhone === "" || customerPhone.length < 8}
             >
                 <TextWithFont

@@ -3,7 +3,7 @@ import {PaymentResponse} from "./PaymentResponse";
 import {PrismaService} from "../prisma/prisma.service";
 import {ConfigService} from "@nestjs/config";
 import {Customer, Product} from "@prisma/client";
-import { uuid } from 'uuidv4';
+import {uuid} from 'uuidv4';
 import {UPaymentService} from "./upayment/UPayment.service";
 
 @Injectable()
@@ -124,7 +124,7 @@ export class PaymentService {
             });
     }
 
-    async createOrder(body: { customer: Customer; products: Product[], foodTruckId: string, order: any }) {
+    async createOrder(body: { customer: Customer; products: Product[], foodTruckId: string, paymentMethod: string }) {
 
         const foodTruck = await this.prismaService.foodTruck.findUnique({
             where: {
@@ -165,6 +165,8 @@ export class PaymentService {
                         paymentId: paymentId
                     },
                 },
+                method: body.paymentMethod,
+                amount: await this.calculateTotalPrice(body.products),
                 PaymentStatus: {
                     connect: {id: paymentStatus.id}
                 }
@@ -221,6 +223,22 @@ export class PaymentService {
         const order = await this.prismaService.order.findUnique({
             where: {
                 id: orderId
+            },
+            include: {
+                invoice: {
+                    select: {
+                        Payment: {
+                            select: {
+                                method: true
+                            }
+                        }
+                    }
+                },
+                FoodTurck: {
+                    select: {
+                        id: true,
+                    }
+                }
             }
         });
 
@@ -230,11 +248,17 @@ export class PaymentService {
             },
             data: {
                 paymentStatus: {
-                    connect: {
-                        name: "PENDING"
+                    connectOrCreate: {
+                        where: {
+                            name: "PENDING"
+                        },
+                        create: {
+                            name: "PENDING",
+                            enable: true
+                        }
                     }
                 }
-            }
+            },
         });
 
         // get order customer
@@ -263,11 +287,6 @@ export class PaymentService {
             select: {
                 iban: true,
                 nameEng: true,
-                User: {
-                    select: {
-                        email: true
-                    }
-                },
                 foodTruckInfo: {
                     select: {
                         phoneNumber: true

@@ -1,9 +1,10 @@
 import {Injectable} from "@nestjs/common";
 import {Customer, Order, Product} from "@prisma/client";
-import {catchError, map} from "rxjs";
+import {catchError, lastValueFrom, map} from "rxjs";
 import {PrismaService} from "../../prisma/prisma.service";
-import {ConfigService} from "@nestjs/config";
 import {HttpService} from "@nestjs/axios";
+import {isAxiosError} from "axios";
+import {ConfigService} from "../../config/config.service";
 
 @Injectable()
 export class UPaymentService {
@@ -39,14 +40,21 @@ export class UPaymentService {
         this.paymentObj.notifyURL = this.configService.get("UPAYMENT_REDIRECT_NOTIFY");
     }
 
-    createPayment(foodTruckDetails: {
-        nameEng: string; iban: string; foodTruckInfo: { phoneNumber: string; }; User: { email: string; }
-    }, order: Order, customer: Customer, products: Product[]) {
-        ;
+    createPayment(
+        foodTruckDetails: {
+            nameEng: string;
+            iban: string;
+            foodTruckInfo: { phoneNumber: string; };
+        },
+        order: Order,
+        customer: Customer,
+        products: Product[]
+    ) {
+
+        console.log("foodTruckDetails", foodTruckDetails);
         const upaymentObj = this.generateUPaymentObj({
                 iban: foodTruckDetails.iban,
                 name: foodTruckDetails.nameEng,
-                email: foodTruckDetails.User.email,
                 phone: foodTruckDetails.foodTruckInfo.phoneNumber
             },
             order,
@@ -54,29 +62,30 @@ export class UPaymentService {
             customer
         );
 
-        return this.httpService.post(this.configService.get("UPAYMENT_URL"), upaymentObj, {
+        return lastValueFrom(this.httpService.post(this.configService.get("UPAYMENT_URL"), upaymentObj, {
             timeout: 10000,
             headers: {
                 "Content-Type": "application/json",
-                "x-Authorization": "hWFfEkzkYE1X691J4qmcuZHAoet7Ds7ADhL"
+                "Authorization": `Bearer ${this.paymentObj.api_key}`,
+                "accept": "application/json"
             }
         }).pipe(
-            map(response => {
-                    return response.data;
+            map(response => response.data),
+            catchError(e => {
+                if (isAxiosError(e)) {
+                    console.log(e);
+                } else {
+                    console.log(e);
                 }
-            ),
-            catchError(error => {
-                console.log("error", error);
-                return error;
+                return e;
             })
-        );
+        ));
     }
 
     private generateUPaymentObj = (
         foodTruckDetails: {
             iban: string,
             name: string,
-            email: string,
             phone: string
         },
         order: any,
@@ -84,9 +93,9 @@ export class UPaymentService {
         customer: any
     ) => {
 
-        const isMainIban = this.configService.get("MAIN_IBAN") === foodTruckDetails.iban;
+        const isMainIban = this.configService.get("MAIN_IBAN") === foodTruckDetails.iban || !foodTruckDetails.iban;
 
-        let returnObj  = {
+        let returnObj = {
             products: products.map(product => ({
                 name: product.name,
                 description: product.description, // No equivalent field in the existing data
@@ -95,23 +104,22 @@ export class UPaymentService {
             })),
             order: {
                 id: order.id,
-                reference: order.id, // Assuming order.id is equivalent to reference
-                description: "", // No equivalent field in the existing data
-                currency: "KWD", // Hardcoded as in the existing data
-                amount: order.totalPrice
+                reference: order.id,
+                description: `order from ${foodTruckDetails.name} food truck, order id: ${order.id}, customer: ${customer.phone}`,
+                currency: "KWD",
+                amount: order.totalPrice,
             },
-            language: "en", // Hardcoded as there's no equivalent field in the existing data
             reference: {
-                id: order.id // Assuming order.id is equivalent to reference id
+                id: `${foodTruckDetails.phone}-${customer.phone}-${new Date().getTime()}`,
             },
-            customer: {
-                uniqueId: customer.id,
-                mobile: customer.phone
+            paymentGateway: {
+                src: order.invoice.Payment[0].method,
             },
+            language: "en",
             returnUrl: this.paymentObj.success_url,
             cancelUrl: this.paymentObj.error_url,
             notificationUrl: this.paymentObj.notifyURL,
-            customerExtraData: order.foodTruck.id, // No equivalent field in the existing data
+            customerExtraData: order.FoodTurck.id, // No equivalent field in the existing data
         };
 
         if (!isMainIban) {
