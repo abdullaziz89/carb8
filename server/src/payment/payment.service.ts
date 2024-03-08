@@ -1,10 +1,10 @@
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {PaymentResponse} from "./PaymentResponse";
 import {PrismaService} from "../prisma/prisma.service";
-import {ConfigService} from "@nestjs/config";
 import {Customer, Product} from "@prisma/client";
 import {uuid} from 'uuidv4';
 import {UPaymentService} from "./upayment/UPayment.service";
+import {ConfigService} from "../config/config.service";
 
 @Injectable()
 export class PaymentService {
@@ -20,7 +20,7 @@ export class PaymentService {
 
         let invoice = await this.prismaService.order.update({
             where: {
-                id: paymentResponse.OrderID
+                id: paymentResponse.requested_order_id
             },
             data: {
                 quickOrder: false
@@ -36,8 +36,14 @@ export class PaymentService {
             },
             data: {
                 paymentStatus: {
-                    connect: {
-                        name: "PAID"
+                    connectOrCreate: {
+                        where: {
+                            name: "PAID"
+                        },
+                        create: {
+                            name: "PAID",
+                            enable: true
+                        }
                     }
                 }
             }
@@ -49,7 +55,7 @@ export class PaymentService {
     async paymentReject(paymentResponse: any) {
         let invoice = await this.prismaService.order.update({
             where: {
-                id: paymentResponse.OrderID
+                id: paymentResponse.requested_order_id
             },
             data: {
                 quickOrder: false
@@ -65,8 +71,14 @@ export class PaymentService {
             },
             data: {
                 paymentStatus: {
-                    connect: {
-                        name: "REJECTED"
+                    connectOrCreate: {
+                        where: {
+                            name: "REJECTED"
+                        },
+                        create: {
+                            name: "REJECTED",
+                            enable: true
+                        }
                     }
                 }
             }
@@ -75,7 +87,7 @@ export class PaymentService {
     }
 
     paymentNotify(paymentResponse: PaymentResponse) {
-        // console.log("notify", paymentResponse);
+        console.log("notify", paymentResponse);
     }
 
     async redirectToPayment(id: string) {

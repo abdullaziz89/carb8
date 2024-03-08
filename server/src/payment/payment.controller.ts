@@ -41,11 +41,12 @@ export class PaymentController {
 
     @Get('reject')
     paymentReject(@Query() paymentResponse: any, @Res() res: any) {
-        if (!paymentResponse || !paymentResponse.OrderID) {
+        if (!paymentResponse || !paymentResponse.requested_order_id) {
             throw new HttpException('Invalid payment response', 400);
         }
         this.paymentService.paymentReject(paymentResponse).then((url: string) => {
-            res.redirect(`${url}/${paymentResponse.OrderID}`);
+            console.log('reject', url, paymentResponse.requested_order_id)
+            res.redirect(`${url}?orderId=${paymentResponse.requested_order_id}`);
         });
     }
 

@@ -10,15 +10,16 @@ import {AntDesign} from "@expo/vector-icons";
 import {useTranslation} from "react-i18next";
 import axios from "axios";
 import {createOrder, payOrder} from "../../services/PaymentService";
-import ExpoWebBrowser from "expo-web-browser/src/ExpoWebBrowser";
 import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
+import OrderFromView from "../../component/OrderFromView";
 
 export default () => {
 
     const {getOrder, getCart} = useAppStateStore();
     const foodTruck = getOrder().foodTruck;
     const {t, i18n} = useTranslation();
-    const [logo, setLogo] = useState();
+    const [logo, setLogo] = useState(null);
     const [customerPhone, setCustomerPhone] = useState("98877449");
     const [paymentMethod, setPaymentMethod] = useState([]);
     const [paymentButtonsIcons, setPaymentButtonsIcons] = useState([
@@ -111,6 +112,9 @@ export default () => {
 
     const [paymentButtonsLoading, setPaymentButtonsLoading] = useState(true);
 
+    // for payment after redirect from server
+    const [paymentRedirectData, setPaymentRedirectData] = useState(null);
+
     useEffect(() => {
 
         setLogo(findLogoImage(foodTruck.images));
@@ -131,7 +135,6 @@ export default () => {
             .then((response) => {
 
                 setPaymentButtonsLoading(false);
-                console.log('get payments buttons resp: ', response.data)
 
                 let payButton = response.data.data.payButtons;
 
@@ -145,7 +148,6 @@ export default () => {
                         return icon.key === button;
                     })
                 }))
-
             })
             .catch((error) => {
                 setPaymentButtonsLoading(false);
@@ -161,7 +163,33 @@ export default () => {
         });
     }
 
+    const handleRedirect = (url) => {
+        console.log('handleRedirect: ', url)
+    }
+
+    const addListener = async () => {
+        Linking.addEventListener("url", handleRedirect);
+    }
+
+    const openAuthSessionAsync = async (url) => {
+        try {
+
+            addListener();
+            let result = await WebBrowser.openBrowserAsync(url);
+
+            if (result.type === "success") {
+                setPaymentRedirectData(result);
+            } else {
+                console.log('openAuthSessionAsync error: ', result)
+            }
+        } catch (error) {
+            alert("Something went wrong. Please try again later.");
+            console.log('openAuthSessionAsync error: ', error)
+        }
+    }
+
     const pay = () => {
+
         const payload = {
             paymentMethod: selectedPaymentMethod.method,
             customer: {
@@ -178,8 +206,6 @@ export default () => {
             foodTruckId: foodTruck.id,
         }
 
-        console.log('pay payload: ', payload)
-
         createOrder(payload)
             .then((response) => {
                 console.log('create order resp: ', response)
@@ -187,7 +213,7 @@ export default () => {
                     .then(async (response) => {
                         console.log('pay order resp: ', response)
 
-                        await WebBrowser.openBrowserAsync(response.data.link);
+                        await openAuthSessionAsync(response.data.link)
                     })
                     .catch((error) => {
                         console.log('pay order error resp: ', error)
@@ -222,75 +248,7 @@ export default () => {
                     }
                 }}
             />
-            <View
-                style={{
-                    width: "100%",
-                    marginTop: 30,
-                }}
-            >
-                <TextWithFont
-                    text={"Order From"}
-                    style={{
-                        fontSize: 20,
-                        margin: 10,
-                    }}
-                />
-                <View
-                    style={{
-                        flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                        alignItems: "center",
-                        justifyContent: "flex-start",
-                        backgroundColor: "white",
-                        padding: 10,
-                        marginTop: 5,
-                    }}
-                >
-                    <Image
-                        source={{uri: logo}}
-                        style={{
-                            width: 85,
-                            height: 85,
-                            borderRadius: 42.5,
-                            backgroundColor: "white",
-                            padding: 5,
-                        }}
-                        shape={"circle"}
-                        contentFit={"cover"}
-                        placeholder={require("../../assets/kwft-logo-placeholder.png")}
-                    />
-                    <View
-                        style={{
-                            width: "50%",
-                            flexDirection: "column",
-                            alignItems: i18n.language === "ar" ? "flex-end" : "flex-start",
-                            justifyContent: "center",
-                            marginStart: 5
-                        }}
-                    >
-                        <TextWithFont
-                            text={i18n.language === "ar" ? foodTruck.nameArb : foodTruck.nameEng}
-                            style={[
-                                {
-                                    fontSize: 20,
-                                    fontWeight: "bold",
-                                },
-                                i18n.language === "ar" ? {marginEnd: 10} : {marginStart: 10}
-                            ]}
-                        />
-                        <TextWithFont
-                            text={i18n.language === "ar" ? foodTruck.descriptionArb : foodTruck.descriptionEng}
-                            style={[
-                                {
-                                    fontSize: 16,
-                                    fontWeight: "normal"
-                                },
-                                i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"},
-                                i18n.language === "ar" ? {marginEnd: 10} : {marginStart: 10}
-                            ]}
-                        />
-                    </View>
-                </View>
-            </View>
+            <OrderFromView/>
             <View
                 style={{
                     width: "100%",

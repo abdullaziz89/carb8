@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "KWFTApp",
+    "scheme": "kwftapp",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splashscreen.png",

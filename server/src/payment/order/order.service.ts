@@ -11,6 +11,14 @@ export class OrderService {
   ) {
   }
 
+  async getOrder(orderId: string) {
+    return await this.prismaService.order.findUnique({
+      where: {
+        id: orderId
+      }
+    });
+  }
+
   async updateOrderProducts(orderProducts: { orderId: string; products: UpdatedOrderProducts }) {
 
     let tbr: boolean = false;

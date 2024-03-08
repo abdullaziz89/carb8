@@ -1,10 +1,38 @@
 import {Stack} from "expo-router";
 import Animated, {interpolate, useAnimatedStyle} from "react-native-reanimated";
 import {useDrawerProgress} from "@react-navigation/drawer";
+import {Text} from "react-native";
+import * as Linking from "expo-linking";
+
+const prefix = Linking.createURL("/");
 
 export default function Layout() {
 
     const drawerProgress = useDrawerProgress();
+
+    const linking = {
+        prefixes: [prefix],
+        config: {
+            screens: {
+                Home: {
+                    path: "",
+                    screens: {
+                        Home: "home",
+                        Profile: "profile",
+                        Settings: "settings",
+                    }
+                },
+                Payment: {
+                    path: "payment",
+                    screens: {
+                        PaymentSuccess: "success",
+                        PaymentReject: "reject",
+                    }
+                },
+                NotFound: "*",
+            }
+        }
+    }
 
     const viewAnimStyle = useAnimatedStyle(() => {
 
@@ -34,7 +62,10 @@ export default function Layout() {
                 statusBarStyle: "dark",
             }}
         >
-            <Stack/>
+            <Stack
+                linking={linking}
+                fallback={<Text>404</Text>}
+            />
         </Animated.View>
     )
 }
