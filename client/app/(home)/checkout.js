@@ -16,8 +16,18 @@ import OrderFromView from "../../component/OrderFromView";
 
 export default () => {
 
-    const {getOrder, getCart} = useAppStateStore();
-    const foodTruck = getOrder().foodTruck;
+    const {getOrders, getCart, updateItemIdInOrders} = useAppStateStore();
+
+    const getListPostedOrder = () => {
+        // compare orders from getOrders by createTime and get the newest one and the order status pending
+        return getOrders().filter((order) => {
+            return order.status === "pending";
+        }).sort((a, b) => {
+            return new Date(b.createTime) - new Date(a.createTime);
+        })[0];
+    }
+
+    const foodTruck = getListPostedOrder().foodTruck;
     const {t, i18n} = useTranslation();
     const [logo, setLogo] = useState(null);
     const [customerPhone, setCustomerPhone] = useState("98877449");
@@ -209,10 +219,12 @@ export default () => {
         createOrder(payload)
             .then((response) => {
                 console.log('create order resp: ', response)
+                updateItemIdInOrders(getListPostedOrder().id, {
+                    ...getListPostedOrder(),
+                    id: response.id,
+                })
                 payOrder(response.id)
                     .then(async (response) => {
-                        console.log('pay order resp: ', response)
-
                         await openAuthSessionAsync(response.data.link)
                     })
                     .catch((error) => {
@@ -310,8 +322,8 @@ export default () => {
                 />
                 <FlatList
                     data={[
-                        {title: "Subtotal", value: getOrder().subTotal},
-                        {title: "Total", value: getOrder().total},
+                        {title: "Subtotal", value: getListPostedOrder().subTotal},
+                        {title: "Total", value: getListPostedOrder().total},
                     ]}
                     style={{
                         width: "100%",

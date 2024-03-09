@@ -10,7 +10,7 @@ export const useAppStateStore = create(
             welcomePreviews: false,
             token: null,
             cart: [],
-            order: null,
+            orders: [],
             user: {
                 user: {
                     id: null,
@@ -116,8 +116,26 @@ export const useAppStateStore = create(
             setRefreshTokens: (refreshTokens) => set({refreshTokens}),
             getSelectedGovernorate: () => get().options.selectedGovernorate,
             setSelectedGovernorateOpt: (selectedGovernorate) => set({options: {selectedGovernorate}}),
-            setOrder: (order) => set({order}),
-            getOrder: () => get().order,
+            setOrders: (orders) => set({orders}),
+            setItemInOrders: (item) => set((state) => {
+                const orders = state.orders;
+                orders.push(item);
+                return {orders}
+            }),
+            getOrders: () => get().orders,
+            getOrder: (orderId) => get().orders.find((order) => order.id === orderId),
+            updateItemIdInOrders: (id, item) => set((state) => {
+                const orders = state.orders;
+                const index = orders.findIndex((order) => order.id === id);
+                orders[index] = item;
+                return {orders}
+            }),
+            updateItemInOrders: (item) => set((state) => {
+                const orders = state.orders;
+                const index = orders.findIndex((order) => order.id === item.id);
+                orders[index] = item;
+                return {orders}
+            }),
         }), {
             name: 'kwft-app-storage',
             storage: createJSONStorage(() => zustandStorage),

@@ -16,7 +16,15 @@ const {width, height} = Dimensions.get("window");
 
 export default () => {
 
-    const {getCart, itemQuantityInCart, addCartItem, removeCartItem, totalPriceInCart, setOrder} = useAppStateStore();
+    const {
+        getCart,
+        itemQuantityInCart,
+        addCartItem,
+        removeCartItem,
+        totalPriceInCart,
+        setItemInOrders,
+        getOrders
+    } = useAppStateStore();
     const navigation = useNavigation();
 
     const {foodTruckParam} = useLocalSearchParams();
@@ -286,7 +294,9 @@ export default () => {
                         const text = event.nativeEvent.text;
                         setSelectedVoucher({
                             code: text,
-                            discount: 10
+                            discount: 10,
+                            type: "percentage",
+                            target: "all",
                         });
                     }}
                 />
@@ -318,6 +328,35 @@ export default () => {
                 </TouchableOpacity>
             </ActionSheet>
         )
+    }
+
+    const calculateVouchers = () => {
+        let lastPrice = 0;
+        if (vouchers.length > 0) {
+            // loop for each voucher and if check whether the voucher type is percentage of fixed, then calculate, according to the voucher type
+            vouchers.forEach((voucher) => {
+                if (voucher.type === "percentage") {
+                    lastPrice = totalPriceInCart() - (totalPriceInCart() * voucher.discount / 100);
+                } else {
+                    lastPrice = totalPriceInCart() - voucher.discount;
+                }
+            });
+        } else {
+            lastPrice = totalPriceInCart();
+        }
+        return lastPrice;
+    }
+
+    const calculateItemPriceWithVoucher = (item) => {
+        if (vouchers.length > 0) {
+            vouchers.forEach((voucher) => {
+                if (voucher.type === "percentage") {
+                    return item.price * item.quantity - (item.price * item.quantity * voucher.discount / 100);
+                }
+            });
+        } else {
+            return item.price * item.quantity;
+        }
     }
 
     return (
@@ -684,7 +723,7 @@ export default () => {
                                         vouchers.length > 0 ? (
                                             <View>
                                                 <TextWithFont
-                                                    text={`${item.price * item.quantity - (item.price * item.quantity * vouchers[0].discount / 100)} KWD`}
+                                                    text={`${calculateItemPriceWithVoucher(item)} KWD`}
                                                     style={[
                                                         {
                                                             fontSize: 14,
@@ -752,51 +791,104 @@ export default () => {
                             <View
                                 style={{
                                     width: "100%",
-                                    padding: 10,
                                     backgroundColor: "white",
                                     marginTop: 10,
-                                    flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
+                                    flexDirection: "column",
                                 }}
                             >
-                                <TextWithFont
-                                    text={i18n.language === "ar" ? 'المجموع' : 'Subtotal'}
+                                <View
                                     style={{
-                                        fontSize: 18,
-                                        margin: 10,
+                                        flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
                                     }}
-                                />
+                                >
+                                    <TextWithFont
+                                        text={i18n.language === "ar" ? 'المجموع' : 'Subtotal'}
+                                        style={{
+                                            fontSize: 18,
+                                            margin: 10,
+                                        }}
+                                    />
+                                    <TextWithFont
+                                        text={`${totalPriceInCart()} KWD`}
+                                        style={{
+                                            fontSize: 18,
+                                            textAlign: "center",
+                                        }}
+                                    />
+                                </View>
                                 {
-                                    vouchers.length > 0 ? (
-                                        <View>
+                                    vouchers.length > 0 && (
+                                        <View
+                                            style={{
+                                                flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
                                             <TextWithFont
-                                                text={`${totalPriceInCart() - (totalPriceInCart() * vouchers[0].discount / 100)} KWD`}
+                                                text={i18n.language === "ar" ? 'الخصم' : 'Discount'}
+                                                style={{
+                                                    fontSize: 18,
+                                                    margin: 10,
+                                                }}
+                                            />
+                                            <TextWithFont
+                                                text={`${calculateVouchers()} KWD`}
                                                 style={{
                                                     fontSize: 18,
                                                     textAlign: "center",
                                                 }}
                                             />
-                                            <TextWithFont
-                                                text={totalPriceInCart() + " KWD"}
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: "bold",
-                                                    color: "gray",
-                                                    textDecorationLine: "line-through"
-                                                }}
-                                            />
                                         </View>
-                                    ) : (
-                                        <TextWithFont
-                                            text={`${totalPriceInCart()} KWD`}
-                                            style={{
-                                                fontSize: 18,
-                                                textAlign: "center",
-                                            }}
-                                        />
                                     )
                                 }
+                                <View
+                                    style={{
+                                        flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <TextWithFont
+                                        text={i18n.language === "ar" ? 'المجموع' : 'Total'}
+                                        style={{
+                                            fontSize: 18,
+                                            margin: 10,
+                                        }}
+                                    />
+                                    {
+                                        vouchers.length > 0 ? (
+                                            <View>
+                                                <TextWithFont
+                                                    text={`${calculateVouchers()} KWD`}
+                                                    style={{
+                                                        fontSize: 18,
+                                                        textAlign: "center",
+                                                    }}
+                                                />
+                                                <TextWithFont
+                                                    text={totalPriceInCart() + " KWD"}
+                                                    style={{
+                                                        fontSize: 16,
+                                                        fontWeight: "bold",
+                                                        color: "gray",
+                                                        textDecorationLine: "line-through"
+                                                    }}
+                                                />
+                                            </View>
+                                        ) : (
+                                            <TextWithFont
+                                                text={`${totalPriceInCart()} KWD`}
+                                                style={{
+                                                    fontSize: 18,
+                                                    textAlign: "center",
+                                                }}
+                                            />
+                                        )
+                                    }
+                                </View>
                             </View>
                         )
                     }}
@@ -815,7 +907,7 @@ export default () => {
                     setIsLoading(true);
                     setTimeout(() => {
                         setIsLoading(false);
-                        setOrder({
+                        setItemInOrders({
                             foodTruck: foodTruck,
                             orderNote: orderNote,
                             items: getCart(),
@@ -823,6 +915,8 @@ export default () => {
                             subTotal: totalPriceInCart(),
                             total: vouchers.length > 0 ? totalPriceInCart() - (totalPriceInCart() * vouchers[0].discount / 100) : totalPriceInCart(),
                             createTime: new Date(),
+                            status: "pending",
+                            id: getOrders().length + 1,
                         });
                         navigation.navigate("checkout");
                     }, 500);

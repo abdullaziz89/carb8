@@ -6,13 +6,15 @@ import {useAppStateStore} from "../../../store/app-store";
 import OrderFromView from "../../../component/OrderFromView";
 import {View} from "react-native";
 import TextWithFont from "../../../component/TextWithFont";
+import {useTranslation} from "react-i18next";
+import {Image} from "expo-image";
 
 export default () => {
 
     const params = useSearchParams();
     const [orderId, setOrderId] = useState(params.orderId);
-    const {getOrder, getCart} = useAppStateStore();
-    const foodTruck = getOrder().foodTruck;
+    const {t, i18n} = useTranslation();
+    const {getCart} = useAppStateStore();
 
     return (
         <KeyboardAwareScrollView
@@ -27,8 +29,7 @@ export default () => {
         >
             <Stack.Screen
                 options={{
-                    headerTitle: () => foodTruck !== null &&
-                        <HeaderTitleView title={'Payment Success'} isProfile={true}/>,
+                    headerTitle: () => <HeaderTitleView title={'Payment Success'} isProfile={true}/>,
                     headerStyle: {
                         backgroundColor: "#f8b91c"
                     }
@@ -45,7 +46,7 @@ export default () => {
                 }}
             >
                 <Image
-                    source={{uri: require('../../../assets/paymentLogo/payment-success.gif')}}
+                    source={require('../../../assets/paymentLogo/payment-success.gif')}
                     style={{
                         width: 85,
                         height: 85,
