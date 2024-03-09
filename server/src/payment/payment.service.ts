@@ -49,10 +49,20 @@ export class PaymentService {
             }
         });
 
+        await this.prismaService.order.update({
+            where: {
+                id: paymentResponse.requested_order_id
+            },
+            data: {
+                gatewayTrackId: paymentResponse.track_id
+            }
+        });
+
         return this.configService.get("PAYMENT_REDIRECT_SUCCESS");
     }
 
     async paymentReject(paymentResponse: any) {
+
         let invoice = await this.prismaService.order.update({
             where: {
                 id: paymentResponse.requested_order_id
@@ -83,6 +93,16 @@ export class PaymentService {
                 }
             }
         });
+
+        await this.prismaService.order.update({
+            where: {
+                id: paymentResponse.requested_order_id
+            },
+            data: {
+                gatewayTrackId: paymentResponse.track_id
+            }
+        });
+
         return this.configService.get("PAYMENT_REDIRECT_REJECT");
     }
 
@@ -316,5 +336,9 @@ export class PaymentService {
             totalPrice += product.price * product.quantity;
         }
         return totalPrice;
+    }
+
+    getGatewayStatus(id: string) {
+        return this.upaymentService.getGatewayStatus(id);
     }
 }

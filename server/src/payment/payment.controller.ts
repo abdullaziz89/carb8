@@ -35,7 +35,7 @@ export class PaymentController {
         }
 
         this.paymentService.paymentSuccess(paymentResponse).then((url: string) => {
-            res.redirect(`${url}/${paymentResponse.OrderID}`);
+            res.redirect(`${url}?orderId=${paymentResponse.requested_order_id}&track_id=${paymentResponse.track_id}`);
         });
     }
 
@@ -44,9 +44,9 @@ export class PaymentController {
         if (!paymentResponse || !paymentResponse.requested_order_id) {
             throw new HttpException('Invalid payment response', 400);
         }
+        console.log('reject', paymentResponse)
         this.paymentService.paymentReject(paymentResponse).then((url: string) => {
-            console.log('reject', url, paymentResponse.requested_order_id)
-            res.redirect(`${url}?orderId=${paymentResponse.requested_order_id}`);
+            res.redirect(`${url}?orderId=${paymentResponse.requested_order_id}&track_id=${paymentResponse.track_id}`);
         });
     }
 
@@ -62,5 +62,10 @@ export class PaymentController {
     @Post('pay')
     pay(@Body() body: { orderId: string }) {
         return this.paymentService.pay(body.orderId)
+    }
+
+    @Get('gateway/status/:truckId')
+    getGatewayStatus(@Param('truckId') truckId: string) {
+        return this.paymentService.getGatewayStatus(truckId);
     }
 }

@@ -12,9 +12,16 @@ export class OrderService {
   }
 
   async getOrder(orderId: string) {
-    return await this.prismaService.order.findUnique({
+    return this.prismaService.order.findUnique({
       where: {
         id: orderId
+      },
+      include: {
+        invoice: {
+          select: {
+            paymentStatus: true
+          }
+        }
       }
     });
   }

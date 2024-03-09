@@ -62,12 +62,31 @@ export class UPaymentService {
             customer
         );
 
-        return lastValueFrom(this.httpService.post(this.configService.get("UPAYMENT_URL"), upaymentObj, {
+        return lastValueFrom(this.httpService.post(`${this.configService.get("UPAYMENT_URL")}/charge`, upaymentObj, {
             timeout: 10000,
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${this.paymentObj.api_key}`,
                 "accept": "application/json"
+            }
+        }).pipe(
+            map(response => response.data),
+            catchError(e => {
+                if (isAxiosError(e)) {
+                    console.log(e);
+                } else {
+                    console.log(e);
+                }
+                return e;
+            })
+        ));
+    }
+
+    getGatewayStatus(id: string) {
+        return lastValueFrom(this.httpService.get(`${this.configService.get("UPAYMENT_URL")}/get-payment-status/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.paymentObj.api_key}`,
             }
         }).pipe(
             map(response => response.data),

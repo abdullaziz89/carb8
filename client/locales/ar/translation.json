@@ -3,5 +3,15 @@
     "cuisine": "الأقسام",
     "description": "الوصف",
     "address": "العنوان"
+  },
+  "paymentDetails": {
+    "payment_id": "رقم الدفع",
+    "ref": "المرجع",
+    "order_id": "رقم الطلب",
+    "requested_order_id": "رقم الطلب المطلوب",
+    "payment_type": "نوع الدفع",
+    "invoice_id": "رقم الفاتورة",
+    "transaction_date": "تاريخ العملية",
+    "receipt_id": "رقم الإيصال"
   }
 }

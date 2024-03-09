@@ -99,6 +99,7 @@ export const useAppStateStore = create(
                 return itemIndex !== -1 ? get().cart[itemIndex].quantity : 0;
             },
             totalPriceInCart: () => get().cart.reduce((acc, item) => acc + item.price * item.quantity, 0),
+            clearCart: () => set({cart: []}),
             setToken: (token) => set({token}),
             getToken: () => get().token,
             isVerified: () => get().verified,
@@ -134,6 +135,12 @@ export const useAppStateStore = create(
                 const orders = state.orders;
                 const index = orders.findIndex((order) => order.id === item.id);
                 orders[index] = item;
+                return {orders}
+            }),
+            updateOrderStatus: (orderId, status) => set((state) => {
+                const orders = state.orders;
+                const index = orders.findIndex((order) => order.id === orderId);
+                orders[index].status = status;
                 return {orders}
             }),
         }), {

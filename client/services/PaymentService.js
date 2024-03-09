@@ -12,3 +12,8 @@ export const payOrder = async (orderId) => {
     const response = await APIClient.post(`${apiUrl}/pay`, {orderId});
     return response.data;
 }
+
+export const getPaymentStatus = async (truckId) => {
+    const response = await APIClient.get(`${apiUrl}/gateway/status/${truckId}`);
+    return response.data;
+}

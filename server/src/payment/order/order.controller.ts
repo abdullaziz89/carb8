@@ -1,4 +1,4 @@
-import {Body, Controller, Put} from "@nestjs/common";
+import {Body, Controller, Get, Param, Put} from "@nestjs/common";
 import {OrderService} from "./order.service";
 import {Product} from "@prisma/client";
 
@@ -14,6 +14,11 @@ export class OrderController {
     constructor(
         private readonly orderService: OrderService,
     ) {
+    }
+
+    @Get(':orderId')
+    async getOrder(@Param('orderId') orderId: string): Promise<any> {
+        return await this.orderService.getOrder(orderId);
     }
 
     // update order products

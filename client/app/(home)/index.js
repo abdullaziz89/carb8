@@ -13,7 +13,7 @@ import {getHeadersImages} from "../../services/HeadersImagesServices";
 import {getCuisine, updateCuisineView} from "../../services/CuisineServices";
 import FoodTruckList from "./food-truck-list";
 import {CreateResponsiveStyle, DEVICE_SIZES, useDeviceSize} from "rn-responsive-styles";
-import {AntDesign, Feather, FontAwesome} from "@expo/vector-icons";
+import {AntDesign, Feather, FontAwesome, MaterialIcons} from "@expo/vector-icons";
 import FoodTrucksFilterOptions from "./FoodTrucksFilterOptions";
 import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
@@ -31,6 +31,8 @@ import Animated, {interpolate, useSharedValue, withTiming} from "react-native-re
 import {useFonts} from "expo-font";
 import {LogLevel, OneSignal} from 'react-native-onesignal';
 import Constants from "expo-constants";
+import {useAppStateStore} from "../../store/app-store";
+import TextWithFont from "../../component/TextWithFont";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -67,33 +69,11 @@ export default function Home() {
         }, isFilterActive: false
     });
 
+    const {getOrders} = useAppStateStore();
+
     const modelViewScale = useSharedValue(0)
 
     useEffect(() => {
-
-        // OneSignal.SetLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.DEBUG);
-        console.log(Constants.manifest.extra.oneSignalAppId);
-        // OneSignal.setAppId(Constants.manifest.extra.oneSignalAppId);
-        //
-        // OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-        //   console.log("User response to push notification permission prompt:", response);
-        // });
-        //
-        // //Method for handling notifications received while app in foreground
-        // OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-        //   console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
-        //   let notification = notificationReceivedEvent.getNotification();
-        //   console.log("notification: ", notification);
-        //   const data = notification.additionalData;
-        //   console.log("additionalData: ", data);
-        //   // Complete with null means don't show a notification.
-        //   notificationReceivedEvent.complete(notification);
-        // });
-        //
-        // //Method for handling notifications opened
-        // OneSignal.setNotificationOpenedHandler(notification => {
-        //   console.log("OneSignal: notification opened:", notification);
-        // });
 
         OneSignal.Debug.setLogLevel(LogLevel.Verbose);
         OneSignal.initialize(Constants.expoConfig.extra.oneSignalAppId);
@@ -115,7 +95,9 @@ export default function Home() {
         //     });
         // }
 
-    }, []);
+        console.log("Orders: ", getOrders());
+
+    }, [getOrders()]);
 
     const fetchData = (fromRefreshing) => {
 
@@ -287,6 +269,41 @@ export default function Home() {
                 />
 
                 {headerImages.length > 0 && <CustomCarousel images={headerImages} clickable={true}/>}
+
+                {
+                    getOrders().length > 0 && (
+                        <View
+                            style={{
+                                width: width,
+                                alignItems: "center",
+                                justifyContent: "flex-start",
+                                marginTop: 20,
+                                padding: 10,
+                                backgroundColor: "#ffffff",
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    margin: 10
+                                }}
+                            >
+                                <TextWithFont
+                                    text={i18n.language === "ar" ? "طلباتي" : "My Orders"}
+                                    style={{
+                                        fontSize: 20,
+                                        fontWeight: "bold",
+                                        fontFamily: 'BalsamiqSans_400Regular',
+                                    }}
+                                />
+                                <MaterialIcons name="arrow-forward-ios" size={24} color="#f8b91c" />
+                            </View>
+                        </View>
+                    )
+                }
 
                 <View
                     style={styles.cuisinesHeaderHolder}

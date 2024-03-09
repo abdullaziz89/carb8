@@ -14,5 +14,16 @@ const DAYS = [
     {id: 9, name: "Saturday"}
 ];
 
-export { DAYS }
+const wantedPaymentGatewayResponse = [
+    "payment_id",
+    "ref",
+    "order_id",
+    "requested_order_id",
+    "payment_type",
+    "invoice_id",
+    "transaction_date",
+    "receipt_id"
+]
+
+export { DAYS, wantedPaymentGatewayResponse }
 

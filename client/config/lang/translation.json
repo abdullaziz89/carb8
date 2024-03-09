@@ -8,5 +8,13 @@
   "academy.sportType": "academy.sportType",
   "foodTruck.address": "foodTruck.address",
   "foodTruck.cuisine": "foodTruck.cuisine",
-  "foodTruck.description": "foodTruck.description"
+  "foodTruck.description": "foodTruck.description",
+  "paymentDetails.invoice_id": "paymentDetails.invoice_id",
+  "paymentDetails.order_id": "paymentDetails.order_id",
+  "paymentDetails.payment_id": "paymentDetails.payment_id",
+  "paymentDetails.payment_type": "paymentDetails.payment_type",
+  "paymentDetails.receipt_id": "paymentDetails.receipt_id",
+  "paymentDetails.ref": "paymentDetails.ref",
+  "paymentDetails.requested_order_id": "paymentDetails.requested_order_id",
+  "paymentDetails.transaction_date": "paymentDetails.transaction_date"
 }

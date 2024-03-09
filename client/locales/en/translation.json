@@ -1,7 +1,17 @@
 {
   "foodTruck": {
-    "cuisine": "Caregory",
+    "cuisine": "Category",
     "description": "Description",
     "address": "Address"
+  },
+  "paymentDetails": {
+    "payment_id": "Payment ID",
+    "ref": "Reference",
+    "order_id": "Order ID",
+    "requested_order_id": "Request Order ID",
+    "payment_type": "Payment Type",
+    "invoice_id": "Invoice ID",
+    "transaction_date": "Transaction Date",
+    "receipt_id": "Receipt ID",
   }
 }

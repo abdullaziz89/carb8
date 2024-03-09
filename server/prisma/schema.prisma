@@ -283,6 +283,7 @@ model Order {
   foodTruckId String?
   Voucher     Voucher?   @relation(fields: [voucherId], references: [id])
   voucherId   String?
+  gatewayTrackId String?
 }
 
 // products
