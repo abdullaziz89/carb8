@@ -20,9 +20,7 @@ export default () => {
 
     const getListPostedOrder = () => {
         // compare orders from getOrders by createTime and get the newest one and the order status pending
-        return getOrders().filter((order) => {
-            return order.status === "pending";
-        }).sort((a, b) => {
+        return getOrders().sort((a, b) => {
             return new Date(b.createTime) - new Date(a.createTime);
         })[0];
     }

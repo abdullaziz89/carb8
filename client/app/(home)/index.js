@@ -7,7 +7,7 @@ import {
     ScrollView,
     Modal, SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground
 } from "react-native";
-import {Link, SplashScreen, Stack} from "expo-router";
+import {Link, SplashScreen, Stack, useNavigation, useRouter} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
 import {getHeadersImages} from "../../services/HeadersImagesServices";
 import {getCuisine, updateCuisineView} from "../../services/CuisineServices";
@@ -54,8 +54,11 @@ export default function Home() {
     }, [fontsLoaded, fontError]);
 
     const {i18n} = useTranslation();
+    const {getOrders} = useAppStateStore();
 
     const styles = useStyles();
+    const router = useRouter();
+    const navigation = useNavigation();
 
     const [headerImages, setHeaderImages] = useState([]);
     const [cuisines, setCuisines] = useState([]);
@@ -68,8 +71,6 @@ export default function Home() {
             governorate: null
         }, isFilterActive: false
     });
-
-    const {getOrders} = useAppStateStore();
 
     const modelViewScale = useSharedValue(0)
 
@@ -95,9 +96,7 @@ export default function Home() {
         //     });
         // }
 
-        console.log("Orders: ", getOrders());
-
-    }, [getOrders()]);
+    }, []);
 
     const fetchData = (fromRefreshing) => {
 
@@ -272,7 +271,7 @@ export default function Home() {
 
                 {
                     getOrders().length > 0 && (
-                        <View
+                        <TouchableOpacity
                             style={{
                                 width: width,
                                 alignItems: "center",
@@ -280,6 +279,11 @@ export default function Home() {
                                 marginTop: 20,
                                 padding: 10,
                                 backgroundColor: "#ffffff",
+                            }}
+                            onPress={() => {
+                                // navigate to orders
+                                // navigation.navigate("order");
+                                router.push("orders");
                             }}
                         >
                             <View
@@ -299,9 +303,9 @@ export default function Home() {
                                         fontFamily: 'BalsamiqSans_400Regular',
                                     }}
                                 />
-                                <MaterialIcons name="arrow-forward-ios" size={24} color="#f8b91c" />
+                                <MaterialIcons name="arrow-forward-ios" size={20} color="#f8b91c" />
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     )
                 }
 
