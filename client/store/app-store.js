@@ -143,6 +143,12 @@ export const useAppStateStore = create(
                 orders[index].status = status;
                 return {orders}
             }),
+            updateOrderTrackingId: (orderId, trackingId) => set((state) => {
+                const orders = state.orders;
+                const index = orders.findIndex((order) => order.id === orderId);
+                orders[index].trackingId = trackingId;
+                return {orders}
+            }),
         }), {
             name: 'kwft-app-storage',
             storage: createJSONStorage(() => zustandStorage),

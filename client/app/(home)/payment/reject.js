@@ -17,7 +17,7 @@ export default () => {
 
     const params = useSearchParams();
     const {t, i18n} = useTranslation();
-    const {getCart, totalPriceInCart, getOrder, updateOrderStatus} = useAppStateStore();
+    const {getCart, totalPriceInCart, getOrder, updateOrderStatus, updateOrderTrackingId} = useAppStateStore();
 
     const [order, setOrder] = useState(null);
     const [paymentStatus, setPaymentStatus] = useState(null);
@@ -67,7 +67,7 @@ export default () => {
                 ]);
 
                 updateOrderStatus(params.orderId, orderResponse.invoice.paymentStatus.name.toLowerCase());
-
+                updateOrderTrackingId(params.orderId, params.track_id);
                 setIsLoading(false);
             });
     }, []);
