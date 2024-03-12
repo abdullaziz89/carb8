@@ -3,13 +3,14 @@ import {AntDesign, MaterialCommunityIcons} from "@expo/vector-icons";
 import {useAppStateStore} from "../store/app-store";
 import {useCallback, useEffect, useState} from "react";
 import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
-import {View, Text} from "react-native";
+import {View, Text, I18nManager, DevSettings} from "react-native";
 import {Image} from "expo-image";
 import TextWithFont from "../component/TextWithFont";
 import {getFoodTruckViews} from "../services/FoodTruckServices";
 import {SplashScreen} from "expo-router";
 import i18n from "i18next";
 import {useTranslation} from "react-i18next";
+import {Restart} from "fiction-expo-restart";
 
 export function customDrawerContent(props, user, isLogin) {
 
@@ -23,6 +24,7 @@ export function customDrawerContent(props, user, isLogin) {
         if (isLogin) {
             getFoodTruckViews(user.foodTruck.id)
                 .then((response) => {
+                    console.log('response: ', response)
                     setNumberViews(response.views);
                 })
                 .catch((error) => {
@@ -82,7 +84,7 @@ export function customDrawerContent(props, user, isLogin) {
                         }}
                     >
                         <TextWithFont
-                            text={user.foodTruck.nameEng}
+                            text={i18n.language === "ar" ? user.foodTruck.nameArb : user.foodTruck.nameEng}
                             style={{
                                 color: "#000",
                                 fontSize: 20,
@@ -90,7 +92,7 @@ export function customDrawerContent(props, user, isLogin) {
                             }}
                         />
                         <TextWithFont
-                            text={i18n.language === "ar" ? `عدد المشاهدات: ${numberViews}` : `number of views: ${numberViews}`}
+                            text={`Number of views: ${numberViews}`}
                             style={{
                                 color: "#000",
                                 fontSize: 16,
@@ -102,7 +104,7 @@ export function customDrawerContent(props, user, isLogin) {
             }
             <DrawerItem
                 {...props}
-                label={i18n.language === "ar" ? "الرئيسية" : "Home"}
+                label={t("drawer.home")}
                 onPress={() => props.navigation.navigate("(home)")}
                 focused={props.state.index === 0}
                 activeTintColor={"#000"}
@@ -202,6 +204,7 @@ export function customDrawerContent(props, user, isLogin) {
 export default (props) => {
 
     const {isLogin, user} = useAppStateStore();
+    const {i18n} = useTranslation();
 
     useEffect(() => {
         // add isLogin to props
@@ -233,7 +236,6 @@ export default (props) => {
             <Drawer.Screen
                 name="(home)"
                 options={{
-                    title: "Home",
                     drawerIcon: ({focused, size}) => (
                         <MaterialCommunityIcons
                             name="home"
@@ -252,7 +254,6 @@ export default (props) => {
             <Drawer.Screen
                 name="(user)"
                 options={{
-                    title: "Profile",
                     drawerIcon: ({focused, size}) => (
                         <MaterialCommunityIcons
                             name="account"
@@ -270,7 +271,6 @@ export default (props) => {
             <Drawer.Screen
                 name="(auth)"
                 options={{
-                    title: "Login",
                     drawerIcon: ({focused, size}) => (
                         <MaterialCommunityIcons
                             name="login"

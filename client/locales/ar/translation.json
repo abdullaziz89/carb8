@@ -1,4 +1,10 @@
 {
+  "drawer": {
+    "home": "الرئيسية",
+    "profile": "الملف الشخصي",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج"
+  },
   "foodTruck": {
     "cuisine": "الأقسام",
     "description": "الوصف",

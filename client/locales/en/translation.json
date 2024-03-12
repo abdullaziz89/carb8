@@ -1,4 +1,10 @@
 {
+  "drawer": {
+    "home": "Home",
+    "profile": "Profile",
+    "login": "Login",
+    "logout": "Logout"
+  },
   "foodTruck": {
     "cuisine": "Category",
     "description": "Description",

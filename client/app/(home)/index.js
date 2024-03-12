@@ -5,7 +5,7 @@ import {
     View,
     Text,
     ScrollView,
-    Modal, SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground
+    Modal, SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground, DevSettings
 } from "react-native";
 import {Link, SplashScreen, Stack, useNavigation, useRouter} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
@@ -33,6 +33,8 @@ import {LogLevel, OneSignal} from 'react-native-onesignal';
 import Constants from "expo-constants";
 import {useAppStateStore} from "../../store/app-store";
 import TextWithFont from "../../component/TextWithFont";
+import {Restart} from 'fiction-expo-restart';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -213,9 +215,15 @@ export default function Home() {
                     height: "100%"
                 }}
                 onPress={() => {
-                    i18n.changeLanguage(i18n.language === "ar" ? "en" : "ar");
-                    // reset the app
-                    router.reset();
+                    i18n.changeLanguage(i18n.language === "ar" ? "en" : "ar")
+                        .then(async () => {
+                            await AsyncStorage.setItem("settings.lang", i18n.language);
+                            if (__DEV__) {
+                                DevSettings.reload()
+                                return
+                            }
+                            Restart();
+                        });
                 }}
             >
                 <FontAwesome
@@ -261,8 +269,7 @@ export default function Home() {
                         headerTitle: () => Platform.OS !== "ios" &&
                             <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../../assets/icon.png")}
                                              localLogo={true}/>,
-                        headerRight: () => i18n.language === 'en' && rightHeader(),
-                        headerLeft: () => i18n.language === 'ar' && rightHeader(),
+                        headerRight: () => rightHeader(),
                         headerBackTitleVisible: false,
                         headerStyle: {
                             backgroundColor: "#f8b91c",

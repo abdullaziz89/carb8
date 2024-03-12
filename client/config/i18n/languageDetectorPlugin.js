@@ -11,10 +11,7 @@ const languageDetectorPlugin = {
     init: async () => {
         //get stored language from Async storage
         await AsyncStorage.getItem(STORE_LANGUAGE_KEY).then(async (language) => {
-            await i18n.changeLanguage('en')
-                .then(() => {
-                    I18nManager.forceRTL(false);
-                });
+            await i18n.changeLanguage(language);
         });
     },
     detect: async (callback) => {

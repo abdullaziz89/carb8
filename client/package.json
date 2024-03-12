@@ -32,6 +32,8 @@
     "expo-router": "^1.2.0",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.2",
+    "expo-web-browser": "~12.1.1",
+    "fiction-expo-restart": "^2.0.0",
     "i18next": "^22.4.15",
     "lodash.findlastindex": "^4.6.0",
     "moti": "^0.28.1",
@@ -55,8 +57,7 @@
     "react-native-web": "~0.18.7",
     "rn-responsive-styles": "^2.1.0",
     "rxjs": "^7.8.1",
-    "zustand": "^4.5.1",
-    "expo-web-browser": "~12.1.1"
+    "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
