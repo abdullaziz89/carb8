@@ -377,7 +377,7 @@ export default () => {
                 options={{
                     title: foodTruck && foodTruck.nameEng,
                     headerTitle: () => foodTruck !== null &&
-                        <HeaderTitleView title={'Overview'} logo={logo} isProfile={true}/>,
+                        <HeaderTitleView title={t('overview.title')} logo={logo} isProfile={true}/>,
                     headerRight: () => (
                         isLoading && <ActivityIndicator size={26} color="white"/>
                     ),
@@ -397,7 +397,7 @@ export default () => {
                 }}
             >
                 <TextWithFont
-                    text={"Order From"}
+                    text={i18n.language === "ar" ? 'طلبك من' : 'Order From'}
                     style={{
                         fontSize: 20,
                         margin: 10,
@@ -475,7 +475,7 @@ export default () => {
                 <View
                     style={{
                         width: "50%",
-                        flexDirection: "row",
+                        flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
                         alignItems: i18n.language === "ar" ? "flex-end" : "flex-start",
                         justifyContent: "flex-start",
                         marginStart: 5
@@ -522,12 +522,12 @@ export default () => {
                 }}
             >
                 <TextWithFont
-                    text={i18n.language === "ar" ? 'Vouchers' : 'Vouchers'}
+                    text={i18n.language === "ar" ? 'كابونات' : 'Vouchers'}
                     style={{
                         width: "100%",
                         fontSize: 20,
-                        textAlign: "left",
-                        margin: 10,
+                        textAlign: i18n.language === "ar" ? "right" : "left",
+                        padding: 10,
                     }}
                 />
                 <FlatList
@@ -630,12 +630,14 @@ export default () => {
                             >
                                 <TextWithFont
                                     text={i18n.language === "ar" ? 'أضف كوبون' : 'Add Voucher'}
-                                    style={{
-                                        width: "100%",
-                                        fontSize: 16,
-                                        color: "#f8b91c",
-                                        textAlign: "left",
-                                    }}
+                                    style={[
+                                        {
+                                            width: "100%",
+                                            fontSize: 16,
+                                            color: "#f8b91c",
+                                        },
+                                        i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
+                                    ]}
                                 />
                             </TouchableOpacity>
                         )
@@ -649,13 +651,16 @@ export default () => {
                 }}
             >
                 <TextWithFont
-                    text={i18n.language === "ar" ? 'Item(s)' : 'Item(s)'}
-                    style={{
-                        width: "100%",
-                        fontSize: 20,
-                        textAlign: "left",
-                        margin: 10,
-                    }}
+                    text={i18n.language === "ar" ? 'عناصر الطلب' : 'Item(s)'}
+                    style={[
+                        {
+                            width: "100%",
+                            fontSize: 20,
+                            textAlign: "left",
+                            padding: 10,
+                        },
+                        i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
+                    ]}
                 />
                 <FlatList
                     style={{

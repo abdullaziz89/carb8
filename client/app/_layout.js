@@ -8,11 +8,14 @@ import {Image} from "expo-image";
 import TextWithFont from "../component/TextWithFont";
 import {getFoodTruckViews} from "../services/FoodTruckServices";
 import {SplashScreen} from "expo-router";
+import i18n from "i18next";
+import {useTranslation} from "react-i18next";
 
 export function customDrawerContent(props, user, isLogin) {
 
     const [numberViews, setNumberViews] = useState(0);
     const {setLogin, setUser, setVerified} = useAppStateStore();
+    const {t, i18n} = useTranslation();
 
     const [logoutClicked, setLogoutClicked] = useState(false);
 
@@ -20,7 +23,6 @@ export function customDrawerContent(props, user, isLogin) {
         if (isLogin) {
             getFoodTruckViews(user.foodTruck.id)
                 .then((response) => {
-                    console.log('response: ', response)
                     setNumberViews(response.views);
                 })
                 .catch((error) => {
@@ -88,7 +90,7 @@ export function customDrawerContent(props, user, isLogin) {
                             }}
                         />
                         <TextWithFont
-                            text={`Number of views: ${numberViews}`}
+                            text={i18n.language === "ar" ? `عدد المشاهدات: ${numberViews}` : `number of views: ${numberViews}`}
                             style={{
                                 color: "#000",
                                 fontSize: 16,
@@ -100,7 +102,7 @@ export function customDrawerContent(props, user, isLogin) {
             }
             <DrawerItem
                 {...props}
-                label="Home"
+                label={i18n.language === "ar" ? "الرئيسية" : "Home"}
                 onPress={() => props.navigation.navigate("(home)")}
                 focused={props.state.index === 0}
                 activeTintColor={"#000"}
@@ -120,7 +122,7 @@ export function customDrawerContent(props, user, isLogin) {
                 isLogin ?
                     <DrawerItem
                         {...props}
-                        label="Profile"
+                        label={i18n.language === "ar" ? "الملف الشخصي" : "Profile"}
                         onPress={() => props.navigation.navigate("(user)")}
                         focused={props.state.index === 1}
                         activeTintColor={"#000"}
@@ -138,7 +140,7 @@ export function customDrawerContent(props, user, isLogin) {
                     /> :
                     <DrawerItem
                         {...props}
-                        label="Login"
+                        label={i18n.language === "ar" ? "تسجيل الدخول" : "Login"}
                         onPress={() => props.navigation.navigate("(auth)")}
                         focused={props.state.index === 2}
                         activeTintColor={"#000"}
@@ -168,7 +170,7 @@ export function customDrawerContent(props, user, isLogin) {
                     isLogin &&
                     <DrawerItem
                         {...props}
-                        label="Logout"
+                        label={i18n.language === "ar" ? "تسجيل الخروج" : "Logout"}
                         onPress={() => {
                             setLogin(false);
                             setUser({});
@@ -224,6 +226,7 @@ export default (props) => {
                     backgroundColor: "#f8b91c"
                 },
                 overlayColor: "transparent",
+                drawerPosition: i18n.language === "ar" ? "right" : "left",
             }}
             drawerContent={(props) => customDrawerContent(props, user, isLogin)}
         >

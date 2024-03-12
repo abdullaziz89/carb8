@@ -214,6 +214,8 @@ export default function Home() {
                 }}
                 onPress={() => {
                     i18n.changeLanguage(i18n.language === "ar" ? "en" : "ar");
+                    // reset the app
+                    router.reset();
                 }}
             >
                 <FontAwesome
@@ -259,10 +261,11 @@ export default function Home() {
                         headerTitle: () => Platform.OS !== "ios" &&
                             <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../../assets/icon.png")}
                                              localLogo={true}/>,
-                        headerRight: () => rightHeader(),
+                        headerRight: () => i18n.language === 'en' && rightHeader(),
+                        headerLeft: () => i18n.language === 'ar' && rightHeader(),
                         headerBackTitleVisible: false,
                         headerStyle: {
-                            backgroundColor: "#f8b91c"
+                            backgroundColor: "#f8b91c",
                         }
                     }}
                 />
@@ -303,7 +306,9 @@ export default function Home() {
                                         fontFamily: 'BalsamiqSans_400Regular',
                                     }}
                                 />
-                                <MaterialIcons name="arrow-forward-ios" size={20} color="#f8b91c" />
+                                {i18n.language === "ar" ?
+                                    <MaterialIcons name="arrow-back-ios" size={20} color="#f8b91c"/> :
+                                    <MaterialIcons name="arrow-forward-ios" size={20} color="#f8b91c"/>}
                             </View>
                         </TouchableOpacity>
                     )

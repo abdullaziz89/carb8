@@ -252,7 +252,7 @@ export default () => {
                 options={{
                     title: foodTruck && foodTruck.nameEng,
                     headerTitle: () => foodTruck !== null &&
-                        <HeaderTitleView title={'Checkout'} logo={logo} isProfile={true}/>,
+                        <HeaderTitleView title={t('checkout.title')} logo={logo} isProfile={true}/>,
                     headerStyle: {
                         backgroundColor: "#f8b91c"
                     }
@@ -266,38 +266,43 @@ export default () => {
                 }}
             >
                 <TextWithFont
-                    text={"Contact Information"}
+                    text={t('checkout.contactInformation.title')}
                     style={{
                         fontSize: 20,
                         margin: 10,
                     }}
                 />
                 <View
-                    style={{
-                        flexDirection: 'column',
-                        alignItems: "flex-start",
-                        justifyContent: "center",
-                        backgroundColor: "white",
-                        padding: 10,
-                        marginTop: 5,
-                    }}
+                    style={[
+                        {
+                            flexDirection: 'column',
+                            justifyContent: "center",
+                            backgroundColor: "white",
+                            padding: 10,
+                            marginTop: 5,
+                        },
+                        i18n.language === "ar" ? {alignItems: "flex-end"} : {alignItems: "flex-start"}
+                    ]}
                 >
                     <TextWithFont
-                        text={i18n.t("Phone Number")}
+                        text={t('checkout.contactInformation.phoneNumber')}
                         style={{
                             fontSize: 16,
                         }}
                     />
                     <TextInput
-                        style={{
-                            width: "100%",
-                            height: 40,
-                            borderColor: "gray",
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            padding: 5,
-                            marginTop: 10,
-                        }}
+                        style={[
+                            {
+                                width: "100%",
+                                height: 40,
+                                borderColor: "gray",
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                padding: 5,
+                                marginTop: 10,
+                            },
+                            i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
+                        ]}
                         onChangeText={setCustomerPhone}
                         value={customerPhone}
                         keyboardType={"phone-pad"}
@@ -312,7 +317,7 @@ export default () => {
                 }}
             >
                 <TextWithFont
-                    text={"Order Summary"}
+                    text={t('checkout.orderSummary.title')}
                     style={{
                         fontSize: 20,
                         margin: 10,
@@ -320,8 +325,14 @@ export default () => {
                 />
                 <FlatList
                     data={[
-                        {title: "Subtotal", value: getListPostedOrder().subTotal},
-                        {title: "Total", value: getListPostedOrder().total},
+                        {
+                            title: i18n.language === "ar" ? 'المجموع الفرعي' : 'Subtotal',
+                            value: getListPostedOrder().subTotal
+                        },
+                        {
+                            title: i18n.language === "ar" ? 'المجموع' : 'Total',
+                            value: getListPostedOrder().total
+                        }
                     ]}
                     style={{
                         width: "100%",
@@ -366,7 +377,7 @@ export default () => {
                 }}
             >
                 <TextWithFont
-                    text={"Payments"}
+                    text={t('checkout.paymentMethod.title')}
                     style={{
                         fontSize: 20,
                         margin: 10,

@@ -553,12 +553,14 @@ export default (props) => {
                                     contentFit={"contain"}
                                 />
                                 <View
-                                    style={{
-                                        width: "50%",
-                                        flexDirection: "column",
-                                        alignItems: "flex-start",
-                                        justifyContent: "center",
-                                    }}
+                                    style={[
+                                        {
+                                            width: "50%",
+                                            flexDirection: "column",
+                                            justifyContent: "center",
+                                        },
+                                        i18n.language === "ar" ? {alignItems: "flex-end"} : {alignItems: "flex-start"}
+                                    ]}
                                 >
                                     <TextWithFont
                                         text={item.name}
@@ -700,7 +702,7 @@ export default (props) => {
                     disabled={quantityInCart() === 0}
                 >
                     <TextWithFont
-                        text={`Checkout (${quantityInCart()})`}
+                        text={i18n.language === "ar" ? "الدفع" : "Checkout"}
                         style={{
                             fontSize: 20,
                             fontWeight: "bold",

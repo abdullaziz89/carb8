@@ -42,7 +42,7 @@ export default () => {
             }}
         >
             <TextWithFont
-                text={"Order From"}
+                text={i18n.language === "ar" ? 'طلبك من' : 'Order From'}
                 style={{
                     fontSize: 20,
                     margin: 10,

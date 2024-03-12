@@ -27,6 +27,19 @@ export default () => {
         }
     }
 
+    const orderStatusLocalized = (status) => {
+        switch (status.toUpperCase()) {
+            case "PENDING":
+                return t("order.status.pending");
+            case "ACCEPTED":
+                return t("order.status.accepted");
+            case "REJECTED":
+                return t("order.status.rejected");
+            default:
+                return status;
+        }
+    }
+
     const sortOrderByDate = (arr) => {
         return arr.sort((a, b) => {
             return new Date(b.createTime) - new Date(a.createTime);
@@ -80,10 +93,12 @@ export default () => {
                     placeholder={require("../../assets/kwft-logo-placeholder.png")}
                 />
                 <View
-                    style={{
-                        flex: 1,
-                        marginLeft: 15,
-                    }}
+                    style={[
+                        {
+                            flex: 1,
+                        },
+                        i18n.language === "ar" ? {marginRight: 15} : {marginLeft: 15}
+                    ]}
                 >
                     <TextWithFont
                         text={i18n.language === "ar" ? item.foodTruck.nameArb : item.foodTruck.nameEng}
@@ -93,13 +108,13 @@ export default () => {
                     />
                     <View
                         style={{
-                            flexDirection: "row",
+                            flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
                             justifyContent: "flex-start",
                             alignItems: "center",
                         }}
                     >
                         <TextWithFont
-                            text={item.status}
+                            text={orderStatusLocalized(item.status)}
                             style={{
                                 fontSize: 12,
                                 color: orderStatusColor(item.status)
@@ -109,35 +124,39 @@ export default () => {
                             name="dot-fill"
                             size={8}
                             color="black"
-                            style={{
-                                marginLeft: 5,
-                            }}
+                            style={i18n.language === "ar" ? {marginRight: 5} : {marginLeft: 5}}
                         />
                         <TextWithFont
                             text={totalPrice.toFixed(2) + " KWD"}
-                            style={{
-                                fontSize: 12,
-                                marginLeft: 5,
-                            }}
+                            style={[
+                                {
+                                    fontSize: 12
+                                },
+                                i18n.language === "ar" ? {marginRight: 5} : {marginLeft: 5}
+                            ]}
                         />
                         <Octicons
                             name="dot-fill"
                             size={8}
                             color="black"
-                            style={{
-                                marginLeft: 5,
-                            }}
+                            style={[
+                                i18n.language === "ar" ? {marginRight: 5} : {marginLeft: 5}
+                            ]}
                         />
                         <TextWithFont
                             text={formatDateAndTime(item.createTime)}
-                            style={{
-                                fontSize: 12,
-                                marginLeft: 5,
-                            }}
+                            style={[
+                                {
+                                    fontSize: 12
+                                },
+                                i18n.language === "ar" ? {marginRight: 5} : {marginLeft: 5}
+                            ]}
                         />
                     </View>
                 </View>
-                <MaterialIcons name="arrow-forward-ios" size={20} color="#f8b91c" />
+                {i18n.language === "ar" ?
+                    (<MaterialIcons name="arrow-back-ios" size={20} color="#f8b91c"/>) :
+                    (<MaterialIcons name="arrow-forward-ios" size={20} color="#f8b91c"/>)}
             </TouchableOpacity>
         )
     }
@@ -152,7 +171,7 @@ export default () => {
             <Stack.Screen
                 options={{
                     title: 'My Orders',
-                    headerTitle: () => <HeaderTitleView title={'My Orders'} logo={null} isProfile={true}/>,
+                    headerTitle: () => <HeaderTitleView title={t('order.myOrder.title')} logo={null} isProfile={true}/>,
                     headerStyle: {
                         backgroundColor: "#f8b91c"
                     },

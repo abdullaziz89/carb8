@@ -12,6 +12,42 @@
     "payment_type": "Payment Type",
     "invoice_id": "Invoice ID",
     "transaction_date": "Transaction Date",
-    "receipt_id": "Receipt ID",
+    "receipt_id": "Receipt ID"
+  },
+  "order": {
+    "myOrder": {
+      "title": "My Order"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
+    }
+  },
+  "overview": {
+    "title": "Overview"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "total": "Total",
+    "pay": "Pay",
+    "orderFrom": {
+      "title": "Order From"
+    },
+    "contactInformation": {
+      "title": "Contact Information",
+      "phoneNumber": "Phone Number"
+    },
+    "orderSummary": {
+      "title": "Order Summary",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total": "Total"
+    },
+    "paymentMethod": {
+      "title": "Payment Method"
+    }
   }
 }

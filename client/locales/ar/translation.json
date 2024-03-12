@@ -13,5 +13,41 @@
     "invoice_id": "رقم الفاتورة",
     "transaction_date": "تاريخ العملية",
     "receipt_id": "رقم الإيصال"
+  },
+  "order": {
+    "myOrder": {
+      "title": "طلباتي"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "accepted": "تم قبول الطلب",
+      "rejected": "تم رفض الطلب",
+      "delivered": "تم التوصيل",
+      "cancelled": "تم الإلغاء"
+    }
+  },
+  "overview": {
+    "title": "ملخص الطلب"
+  },
+  "checkout": {
+    "title": "الدفع",
+    "total": "المجموع",
+    "pay": "ادفع",
+    "orderFrom": {
+      "title": "Order From"
+    },
+    "contactInformation": {
+      "title": "بايانات التواصل",
+      "phoneNumber": "رقم الهاتف"
+    },
+    "orderSummary": {
+      "title": "ملخص الدفع",
+      "subtotal": "المجموع الفرعي",
+      "discount": "الخصم",
+      "total": "الأجمالي"
+    },
+    "paymentMethod": {
+      "title": "طريقة الدفع"
+    }
   }
 }
