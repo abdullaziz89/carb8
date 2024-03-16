@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### create new user - online
-POST https://api.allsports.club/authenticate/register
+POST https://api.kwfts.com/authenticate/register
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
     "password": "Aziz98877449@?",
     "enable": true
   },
-  "roleId": "0613f589-c869-4b90-9059-6b79856fbc9e"
+  "roleId": "c6a99f1c-433b-4ebe-8ca4-d14abebbf94f"
 }
 
 ### login as admin

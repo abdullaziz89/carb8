@@ -56,10 +56,15 @@ export default () => {
 
     const formatDateAndTime = (date) => {
         // date = 2021-08-25T14:00:00.000Z, format for example: 25/08/2021 14:00
-        const split = date.split("T");
-        const dateSplit = split[0].split("-");
-        const timeSplit = split[1].split(":");
-        return `${dateSplit[2]}/${dateSplit[1]}/${dateSplit[0]} ${timeSplit[0]}:${timeSplit[1]}`;
+        if (date) {
+            const d = new Date(date);
+            const day = d.getDate();
+            const month = d.getMonth() + 1;
+            const year = d.getFullYear();
+            const hours = d.getHours();
+            const minutes = d.getMinutes();
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
     }
 
     const orderRenderItem = ({item}) => {

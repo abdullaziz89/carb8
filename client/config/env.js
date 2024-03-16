@@ -1,7 +1,7 @@
 
-const host = 'http://192.168.3.8'
+const host = 'http://192.168.8.110'
 
 export const environment = {
-  // apiUrl: "https://api.allsports.club"
-  apiUrl: `${host}:3000`,
+  apiUrl: "https://api.kwfts.com"
+  // apiUrl: `${host}:3000`,
 }

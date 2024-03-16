@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ### Create Role
-POST https://api.allsports.club/role
+POST https://api.kwfts.com/role
 Content-Type: application/json
 
 {

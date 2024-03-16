@@ -137,7 +137,6 @@ export default function Home() {
     const cuisineRenderItem = ({item, index}) => {
 
         const isFirst = index === 0;
-
         return (
             <TouchableOpacity
                 style={[

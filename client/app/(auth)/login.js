@@ -134,10 +134,10 @@ export default () => {
     return (
         <KeyboardAwareScrollView
             style={{
+                flex: 1,
                 backgroundColor: "#efefe0f"
             }}
             contentContainerStyle={{
-                flex: 1,
                 justifyContent: "center",
                 alignItems: "center"
             }}

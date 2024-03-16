@@ -1,6 +1,6 @@
 export const environment = {
-  baseUrl: "https://dashboard.allsports.club",
+  baseUrl: "https://dashboard.kwfts.com",
   production: true,
-  apiUrl: "https://api.allsports.club",
-  clientUrl: `https//allsports.club`
+  apiUrl: "https://api.kwfts.com",
+  clientUrl: `https//kwfts.com`
 };
