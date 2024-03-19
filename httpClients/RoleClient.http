@@ -1,9 +1,9 @@
 ### Create Role
-POST http://192.168.8.133:3000/role
+POST http://192.168.8.170:3000/role
 Content-Type: application/json
 
 {
-    "name": "FOOD_TRUCK_OWNER"
+    "name": "SUPER_ADMIN"
 }
 
 ### Create Role

@@ -16,6 +16,7 @@ import { RolesGuard } from "../guards/roles-guard.guard";
 import { Roles } from "../role/role.decorator";
 import { CloudflareImagesInterceptor } from "../file/CloudflareImagesInterceptor";
 import {CuisineService} from "./cuisine.service";
+import {FilesInterceptor} from "@nestjs/platform-express";
 
 @Controller("cuisine")
 export class CuisineController {
@@ -29,7 +30,7 @@ export class CuisineController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(["SUPER_ADMIN", "ADMIN"])
   @UseInterceptors(CloudflareImagesInterceptor)
-  create(@UploadedFiles() files, @Body("cuisine") cuisine: any) {
+  create(@UploadedFiles() files: any, @Body("cuisine") cuisine: any) {
     return this.cuisineService.create(JSON.parse(cuisine), files);
   }
 
