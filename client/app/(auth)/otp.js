@@ -63,7 +63,7 @@ export default () => {
                     // set verified to true
                     setVerified(true);
                     // navigate to home
-                    router.replace('(user)');
+                    navigation.navigate('login');
                 })
                 .catch((error) => {
                     console.log(error);

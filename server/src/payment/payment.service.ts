@@ -58,6 +58,8 @@ export class PaymentService {
             }
         });
 
+        console.log(this.configService.get("PAYMENT_REDIRECT_SUCCESS"))
+
         return this.configService.get("PAYMENT_REDIRECT_SUCCESS");
     }
 

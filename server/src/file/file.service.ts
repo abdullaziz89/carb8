@@ -6,7 +6,7 @@ import FormData = require("form-data");
 export class FileService {
 
   apiKey = "rYAYR7h_6geIanjjIZWQ8mgTg6x6auTLxb0Vp4io"; // Replace with your Cloudflare API key
-  url = `http://localhost:8081`;
+  url = `http://localhost:8082`;
 
   constructor() {
   }
@@ -69,6 +69,6 @@ export class FileService {
   }
 
   getFileUrl(path: string, filename: string) {
-    return `http://192.168.8.170:8081/${path}/${filename}`;
+    return `https://file.kwfts.com/${path}/${filename}`;
   }
 }

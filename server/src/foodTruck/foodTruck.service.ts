@@ -39,8 +39,6 @@ export class FoodTruckService {
                     where: {name: "FOOD_TRUCK_OWNER"}
                 });
 
-                console.log(clientRole);
-
                 // if role not exist create it
                 if (!clientRole) {
                     clientRole = await prisma.role.create({
@@ -52,7 +50,7 @@ export class FoodTruckService {
                     });
                 }
 
-                await prisma.user.create({
+                user = await prisma.user.create({
                     data: {
                         email: payload.user.email,
                         password: encodePassword(payload.user.password),
@@ -68,11 +66,19 @@ export class FoodTruckService {
                         }
                     }
                 });
+            } else {
+                user = await prisma.user.findFirst({
+                    where: {
+                        userRole: {
+                            some: {
+                                role: {
+                                    name: "SUPER_ADMIN"
+                                }
+                            }
+                        }
+                    }
+                });
             }
-
-            user = await prisma.user.findUnique({
-                where: {email: payload.user.email}
-            });
 
             const foodTruckExist = await prisma.foodTruck.findUnique({
                 where: {

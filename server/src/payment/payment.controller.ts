@@ -30,7 +30,7 @@ export class PaymentController {
     @Get('success')
     paymentSuccess(@Query() paymentResponse: any, @Res() res: any) {
 
-        if (!paymentResponse || !paymentResponse.OrderID) {
+        if (!paymentResponse || !paymentResponse.requested_order_id) {
             throw new HttpException('Invalid payment response', 400);
         }
 

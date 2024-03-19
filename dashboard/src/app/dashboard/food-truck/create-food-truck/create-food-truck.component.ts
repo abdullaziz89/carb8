@@ -143,7 +143,8 @@ export class CreateFoodTruckComponent implements OnInit {
     const payload = {
       foodTruck: this.foodTruckForm?.value,
       address: this.addressForm?.value,
-      information: this.informationForm?.value
+      information: this.informationForm?.value,
+      user: {}
     };
 
     formData.append("payload", JSON.stringify(payload));
