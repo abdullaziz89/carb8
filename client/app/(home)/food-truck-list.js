@@ -132,7 +132,7 @@ export default (props) => {
         let {status} = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
-            console.log("Permission to access location was denied");
+             ("Permission to access location was denied");
         } else {
             return await Location.getCurrentPositionAsync({});
         }

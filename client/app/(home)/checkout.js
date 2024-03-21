@@ -159,7 +159,7 @@ export default () => {
             })
             .catch((error) => {
                 setPaymentButtonsLoading(false);
-                console.log('get payments buttons error resp: ', error)
+                 ('get payments buttons error resp: ', error)
             });
     }, []);
 
@@ -172,7 +172,7 @@ export default () => {
     }
 
     const handleRedirect = (url) => {
-        console.log('handleRedirect: ', url)
+         ('handleRedirect: ', url)
     }
 
     const addListener = async () => {
@@ -188,11 +188,11 @@ export default () => {
             if (result.type === "success") {
                 setPaymentRedirectData(result);
             } else {
-                console.log('openAuthSessionAsync error: ', result)
+                 ('openAuthSessionAsync error: ', result)
             }
         } catch (error) {
             alert("Something went wrong. Please try again later.");
-            console.log('openAuthSessionAsync error: ', error)
+             ('openAuthSessionAsync error: ', error)
         }
     }
 
@@ -216,7 +216,7 @@ export default () => {
 
         createOrder(payload)
             .then((response) => {
-                console.log('create order resp: ', response)
+                 ('create order resp: ', response)
                 updateItemIdInOrders(getListPostedOrder().id, {
                     ...getListPostedOrder(),
                     id: response.id,
@@ -226,11 +226,11 @@ export default () => {
                         await openAuthSessionAsync(response.data.link)
                     })
                     .catch((error) => {
-                        console.log('pay order error resp: ', error)
+                         ('pay order error resp: ', error)
                     });
             })
             .catch((error) => {
-                console.log('create order error resp: ', error)
+                 ('create order error resp: ', error)
             });
     }
 

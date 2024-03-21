@@ -46,7 +46,7 @@ export default () => {
             login(data)
                 .then(async (response) => {
                     setIsLoading(false);
-                    // console.log('login.js response', response);
+                    //  ('login.js response', response);
                     const token = response.data.token;
                     const user = response.data.user;
                     setToken(token);

@@ -20,7 +20,7 @@ export default function Governorates() {
                 setGovernorates(data);
             })
             .catch(e => {
-                console.log(e);
+                 (e);
             })
     }, []);
 

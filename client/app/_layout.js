@@ -1,9 +1,9 @@
 import {Drawer} from 'expo-router/drawer';
-import {AntDesign, MaterialCommunityIcons} from "@expo/vector-icons";
+import {AntDesign, Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import {useAppStateStore} from "../store/app-store";
 import {useCallback, useEffect, useState} from "react";
 import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
-import {View, Text, I18nManager, DevSettings} from "react-native";
+import {View, Text} from "react-native";
 import {Image} from "expo-image";
 import TextWithFont from "../component/TextWithFont";
 import {getFoodTruckViews} from "../services/FoodTruckServices";
@@ -11,12 +11,15 @@ import {SplashScreen} from "expo-router";
 import i18n from "i18next";
 import {useTranslation} from "react-i18next";
 import {Restart} from "fiction-expo-restart";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
+import Constants from "expo-constants";
 
 export function customDrawerContent(props, user, isLogin) {
 
     const [numberViews, setNumberViews] = useState(0);
     const {setLogin, setUser, setVerified} = useAppStateStore();
     const {t, i18n} = useTranslation();
+    const insets = useSafeAreaInsets();
 
     const [logoutClicked, setLogoutClicked] = useState(false);
 
@@ -24,11 +27,11 @@ export function customDrawerContent(props, user, isLogin) {
         if (isLogin) {
             getFoodTruckViews(user.foodTruck.id)
                 .then((response) => {
-                    console.log('response: ', response)
+                     ('response: ', response)
                     setNumberViews(response.views);
                 })
                 .catch((error) => {
-                    console.log('error: ', error);
+                     ('error: ', error);
                 });
         }
     }, [isLogin]);
@@ -40,7 +43,7 @@ export function customDrawerContent(props, user, isLogin) {
     }, []);
 
     const getLogo = () => {
-        const logo = `http://192.168.3.8:8081/foodTruck/${user.foodTruck.id}/logo.jpg`
+        const logo = `https://file.kwfts.com/foodTruck/${user.foodTruck.id}/logo.jpg`
         return (
             <Image
                 source={{uri: logo}}
@@ -55,149 +58,206 @@ export function customDrawerContent(props, user, isLogin) {
     }
 
     return (
-        <DrawerContentScrollView
-            {...props}
-            contentContainerStyle={{
-                backgroundColor: "#f8b91c",
-                width: "100%",
-                height: "100%",
-                paddingTop: 50,
+        <View
+            style={{
+                flex: 1,
             }}
-            onLayout={onLayoutRootView}
         >
-            {
-                isLogin &&
-                <View
-                    style={{
-                        width: "100%",
-                        height: 200,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: 10,
-                        marginBottom: 15,
-                    }}
-                >
-                    {getLogo()}
-                    <View
-                        style={{
-                            marginTop: 15,
-                        }}
-                    >
-                        <TextWithFont
-                            text={i18n.language === "ar" ? user.foodTruck.nameArb : user.foodTruck.nameEng}
-                            style={{
-                                color: "#000",
-                                fontSize: 20,
-                                textAlign: "center",
-                            }}
-                        />
-                        <TextWithFont
-                            text={`Number of views: ${numberViews}`}
-                            style={{
-                                color: "#000",
-                                fontSize: 16,
-                                textAlign: "center",
-                            }}
-                        />
-                    </View>
-                </View>
-            }
-            <DrawerItem
+            <DrawerContentScrollView
                 {...props}
-                label={t("drawer.home")}
-                onPress={() => props.navigation.navigate("(home)")}
-                focused={props.state.index === 0}
-                activeTintColor={"#000"}
-                inactiveTintColor={"#000"}
-                activeBackgroundColor={props.state.index === 0 ? "#fff" : "transparent"}
-                inactiveBackgroundColor={"transparent"}
-                icon={({focused, size}) => (
-                    <AntDesign
-                        name="home"
-                        size={24}
-                        color="black"
-                        style={{marginLeft: 10}}
-                    />
-                )}
-            />
-            {
-                isLogin ?
-                    <DrawerItem
-                        {...props}
-                        label={i18n.language === "ar" ? "الملف الشخصي" : "Profile"}
-                        onPress={() => props.navigation.navigate("(user)")}
-                        focused={props.state.index === 1}
-                        activeTintColor={"#000"}
-                        inactiveTintColor={"#000"}
-                        activeBackgroundColor={props.state.index === 1 ? "#fff" : "transparent"}
-                        inactiveBackgroundColor={"transparent"}
-                        icon={({focused, size}) => (
-                            <MaterialCommunityIcons
-                                name="account-circle-outline"
-                                size={size}
-                                color={"#000"}
-                                style={{marginLeft: 10}}
-                            />
-                        )}
-                    /> :
-                    <DrawerItem
-                        {...props}
-                        label={i18n.language === "ar" ? "تسجيل الدخول" : "Login"}
-                        onPress={() => props.navigation.navigate("(auth)")}
-                        focused={props.state.index === 2}
-                        activeTintColor={"#000"}
-                        inactiveTintColor={"#000"}
-                        activeBackgroundColor={props.state.index === 2 ? "#fff" : "transparent"}
-                        inactiveBackgroundColor={"transparent"}
-                        icon={({focused, size}) => (
-                            <MaterialCommunityIcons
-                                name="login"
-                                size={size}
-                                color={"#000"}
-                                style={{marginLeft: 10}}
-                            />
-                        )}
-                    />
-            }
-            <View
-                style={{
+                contentContainerStyle={{
+                    backgroundColor: "#f8b91c",
                     width: "100%",
-                    borderTopColor: "#fff",
-                    borderTopWidth: 1,
-                    marginTop: 20,
-                    paddingTop: 20,
+                    height: "100%",
+                    paddingTop: 50,
                 }}
+                onLayout={onLayoutRootView}
             >
                 {
                     isLogin &&
-                    <DrawerItem
-                        {...props}
-                        label={i18n.language === "ar" ? "تسجيل الخروج" : "Logout"}
-                        onPress={() => {
-                            setLogin(false);
-                            setUser({});
-                            setVerified(false);
-
-                            SplashScreen.preventAutoHideAsync();
-                            props.navigation.navigate("(home)");
+                    <View
+                        style={{
+                            width: "100%",
+                            height: 200,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            padding: 10,
+                            marginBottom: 15,
                         }}
-                        focused={props.state.index === 3}
-                        activeTintColor={"#000"}
-                        inactiveTintColor={"#000"}
-                        activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
-                        inactiveBackgroundColor={"transparent"}
-                        icon={({focused, size}) => (
-                            <MaterialCommunityIcons
-                                name="logout"
-                                size={size}
-                                color={"#000"}
-                                style={{marginLeft: 10}}
+                    >
+                        {getLogo()}
+                        <View
+                            style={{
+                                marginTop: 15,
+                            }}
+                        >
+                            <TextWithFont
+                                text={i18n.language === "ar" ? user.foodTruck.nameArb : user.foodTruck.nameEng}
+                                style={{
+                                    color: "#000",
+                                    fontSize: 20,
+                                    textAlign: "center",
+                                }}
                             />
-                        )}
-                    />
+                            <TextWithFont
+                                text={`Number of views: ${numberViews}`}
+                                style={{
+                                    color: "#000",
+                                    fontSize: 16,
+                                    textAlign: "center",
+                                }}
+                            />
+                        </View>
+                    </View>
                 }
+                <DrawerItem
+                    {...props}
+                    label={t("drawer.home")}
+                    onPress={() => props.navigation.navigate("(home)")}
+                    focused={props.state.index === 0}
+                    activeTintColor={"#000"}
+                    inactiveTintColor={"#000"}
+                    activeBackgroundColor={props.state.index === 0 ? "#fff" : "transparent"}
+                    inactiveBackgroundColor={"transparent"}
+                    icon={({focused, size}) => (
+                        <AntDesign
+                            name="home"
+                            size={24}
+                            color="black"
+                            style={{marginLeft: 10}}
+                        />
+                    )}
+                />
+                {
+                    isLogin ?
+                        <DrawerItem
+                            {...props}
+                            label={i18n.language === "ar" ? "الملف الشخصي" : "Profile"}
+                            onPress={() => props.navigation.navigate("(user)")}
+                            focused={props.state.index === 1}
+                            activeTintColor={"#000"}
+                            inactiveTintColor={"#000"}
+                            activeBackgroundColor={props.state.index === 1 ? "#fff" : "transparent"}
+                            inactiveBackgroundColor={"transparent"}
+                            icon={({focused, size}) => (
+                                <MaterialCommunityIcons
+                                    name="account-circle-outline"
+                                    size={size}
+                                    color={"#000"}
+                                    style={{marginLeft: 10}}
+                                />
+                            )}
+                        /> :
+                        <DrawerItem
+                            {...props}
+                            label={i18n.language === "ar" ? "تسجيل الدخول" : "Login"}
+                            onPress={() => props.navigation.navigate("(auth)")}
+                            focused={props.state.index === 2}
+                            activeTintColor={"#000"}
+                            inactiveTintColor={"#000"}
+                            activeBackgroundColor={props.state.index === 2 ? "#fff" : "transparent"}
+                            inactiveBackgroundColor={"transparent"}
+                            icon={({focused, size}) => (
+                                <MaterialCommunityIcons
+                                    name="login"
+                                    size={size}
+                                    color={"#000"}
+                                    style={{marginLeft: 10}}
+                                />
+                            )}
+                        />
+                }
+                <View
+                    style={{
+                        width: "100%",
+                        borderTopColor: "#fff",
+                        borderTopWidth: 1,
+                        marginTop: 20,
+                        paddingTop: 20,
+                    }}
+                >
+                    {
+                        isLogin &&
+                        <DrawerItem
+                            {...props}
+                            label={i18n.language === "ar" ? "تسجيل الخروج" : "Logout"}
+                            onPress={() => {
+                                setLogin(false);
+                                setUser({});
+                                setVerified(false);
+
+                                SplashScreen.preventAutoHideAsync();
+                                props.navigation.navigate("(home)");
+                            }}
+                            focused={props.state.index === 3}
+                            activeTintColor={"#000"}
+                            inactiveTintColor={"#000"}
+                            activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
+                            inactiveBackgroundColor={"transparent"}
+                            icon={({focused, size}) => (
+                                <MaterialCommunityIcons
+                                    name="logout"
+                                    size={size}
+                                    color={"#000"}
+                                    style={{marginLeft: 10}}
+                                />
+                            )}
+                        />
+                    }
+                </View>
+                <DrawerItem
+                    {...props}
+                    label={i18n.language === "ar" ? "السياسة والخصوصية" : "Policy and Privacy"}
+                    onPress={() => {
+                        props.navigation.navigate("policy");
+                    }}
+                    focused={props.state.index === 3}
+                    activeTintColor={"#000"}
+                    inactiveTintColor={"#000"}
+                    activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
+                    inactiveBackgroundColor={"transparent"}
+                    icon={({focused, size}) => (
+                        <MaterialCommunityIcons
+                            name="police-badge-outline"
+                            size={size}
+                            color={"#000"}
+                            style={{marginLeft: 10}}
+                        />
+                    )}
+                />
+                <DrawerItem
+                    {...props}
+                    label={i18n.language === "ar" ? "الأعدادات" : "Settings"}
+                    onPress={() => {
+                        props.navigation.navigate("(setting)");
+                    }}
+                    focused={props.state.index === 3}
+                    activeTintColor={"#000"}
+                    inactiveTintColor={"#000"}
+                    activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
+                    inactiveBackgroundColor={"transparent"}
+                    icon={({focused, size}) => (
+                        <Ionicons
+                            name="settings-outline"
+                            size={size}
+                            color={"#000"}
+                            style={{marginLeft: 10}}
+                        />
+                    )}
+                />
+            </DrawerContentScrollView>
+            <View
+                style={{
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    paddingBottom: insets.bottom + 10,
+                    backgroundColor: "#f8b91c",
+                }}
+            >
+                <Text style={{color: '#efefef'}}>V{Constants.expoConfig.version}</Text>
             </View>
-        </DrawerContentScrollView>
+        </View>
     )
 }
 
@@ -210,10 +270,6 @@ export default (props) => {
         // add isLogin to props
         props.isLogin = isLogin;
     }, []);
-
-    useEffect(() => {
-        console.log('isLogin: ', isLogin);
-    }, [isLogin]);
 
     return (
         <Drawer
@@ -283,6 +339,18 @@ export default (props) => {
                     drawerInactiveBackgroundColor: "transparent",
                     drawerActiveTintColor: "#000",
                     drawerInactiveTintColor: "#000",
+                }}
+            />
+            <Drawer.Screen
+                name="(setting)"
+                options={{
+                    drawerActiveBackgroundColor: "#efefef",
+                    drawerInactiveBackgroundColor: "transparent",
+                    drawerActiveTintColor: "#000",
+                    drawerInactiveTintColor: "#000",
+                    sceneContainerStyle: {
+                        backgroundColor: "#efefef"
+                    },
                 }}
             />
         </Drawer>

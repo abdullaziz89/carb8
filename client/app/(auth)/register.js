@@ -95,7 +95,7 @@ export default () => {
                 setCuisines(cuisines);
             })
             .catch((error) => {
-                console.log("error", error);
+                 ("error", error);
             });
     };
 
@@ -1326,7 +1326,7 @@ export default () => {
                         justifyContent: "center"
                     }}
                     onPress={() => {
-                        console.log("onSubmit")
+                         ("onSubmit")
                         handleSubmit(onSubmit)();
                     }}
                 >

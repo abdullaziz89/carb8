@@ -135,6 +135,7 @@ export default (props) => {
             getFoodTruck(params.foodTruck)
                 .then((response) => {
                     setFoodTruck(response);
+                     (findLogoImage(response.images))
                     setLogo(findLogoImage(response.images));
                     setShowIndicator(false);
                     updateFoodTruckView(response.id);
@@ -267,7 +268,7 @@ export default (props) => {
         let {status} = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
-            console.log("Permission to access location was denied");
+             ("Permission to access location was denied");
         } else {
             setCurrentLocation(await Location.getCurrentPositionAsync({}));
         }

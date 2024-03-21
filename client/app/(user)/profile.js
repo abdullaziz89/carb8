@@ -75,7 +75,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        console.log("user", user.foodTruck);
+         ("user", user.foodTruck);
         fetchData();
     }, []);
 
@@ -99,7 +99,7 @@ export default () => {
                 setCuisines(cuisines);
             })
             .catch((error) => {
-                console.log("error", error);
+                 ("error", error);
             });
     };
 
@@ -537,7 +537,7 @@ export default () => {
     }
 
     const foodTruckWorkingDaysRenderItem = ({item, index}) => {
-        console.log("item", item)
+         ("item", item)
         return (
             <View
                 style={{
@@ -618,7 +618,6 @@ export default () => {
             }}
             scrollEnabled={true}
             showsVerticalScrollIndicator={false}
-
         >
             <Stack.Screen
                 options={{
@@ -1297,7 +1296,7 @@ export default () => {
                         justifyContent: "center"
                     }}
                     onPress={() => {
-                        console.log("onSubmit")
+                         ("onSubmit")
                         handleSubmit(onSubmit)();
                     }}
                 >

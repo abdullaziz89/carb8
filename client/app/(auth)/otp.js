@@ -28,10 +28,10 @@ export default () => {
 
         sendOTP({email: user.user.email})
             .then((response) => {
-                console.log(response);
+                 (response);
             })
             .catch((error) => {
-                console.log(error);
+                 (error);
                 const message = error.response.data.message;
                 alert(message)
             });
@@ -66,7 +66,7 @@ export default () => {
                     navigation.navigate('login');
                 })
                 .catch((error) => {
-                    console.log(error);
+                     (error);
                     const message = error.response.data.message;
                     alert(message);
                 });
