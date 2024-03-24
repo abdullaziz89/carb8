@@ -7,7 +7,7 @@ GET http://localhost:8080/authrization
 Content-Type: "application/json"
 
 ###
-GET http://192.168.8.144:8080/storage/file/all
+GET http://192.168.3.93:8080/storage/file/all
 Content-Type: "application/json"
 
 ###
