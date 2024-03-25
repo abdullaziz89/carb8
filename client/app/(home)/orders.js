@@ -180,7 +180,9 @@ export default () => {
                     headerStyle: {
                         backgroundColor: "#f8b91c"
                     },
-                    headerShown: true
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    headerTintColor: "#fff",
                 }}
             />
             <FlatList

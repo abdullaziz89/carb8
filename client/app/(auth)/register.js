@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import HeaderTitleView from "../(home)/HeaderTitleView";
-import {Stack, useNavigation, useRouter, useSearchParams} from "expo-router";
+import {Stack, useNavigation, useRouter, useLocalSearchParams} from "expo-router";
 import {MaterialIcons} from "@expo/vector-icons";
 import {Image} from "expo-image";
 import {Controller, useForm} from "react-hook-form";

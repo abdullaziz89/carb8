@@ -1,4 +1,4 @@
-import {Stack, useLocalSearchParams, useSearchParams} from "expo-router";
+import {Stack, useLocalSearchParams} from "expo-router";
 import {FlatList, Keyboard, TouchableOpacity, View} from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import HeaderTitleView from "./HeaderTitleView";

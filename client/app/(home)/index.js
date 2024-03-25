@@ -20,7 +20,7 @@ import CustomCarousel from "./CustomCarousel";
 import {forkJoin} from "rxjs";
 import "../../config/i18n";
 import {useTranslation} from "react-i18next";
-import HeaderTitleView from "./HeaderTitleView";
+import HeaderTitleView, {HeaderLogo} from "./HeaderTitleView";
 import {
     BalsamiqSans_400Regular,
     BalsamiqSans_400Regular_Italic,
@@ -35,6 +35,7 @@ import {useAppStateStore} from "../../store/app-store";
 import TextWithFont from "../../component/TextWithFont";
 import {Restart} from 'fiction-expo-restart';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {DrawerToggleButton} from "@react-navigation/drawer";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -268,6 +269,9 @@ export default function Home() {
                         headerTitle: () => Platform.OS !== "ios" &&
                             <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../../assets/icon.png")}
                                              localLogo={true}/>,
+                        headerLeft: () => Platform.OS === "ios" && (
+                            <DrawerToggleButton tintColor={'#fff'}/>
+                        ),
                         headerRight: () => rightHeader(),
                         headerBackTitleVisible: false,
                         headerStyle: {

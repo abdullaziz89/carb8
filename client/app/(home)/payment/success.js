@@ -1,4 +1,4 @@
-import {Stack, useSearchParams} from "expo-router";
+import {Stack, useLocalSearchParams} from "expo-router";
 import {useEffect, useState} from "react";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import HeaderTitleView from "../HeaderTitleView";
@@ -14,7 +14,7 @@ import {getPaymentStatus} from "../../../services/PaymentService";
 
 export default () => {
 
-    const params = useSearchParams();
+    const params = useLocalSearchParams();
     const [orderId, setOrderId] = useState(params.orderId);
     const {t, i18n} = useTranslation();
     const {getCart, totalPriceInCart, getOrder, updateOrderStatus, updateOrderTrackingId, clearCart} = useAppStateStore();

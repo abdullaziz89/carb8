@@ -1,7 +1,7 @@
 import {View, Text, ActivityIndicator, TouchableOpacity, Dimensions, TextInput, FlatList} from "react-native";
 import {useAppStateStore} from "../../store/app-store";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {SplashScreen, Stack, useLocalSearchParams, useNavigation, useRouter, useSearchParams} from "expo-router";
+import {SplashScreen, Stack, useLocalSearchParams, useNavigation} from "expo-router";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {Image} from "expo-image";
 import TextWithFont from "../../component/TextWithFont";
@@ -382,8 +382,9 @@ export default () => {
                         isLoading && <ActivityIndicator size={26} color="white"/>
                     ),
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
-                    }
+                        backgroundColor: "#f8b91c",
+                    },
+                    headerTintColor: "#fff",
                 }}
             />
             {orderNoteSheet()}

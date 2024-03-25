@@ -255,7 +255,8 @@ export default () => {
                         <HeaderTitleView title={t('checkout.title')} logo={logo} isProfile={true}/>,
                     headerStyle: {
                         backgroundColor: "#f8b91c"
-                    }
+                    },
+                    headerTintColor: "#fff",
                 }}
             />
             <OrderFromView/>

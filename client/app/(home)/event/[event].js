@@ -1,4 +1,4 @@
-import {Stack, useRouter, useSearchParams} from "expo-router";
+import {Stack, useRouter, useLocalSearchParams} from "expo-router";
 import {useEffect, useState} from "react";
 import {getEvent} from "../../../services/EventsServices";
 import {
@@ -24,7 +24,7 @@ const isWeb = Platform.OS === "web";
 
 export default () => {
 
-    const params = useSearchParams();
+    const params = useLocalSearchParams();
 
     const [showIndicator, setShowIndicator] = useState(false);
     const [event, setEvent] = useState(null);

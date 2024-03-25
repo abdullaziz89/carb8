@@ -9,7 +9,7 @@ import {
     Linking,
     TouchableOpacity, FlatList, SectionList
 } from "react-native";
-import {Stack, useNavigation, useRouter, useSearchParams} from "expo-router";
+import {Stack, useNavigation, useRouter, useLocalSearchParams} from "expo-router";
 import {useEffect, useRef, useState} from "react";
 import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
@@ -30,7 +30,7 @@ const isWeb = Platform.OS === "web";
 
 export default (props) => {
 
-    const params = useSearchParams();
+    const params = useLocalSearchParams();
 
     const {t, i18n} = useTranslation();
 
@@ -490,7 +490,9 @@ export default (props) => {
                         <HeaderTitleView title={foodTruck.nameEng} logo={logo} isProfile={true}/>,
                     headerStyle: {
                         backgroundColor: "#f8b91c"
-                    }
+                    },
+                    headerTintColor: "#fff",
+                    headerBackTitleVisible: false,
                 }}
             />
 

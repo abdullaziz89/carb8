@@ -66,8 +66,8 @@ export default () => {
 
     useEffect(() => {
 
-        setHost(Constants.manifest.extra.host.dev)
-        setSelectedImage(`${Constants.manifest.extra.host.dev}:8081/foodTruck/${user.foodTruck.id}/logo.jpg`)
+        setHost('https://file.kwfts.com')
+        setSelectedImage(`https://file.kwfts.com/foodTruck/${user.foodTruck.id}/logo.jpg`)
         // if user is not verified send to otp
         if (!isVerified()) {
             router.replace("(auth)/otp");
@@ -209,13 +209,13 @@ export default () => {
                 const split = image.split("/");
                 return split[split.length - 1].split(".")[0] === "logo";
             });
-            return `${host}:8081/foodTruck/${user.foodTruck.id}/${imgs}`;
+            return `${host}/foodTruck/${user.foodTruck.id}/${imgs}`;
         } else {
             return images.map((image) => {
                 const split = image.split("/");
                 return split[split.length - 1].split(".")[0] !== "logo";
             }).map((image) => {
-                return `${host}:8081/foodTruck/${user.foodTruck.id}/${image}`;
+                return `${host}/foodTruck/${user.foodTruck.id}/${image}`;
             });
         }
     }

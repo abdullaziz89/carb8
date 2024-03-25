@@ -3,28 +3,13 @@ import {Image} from "expo-image";
 import {useTranslation} from "react-i18next";
 import {useNavigation} from "expo-router";
 import TextWithFont from "../../component/TextWithFont";
+import {DrawerActions as DrawerAction} from "@react-navigation/routers/src";
 
 export default (props) => {
 
     const {title, logo, localLogo, isProfile} = props;
     const {t, i18n} = useTranslation();
     const navigation = useNavigation();
-
-    const headerLogo = () => {
-        return (
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.toggleDrawer();
-                }}
-            >
-                <Image
-                    source={localLogo ? logo : {uri: logo}}
-                    style={{width: 35, height: 35, borderRadius: 17.5}}
-                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
-                />
-            </TouchableOpacity>
-        )
-    }
 
     return (
         <View
@@ -35,7 +20,7 @@ export default (props) => {
             }}
         >
             {
-                !isProfile && logo && headerLogo()
+                !isProfile && logo && HeaderLogo()
             }
             <TextWithFont
                 text={title}
@@ -45,4 +30,21 @@ export default (props) => {
             />
         </View>
     );
+}
+
+export const HeaderLogo = (navigation, logo, localLogo) => {
+
+    return (
+        <TouchableOpacity
+            onPress={() => {
+                DrawerAction.toggleDrawer();
+            }}
+        >
+            <Image
+                source={localLogo ? logo : {uri: logo}}
+                style={{width: 35, height: 35, borderRadius: 17.5}}
+                placeholder={require("../../assets/kwft-logo-placeholder.png")}
+            />
+        </TouchableOpacity>
+    )
 }

@@ -2,7 +2,7 @@
 import {FlatList, Modal, TouchableOpacity, View, Text} from "react-native";
 import {useEffect, useState} from "react";
 import {getGovernorate} from "../../services/GovernorateService";
-import {useNavigation, useRouter, useSearchParams} from "expo-router";
+import {useNavigation, useRouter, useLocalSearchParams} from "expo-router";
 import TextWithFont from "../../component/TextWithFont";
 import {useAppStateStore} from "../../store/app-store";
 
@@ -12,7 +12,7 @@ export default function Governorates() {
     const navigation = useNavigation();
     const router = useRouter();
     const [governorates, setGovernorates] = useState([]);
-    const params = useSearchParams();
+    const params = useLocalSearchParams();
 
     useEffect(() => {
         getGovernorate()

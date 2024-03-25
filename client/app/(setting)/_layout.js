@@ -32,7 +32,6 @@ export default function UserLayout() {
                 initialRouteName="index"
                 screenOptions={{
                     statusBarHidden: false,
-                    statusBarStyle: "dark",
                 }}
             />
         </Animated.View>

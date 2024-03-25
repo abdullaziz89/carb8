@@ -59,7 +59,7 @@ export default () => {
                     setIsLoading(false);
 
                     let response = error.response.data;
-
+                    console.log('login.js error', response)
                     // if response has entity
                     if (response.username) {
                         if (!response.enable) {
@@ -145,7 +145,6 @@ export default () => {
         >
             <Stack.Screen
                 options={{
-                    headerLargeTitle: true,
                     title: "Login",
                     headerLeft: () => {
                         // back icon button
@@ -164,7 +163,7 @@ export default () => {
                     },
                     headerStyle: {
                         backgroundColor: "#f8b91c"
-                    }
+                    },
                 }}
             />
             <View>

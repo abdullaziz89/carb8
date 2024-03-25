@@ -33,7 +33,6 @@ export default function LoginLayout () {
                 initialRouteName="login"
                 screenOptions={{
                     statusBarHidden: false,
-                    statusBarStyle: "dark",
                 }}
             >
                 <Stack.Screen

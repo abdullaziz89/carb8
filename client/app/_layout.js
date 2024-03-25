@@ -3,16 +3,15 @@ import {AntDesign, Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import {useAppStateStore} from "../store/app-store";
 import {useCallback, useEffect, useState} from "react";
 import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
-import {View, Text} from "react-native";
+import {View, Text, StatusBar} from "react-native";
 import {Image} from "expo-image";
 import TextWithFont from "../component/TextWithFont";
 import {getFoodTruckViews} from "../services/FoodTruckServices";
 import {SplashScreen} from "expo-router";
-import i18n from "i18next";
 import {useTranslation} from "react-i18next";
-import {Restart} from "fiction-expo-restart";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
 import Constants from "expo-constants";
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 export function customDrawerContent(props, user, isLogin) {
 
@@ -27,11 +26,11 @@ export function customDrawerContent(props, user, isLogin) {
         if (isLogin) {
             getFoodTruckViews(user.foodTruck.id)
                 .then((response) => {
-                     ('response: ', response)
+                    ('response: ', response)
                     setNumberViews(response.views);
                 })
                 .catch((error) => {
-                     ('error: ', error);
+                    ('error: ', error);
                 });
         }
     }, [isLogin]);
@@ -272,87 +271,96 @@ export default (props) => {
     }, []);
 
     return (
-        <Drawer
-            initialRouteName={"(home)"}
-            screenOptions={{
-                headerShown: false,
-                drawerType: "slide",
-                drawerActiveBackgroundColor: "transparent",
-                drawerInactiveBackgroundColor: "transparent",
-                drawerActiveTintColor: "#fff",
-                drawerInactiveTintColor: "#000",
-                sceneContainerStyle: {
-                    backgroundColor: "#f8b91c"
-                },
-                overlayColor: "transparent",
-                drawerPosition: i18n.language === "ar" ? "right" : "left",
+        <SafeAreaView
+            style={{
+                flex: 1,
+                backgroundColor: "#f8b91c",
             }}
-            drawerContent={(props) => customDrawerContent(props, user, isLogin)}
         >
-            <Drawer.Screen
-                name="(home)"
-                options={{
-                    drawerIcon: ({focused, size}) => (
-                        <MaterialCommunityIcons
-                            name="home"
-                            size={size}
-                            color={"#000"}
-                            style={{marginLeft: 10}}
-                        />
-                    ),
-                    drawerActiveBackgroundColor: "#efefef",
-                    drawerInactiveBackgroundColor: "transparent",
-                    drawerActiveTintColor: "#000",
-                    drawerInactiveTintColor: "#000",
-                }}
-                customDrawerContent={customDrawerContent}
-            />
-            <Drawer.Screen
-                name="(user)"
-                options={{
-                    drawerIcon: ({focused, size}) => (
-                        <MaterialCommunityIcons
-                            name="account"
-                            size={size}
-                            color={"#000"}
-                            style={{marginLeft: 10}}
-                        />
-                    ),
-                    drawerActiveBackgroundColor: "#efefef",
-                    drawerInactiveBackgroundColor: "transparent",
-                    drawerActiveTintColor: "#000",
-                    drawerInactiveTintColor: "#000",
-                }}
-            />
-            <Drawer.Screen
-                name="(auth)"
-                options={{
-                    drawerIcon: ({focused, size}) => (
-                        <MaterialCommunityIcons
-                            name="login"
-                            size={size}
-                            color={"#000"}
-                            style={{marginLeft: 10}}
-                        />
-                    ),
-                    drawerActiveBackgroundColor: "#efefef",
-                    drawerInactiveBackgroundColor: "transparent",
-                    drawerActiveTintColor: "#000",
-                    drawerInactiveTintColor: "#000",
-                }}
-            />
-            <Drawer.Screen
-                name="(setting)"
-                options={{
-                    drawerActiveBackgroundColor: "#efefef",
-                    drawerInactiveBackgroundColor: "transparent",
-                    drawerActiveTintColor: "#000",
-                    drawerInactiveTintColor: "#000",
-                    sceneContainerStyle: {
-                        backgroundColor: "#efefef"
-                    },
-                }}
-            />
-        </Drawer>
+            <GestureHandlerRootView style={{flex: 1}}>
+                <Drawer
+                    initialRouteName={"(home)"}
+                    screenOptions={{
+                        headerShown: false,
+                        drawerType: "slide",
+                        drawerActiveBackgroundColor: "transparent",
+                        drawerInactiveBackgroundColor: "transparent",
+                        drawerActiveTintColor: "#fff",
+                        drawerInactiveTintColor: "#000",
+                        sceneContainerStyle: {
+                            backgroundColor: "#f8b91c"
+                        },
+                        overlayColor: "transparent",
+                        drawerPosition: i18n.language === "ar" ? "right" : "left",
+                    }}
+                    drawerContent={(props) => customDrawerContent(props, user, isLogin)}
+                >
+                    <Drawer.Screen
+                        name="(home)"
+                        options={{
+                            drawerIcon: ({focused, size}) => (
+                                <MaterialCommunityIcons
+                                    name="home"
+                                    size={size}
+                                    color={"#000"}
+                                    style={{marginLeft: 10}}
+                                />
+                            ),
+                            drawerActiveBackgroundColor: "#efefef",
+                            drawerInactiveBackgroundColor: "transparent",
+                            drawerActiveTintColor: "#000",
+                            drawerInactiveTintColor: "#000",
+                        }}
+                        customDrawerContent={customDrawerContent}
+                    />
+                    <Drawer.Screen
+                        name="(user)"
+                        options={{
+                            drawerIcon: ({focused, size}) => (
+                                <MaterialCommunityIcons
+                                    name="account"
+                                    size={size}
+                                    color={"#000"}
+                                    style={{marginLeft: 10}}
+                                />
+                            ),
+                            drawerActiveBackgroundColor: "#efefef",
+                            drawerInactiveBackgroundColor: "transparent",
+                            drawerActiveTintColor: "#000",
+                            drawerInactiveTintColor: "#000",
+                        }}
+                    />
+                    <Drawer.Screen
+                        name="(auth)"
+                        options={{
+                            drawerIcon: ({focused, size}) => (
+                                <MaterialCommunityIcons
+                                    name="login"
+                                    size={size}
+                                    color={"#000"}
+                                    style={{marginLeft: 10}}
+                                />
+                            ),
+                            drawerActiveBackgroundColor: "#efefef",
+                            drawerInactiveBackgroundColor: "transparent",
+                            drawerActiveTintColor: "#000",
+                            drawerInactiveTintColor: "#000",
+                        }}
+                    />
+                    <Drawer.Screen
+                        name="(setting)"
+                        options={{
+                            drawerActiveBackgroundColor: "#efefef",
+                            drawerInactiveBackgroundColor: "transparent",
+                            drawerActiveTintColor: "#000",
+                            drawerInactiveTintColor: "#000",
+                            sceneContainerStyle: {
+                                backgroundColor: "#efefef"
+                            },
+                        }}
+                    />
+                </Drawer>
+            </GestureHandlerRootView>
+        </SafeAreaView>
     )
 }

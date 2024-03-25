@@ -1,7 +1,7 @@
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {Keyboard, TextInput, TouchableOpacity, View} from "react-native";
 import TextWithFont from "../../component/TextWithFont";
-import {Stack, useNavigation, useRouter, useSearchParams} from "expo-router";
+import {Stack, useNavigation, useRouter, useLocalSearchParams} from "expo-router";
 import {useEffect, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {MaterialIcons} from "@expo/vector-icons";
