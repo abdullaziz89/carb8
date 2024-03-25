@@ -269,9 +269,7 @@ export default function Home() {
                         headerTitle: () => Platform.OS !== "ios" &&
                             <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../../assets/icon.png")}
                                              localLogo={true}/>,
-                        headerLeft: () => Platform.OS === "ios" && (
-                            <DrawerToggleButton tintColor={'#fff'}/>
-                        ),
+                        headerLeft: () => <DrawerToggleButton tintColor={'#fff'}/>,
                         // headerRight: () => rightHeader(),
                         headerBackTitleVisible: false,
                         headerStyle: {

@@ -19,9 +19,6 @@ export default (props) => {
                 justifyContent: "flex-start"
             }}
         >
-            {
-                !isProfile && logo && HeaderLogo()
-            }
             <TextWithFont
                 text={title}
                 style={{
