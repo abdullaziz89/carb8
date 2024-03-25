@@ -262,7 +262,7 @@ export function customDrawerContent(props, user, isLogin) {
 
 export default (props) => {
 
-    const {isLogin, user} = useAppStateStore();
+    const {isLogin, user, setOrders} = useAppStateStore();
     const {i18n} = useTranslation();
 
     useEffect(() => {

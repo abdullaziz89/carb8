@@ -272,7 +272,7 @@ export default function Home() {
                         headerLeft: () => Platform.OS === "ios" && (
                             <DrawerToggleButton tintColor={'#fff'}/>
                         ),
-                        headerRight: () => rightHeader(),
+                        // headerRight: () => rightHeader(),
                         headerBackTitleVisible: false,
                         headerStyle: {
                             backgroundColor: "#f8b91c",

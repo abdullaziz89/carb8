@@ -124,7 +124,12 @@ export const useAppStateStore = create(
                 return {orders}
             }),
             getOrders: () => get().orders,
-            getOrder: (orderId) => get().orders.find((order) => order.id === orderId),
+            getOrder: (orderId) => {
+                const index = get().orders.findIndex((order) => {
+                    return Number(order.id) === Number(orderId)
+                });
+                return index !== -1 ? get().orders[index] : null;
+            },
             updateItemIdInOrders: (id, item) => set((state) => {
                 const orders = state.orders;
                 const index = orders.findIndex((order) => order.id === id);

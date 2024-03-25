@@ -53,7 +53,7 @@ export default () => {
                     setUser(user);
                     setVerified(true);
                     setLogin(true);
-                    router.replace('(user)/profile');
+                    router.push('(user)/profile');
                 })
                 .catch((error) => {
                     setIsLoading(false);

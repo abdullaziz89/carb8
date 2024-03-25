@@ -30,9 +30,6 @@ export default function UserLayout() {
         >
             <Stack
                 initialRouteName="index"
-                screenOptions={{
-                    statusBarHidden: false,
-                }}
             />
         </Animated.View>
     )

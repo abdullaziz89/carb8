@@ -1,5 +1,5 @@
 import {Stack, useLocalSearchParams} from "expo-router";
-import {FlatList, Keyboard, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, FlatList, Keyboard, TouchableOpacity, View} from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import HeaderTitleView from "./HeaderTitleView";
 import {useEffect, useState} from "react";
@@ -18,6 +18,31 @@ export default () => {
 
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [paymentStatusModified, setPaymentStatusModified] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        console.log("order", order)
+        if (order) {
+            setIsLoading(false);
+        }
+    }, [order])
+
+    if (isLoading) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <ActivityIndicator
+                    size="large"
+                    color="#f8b91c"
+                />
+            </View>
+        )
+    }
 
     const orderStatusColor = (status) => {
         switch (status.toUpperCase()) {
@@ -164,7 +189,9 @@ export default () => {
                     headerStyle: {
                         backgroundColor: "#f8b91c"
                     },
-                    headerShown: true
+                    headerShown: true,
+                    headerTintColor: "#fff",
+                    headerBackTitleVisible: false,
                 }}
             />
             {foodTruckView()}
