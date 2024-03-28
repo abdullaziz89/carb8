@@ -21,11 +21,6 @@
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.ideveloprs.kwft",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ"
-        }
-      },
       "intentFilters": [
         {
           "action": "VIEW",
@@ -56,10 +51,6 @@
         "NSLocationAlwaysUsageDescription": "This app requires access to your location to function properly.",
         "UIViewControllerBasedStatusBarAppearance": "yes"
       },
-      "config": {
-        "googleMapsApiKey": "AIzaSyBGEkayxt-Q_-vDH7jNueDEilauu7w7yQQ",
-        "usesNonExemptEncryption": false
-      },
       "associatedDomains": [
         "applinks:kwftapp.page.link",
         "applinks:kwft.page.link"
@@ -87,6 +78,12 @@
           "ios": {
             "deploymentTarget": "17.0"
           }
+        }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "abdullaziz89"
         }
       ]
     ],
