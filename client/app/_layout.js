@@ -262,6 +262,12 @@ export function customDrawerContent(props, user, isLogin) {
 
 export default (props) => {
 
+    if (!__DEV__) {
+        for (const iterator of Object.keys(global.console)) {
+            global.console[iterator] = () => 0;
+        }
+    }
+
     const {isLogin, user, setOrders} = useAppStateStore();
     const {i18n} = useTranslation();
 

@@ -10,10 +10,11 @@
       },
       "ios": {
         "buildConfiguration": "Debug"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
-      "distribution": "store ",
+      "distribution": "internal",
       "ios": {
         "enterpriseProvisioning": "universal"
       },

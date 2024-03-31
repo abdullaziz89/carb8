@@ -112,6 +112,7 @@ export default function Home() {
                 setIsRefreshing(false);
                 setCuisines(cuisines);
                 setHeaderImages(headersImages);
+                console.log("headersImages", headersImages);
             });
     };
 
