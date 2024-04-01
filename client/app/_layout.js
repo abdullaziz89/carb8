@@ -37,7 +37,7 @@ function customDrawerContent(props, user, isLogin) {
 
     const [numberViews, setNumberViews] = useState(0);
     const {setLogin, setUser, setVerified} = useAppStateStore();
-    const {t, i18n} = useTranslation();
+    const {i18n} = useTranslation();
     const insets = useSafeAreaInsets();
 
     const [logoutClicked, setLogoutClicked] = useState(false);
@@ -131,7 +131,7 @@ function customDrawerContent(props, user, isLogin) {
                 }
                 <DrawerItem
                     {...props}
-                    label={t("drawer.home")}
+                    label={i18n.language === "ar" ? "الرئيسية" : "Home"}
                     onPress={() => props.navigation.navigate("(home)")}
                     focused={props.state.index === 0}
                     activeTintColor={"#000"}
