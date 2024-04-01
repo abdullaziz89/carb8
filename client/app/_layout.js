@@ -7,13 +7,33 @@ import {View, Text, StatusBar} from "react-native";
 import {Image} from "expo-image";
 import TextWithFont from "../component/TextWithFont";
 import {getFoodTruckViews} from "../services/FoodTruckServices";
-import {SplashScreen} from "expo-router";
+import {SplashScreen, useNavigationContainerRef} from "expo-router";
 import {useTranslation} from "react-i18next";
 import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import * as Sentry from "@sentry/react-native";
 
-export function customDrawerContent(props, user, isLogin) {
+// Construct a new instrumentation instance. This is needed to communicate between the integration and React
+const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+
+Sentry.init({
+    dsn: "https://86d556e97d63e40532cd8ab0094ede13@o4507008560726016.ingest.us.sentry.io/4507008649527296",
+    enableAutoSessionTracking: true,
+    // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+    // We recommend adjusting this value in production.
+    tracesSampleRate: 1.0,
+    debug: __DEV__,
+    integrations: [
+        new Sentry.ReactNativeTracing({
+            // Pass instrumentation to be used as `routingInstrumentation`
+            routingInstrumentation,
+            // ...
+        }),
+    ],
+});
+
+function customDrawerContent(props, user, isLogin) {
 
     const [numberViews, setNumberViews] = useState(0);
     const {setLogin, setUser, setVerified} = useAppStateStore();
@@ -260,7 +280,7 @@ export function customDrawerContent(props, user, isLogin) {
     )
 }
 
-export default (props) => {
+const MyDrawer = (props) => {
 
     if (!__DEV__) {
         for (const iterator of Object.keys(global.console)) {
@@ -271,9 +291,19 @@ export default (props) => {
     const {isLogin, user, setOrders} = useAppStateStore();
     const {i18n} = useTranslation();
 
+    // Capture the NavigationContainer ref and register it with the instrumentation.
+    const ref = useNavigationContainerRef();
+
+    useEffect(() => {
+        if (ref) {
+            routingInstrumentation.registerNavigationContainer(ref);
+        }
+    }, [ref]);
+
     useEffect(() => {
         // add isLogin to props
         props.isLogin = isLogin;
+        // throw new Error("This is a test error");
     }, []);
 
     return (
@@ -370,3 +400,5 @@ export default (props) => {
         </SafeAreaView>
     )
 }
+
+export default Sentry.wrap(MyDrawer);

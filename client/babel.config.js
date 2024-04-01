@@ -3,7 +3,6 @@ module.exports = function(api) {
   return {
     presets: ["babel-preset-expo"],
     plugins: [
-      "@babel/plugin-transform-export-namespace-from",
       "react-native-reanimated/plugin",
       [
         "i18next-extract",

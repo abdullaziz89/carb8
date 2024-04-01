@@ -36,6 +36,7 @@ import TextWithFont from "../../component/TextWithFont";
 import {Restart} from 'fiction-expo-restart';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {DrawerToggleButton} from "@react-navigation/drawer";
+import * as Sentry from "@sentry/react-native";
 
 SplashScreen.preventAutoHideAsync();
 

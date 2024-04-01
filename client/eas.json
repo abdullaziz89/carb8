@@ -20,6 +20,10 @@
       },
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_LOG_LEVEL": "debug"
       }
     },
     "production": {}
