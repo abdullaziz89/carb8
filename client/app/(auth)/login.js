@@ -1,11 +1,10 @@
-import {View, Text, Platform, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator} from "react-native";
+import {View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator} from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import HeaderTitleView from "../(home)/HeaderTitleView";
 import {Stack, useNavigation, useRouter} from "expo-router";
 import {MaterialIcons} from "@expo/vector-icons";
 import {Image} from "expo-image";
 import {Controller, useForm} from "react-hook-form";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {login} from "../../services/UserService";
 import {useAppStateStore} from "../../store/app-store";
 
@@ -15,7 +14,7 @@ export default () => {
     const router = useRouter();
 
     const [isLoading, setIsLoading] = useState(false);
-    const {getUser, setLogin, setUser, setUsername, setVerified, setToken} = useAppStateStore();
+    const {setLogin, setUser, setUsername, setVerified, setToken} = useAppStateStore();
 
     const {register, setValue, handleSubmit, control, reset, formState: {errors}} = useForm({
         defaultValues: {
@@ -44,9 +43,8 @@ export default () => {
         // check data not empty
         if (data.username && data.password) {
             login(data)
-                .then(async (response) => {
+                .then((response) => {
                     setIsLoading(false);
-                    //  ('login.js response', response);
                     const token = response.data.token;
                     const user = response.data.user;
                     setToken(token);
@@ -65,12 +63,14 @@ export default () => {
                         if (!response.enable) {
                             setUsername(response.username);
                             navigation.navigate('otp');
-                            return;
                         }
                     } else {
                         alert(response.message);
                     }
                 });
+        } else {
+            setIsLoading(false);
+            alert('Please fill all fields');
         }
     }
 
