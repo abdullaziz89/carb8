@@ -6,34 +6,50 @@
     "development": {
       "distribution": "internal",
       "android": {
-        "gradleCommand": ":app:assembleDebug"
+        "gradleCommand": ":app:assembleDebug",
+        "buildType": "apk"
       },
       "ios": {
         "buildConfiguration": "Debug"
       },
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_LOG_LEVEL": "debug"
+      },
       "channel": "development"
     },
     "preview": {
-      "distribution": "internal",
+      "distribution": "store",
       "ios": {
+        "buildConfiguration": "Debug",
         "enterpriseProvisioning": "universal"
       },
       "android": {
+        "gradleCommand": ":app:assembleDebug",
         "buildType": "apk"
       },
       "env": {
         "SENTRY_AUTH_TOKEN": "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",
         "SENTRY_LOG_LEVEL": "debug"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "env": {
         "SENTRY_AUTH_TOKEN": "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",
-        "SENTRY_LOG_LEVEL": "debug"
-      }
+        "SENTRY_LOG_LEVEL": "INFO"
+      },
+      "channel": "production"
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "buildConfiguration": "Release"
+      },
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    }
   }
 }
