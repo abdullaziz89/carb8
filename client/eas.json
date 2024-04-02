@@ -43,13 +43,6 @@
     }
   },
   "submit": {
-    "production": {
-      "ios": {
-        "buildConfiguration": "Release"
-      },
-      "android": {
-        "gradleCommand": ":app:assembleRelease"
-      }
-    }
+    "production": {}
   }
 }
