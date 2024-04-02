@@ -30,6 +30,7 @@ const isWeb = Platform.OS === "web";
 
 export default (props) => {
 
+    const {quantityInCart, removeCartItem, addCartItem, itemQuantityInCart, getCart} = useAppStateStore()
     const params = useLocalSearchParams();
 
     const {t, i18n} = useTranslation();
@@ -41,78 +42,9 @@ export default (props) => {
     const [currentLocation, setCurrentLocation] = useState(null);
     const contactViewRef = useRef(null);
 
-    const [foods, setFoods] = useState([
-        {
-            title: "Burger",
-            data: [
-                {
-                    id: 1,
-                    name: "Cheese Burger",
-                    price: 1.5,
-                    image: "https://s23209.pcdn.co/wp-content/uploads/2022/07/220602_DD_The-Best-Ever-Cheeseburger_267.jpg"
-                },
-                {
-                    id: 2,
-                    name: "Double Cheese Burger",
-                    price: 2.5,
-                    image: "https://s7d1.scene7.com/is/image/mcdonalds/Header_DoubleCheeseburger_832x472:1-3-product-tile-desktop?wid=763&hei=472&dpr=off"
-                }
-            ]
-        },
-        {
-            title: "Pizza",
-            data: [
-                {
-                    id: 3,
-                    name: "Cheese Pizza",
-                    price: 2.5,
-                    image: "https://www.foodandwine.com/thmb/Wd4lBRZz3X_8qBr69UOu2m7I2iw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
-                },
-                {
-                    id: 4,
-                    name: "Pepperoni Pizza",
-                    price: 3.5,
-                    image: "https://www.simplyrecipes.com/thmb/KE6iMblr3R2Db6oE8HdyVsFSj2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2019__09__easy-pepperoni-pizza-lead-3-1024x682-583b275444104ef189d693a64df625da.jpg"
-                }
-            ]
-        },
-        {
-            title: "Drinks",
-            data: [
-                {
-                    id: 5,
-                    name: "Pepsi",
-                    price: 0.5,
-                    image: "https://cdnprod.mafretailproxy.com/sys-master-root/he9/hd8/17543283703838/30203_main.jpg_480Wx480H"
-                },
-                {
-                    id: 6,
-                    name: "Coca Cola",
-                    price: 0.5,
-                    image: "https://m.media-amazon.com/images/I/51v8nyxSOYL._SL1500_.jpg"
-                }
-            ]
-        },
-        {
-            title: "Desserts",
-            data: [
-                {
-                    id: 7,
-                    name: "Chocolate Cake",
-                    price: 2.5,
-                    image: "https://scientificallysweet.com/wp-content/uploads/2020/09/IMG_4087-feature-2.jpg"
-                },
-                {
-                    id: 8,
-                    name: "Cheese Cake",
-                    price: 3.5,
-                    image: "https://sugarspunrun.com/wp-content/uploads/2019/01/Best-Cheesecake-Recipe-2-1-of-1-4-500x500.jpg"
-                }
-            ]
-        }
-    ]);
 
-    const {quantityInCart, removeCartItem, addCartItem, itemQuantityInCart} = useAppStateStore()
+    // create a state for quantityInCart
+    const [quantityCart, setQuantityCart] = useState(quantityInCart());
 
     const router = useRouter();
 
@@ -127,6 +59,85 @@ export default (props) => {
         }
     });
 
+    const [foods, setFoods] = useState([
+        {
+            title: "Burger",
+            data: [
+                {
+                    id: 1,
+                    name: "Cheese Burger",
+                    price: 1.5,
+                    image: "https://s23209.pcdn.co/wp-content/uploads/2022/07/220602_DD_The-Best-Ever-Cheeseburger_267.jpg",
+                    quantity: 0
+                },
+                {
+                    id: 2,
+                    name: "Double Cheese Burger",
+                    price: 2.5,
+                    image: "https://s7d1.scene7.com/is/image/mcdonalds/Header_DoubleCheeseburger_832x472:1-3-product-tile-desktop?wid=763&hei=472&dpr=off",
+                    quantity: 0,
+                }
+            ]
+        },
+        {
+            title: "Pizza",
+            data: [
+                {
+                    id: 3,
+                    name: "Cheese Pizza",
+                    price: 2.5,
+                    image: "https://www.foodandwine.com/thmb/Wd4lBRZz3X_8qBr69UOu2m7I2iw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg",
+                    quantity: 0
+                },
+                {
+                    id: 4,
+                    name: "Pepperoni Pizza",
+                    price: 3.5,
+                    image: "https://www.simplyrecipes.com/thmb/KE6iMblr3R2Db6oE8HdyVsFSj2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2019__09__easy-pepperoni-pizza-lead-3-1024x682-583b275444104ef189d693a64df625da.jpg",
+                    quantity: 0
+                }
+            ]
+        },
+        {
+            title: "Drinks",
+            data: [
+                {
+                    id: 5,
+                    name: "Pepsi",
+                    price: 0.5,
+                    image: "https://cdnprod.mafretailproxy.com/sys-master-root/he9/hd8/17543283703838/30203_main.jpg_480Wx480H",
+                    quantity: 0
+                },
+                {
+                    id: 6,
+                    name: "Coca Cola",
+                    price: 0.5,
+                    image: "https://m.media-amazon.com/images/I/51v8nyxSOYL._SL1500_.jpg",
+                    quantity: 0
+                }
+            ]
+        },
+        {
+            title: "Desserts",
+            data: [
+                {
+                    id: 7,
+                    name: "Chocolate Cake",
+                    price: 2.5,
+                    image: "https://scientificallysweet.com/wp-content/uploads/2020/09/IMG_4087-feature-2.jpg",
+                    quantity: 0
+                },
+                {
+                    id: 8,
+                    name: "Cheese Cake",
+                    price: 3.5,
+                    image: "https://sugarspunrun.com/wp-content/uploads/2019/01/Best-Cheesecake-Recipe-2-1-of-1-4-500x500.jpg",
+                    quantity: 0
+                }
+            ]
+        }
+    ]);
+
     useEffect(() => {
 
         setShowIndicator(true);
@@ -135,7 +146,7 @@ export default (props) => {
             getFoodTruck(params.foodTruck)
                 .then((response) => {
                     setFoodTruck(response);
-                     (findLogoImage(response.images))
+                    (findLogoImage(response.images))
                     setLogo(findLogoImage(response.images));
                     setShowIndicator(false);
                     updateFoodTruckView(response.id);
@@ -150,7 +161,25 @@ export default (props) => {
     }, [params.foodTruck]);
 
     useEffect(() => {
-        if (quantityInCart() > 0) {
+        // update item quantity in food according to the cart
+        setFoods((prevFoods) => {
+            return prevFoods.map((food) => {
+                return {
+                    ...food,
+                    data: food.data.map((item) => {
+                        return {
+                            ...item,
+                            quantity: itemQuantityInCart(item.id)
+                        }
+                    })
+                }
+            });
+        });
+        setQuantityCart(quantityInCart());
+    }, [getCart()]);
+
+    useEffect(() => {
+        if (quantityCart > 0) {
             checkoutAnimStyle.animateTo((current) => ({
                 ...current,
                 translateY: 0,
@@ -161,7 +190,32 @@ export default (props) => {
                 translateY: 60,
             }));
         }
-    }, [quantityInCart()]);
+    }, [quantityCart]);
+
+    // const reduceFoodItemQuantity = (itemId) => {
+    //     const itemExistsInFoods = foods.some((food) => food.id === itemId);
+    //
+    //     if (!itemExistsInFoods) {
+    //         console.error(`Item with id ${itemId} not found in foods array.`);
+    //         return;
+    //     }
+    //
+    //     setFoods((prevFoods) => {
+    //         return prevFoods.map((food) => {
+    //             return {
+    //                 ...food,
+    //                 data: food.data.map((item) => {
+    //                     if (item.id === itemId) {
+    //                         return {...item, quantity: item.quantity - 1};
+    //                     }
+    //                     return item;
+    //                 })
+    //             }
+    //         });
+    //     });
+    //
+    //     removeCartItem(itemId);
+    // };
 
     const findLogoImage = (images) => {
 
@@ -268,7 +322,7 @@ export default (props) => {
         let {status} = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
-             ("Permission to access location was denied");
+            ("Permission to access location was denied");
         } else {
             setCurrentLocation(await Location.getCurrentPositionAsync({}));
         }
@@ -538,7 +592,7 @@ export default (props) => {
                                         paddingVertical: 20,
                                     },
                                     i18n.language === "ar" ? {flexDirection: "row-reverse"} : {flexDirection: "row"},
-                                    itemQuantityInCart(item.id) > 0 ? {
+                                    item.quantity > 0 ? {
                                         borderLeftWidth: 5,
                                         borderLeftStyle: "solid",
                                         borderLeftColor: "#f8b91c",
@@ -600,7 +654,7 @@ export default (props) => {
                                         }}
                                     >
                                         {
-                                            itemQuantityInCart(item.id) > 0 ? (
+                                            item.quantity > 0 ? (
                                                 <View
                                                     style={{
                                                         flexDirection: "column",
@@ -615,7 +669,7 @@ export default (props) => {
                                                                                 color="#f8b91c"/>
                                                     </TouchableOpacity>
                                                     <TextWithFont
-                                                        text={itemQuantityInCart(item.id)}
+                                                        text={item.quantity.toString()}
                                                         style={{
                                                             fontSize: 16,
                                                             fontWeight: "bold",
@@ -697,12 +751,12 @@ export default (props) => {
                             justifyContent: "center",
                             borderRadius: 10,
                         },
-                        quantityInCart() === 0 ? {backgroundColor: "grey"} : {backgroundColor: "#f8b91c"}
+                        quantityCart === 0 ? {backgroundColor: "grey"} : {backgroundColor: "#f8b91c"}
                     ]}
                     onPress={() => {
                         navigation.navigate("overview", {foodTruckParam: JSON.stringify(foodTruck)});
                     }}
-                    disabled={quantityInCart() === 0}
+                    disabled={quantityCart === 0}
                 >
                     <TextWithFont
                         text={i18n.language === "ar" ? "الدفع" : "Checkout"}

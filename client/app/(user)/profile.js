@@ -1021,7 +1021,7 @@ export default () => {
                                     }}
                                     onBlur={onBlur}
                                     onChangeText={value => onChange(value)}
-                                    value={value}
+                                    value={value.toString()}
                                     placeholder={"Enter google latitude"}
                                 />
                             )}
@@ -1042,7 +1042,7 @@ export default () => {
                                     }}
                                     onBlur={onBlur}
                                     onChangeText={value => onChange(value)}
-                                    value={value}
+                                    value={value.toString()}
                                     placeholder={"Enter google longitude"}
                                 />
                             )}

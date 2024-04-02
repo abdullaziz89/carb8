@@ -21,11 +21,9 @@
     "preview": {
       "distribution": "store",
       "ios": {
-        "buildConfiguration": "Debug",
         "enterpriseProvisioning": "universal"
       },
       "android": {
-        "gradleCommand": ":app:assembleDebug",
         "buildType": "apk"
       },
       "env": {

@@ -34,9 +34,13 @@ Sentry.init({
 function customDrawerContent(props, user, isLogin, i18n) {
 
     const [numberViews, setNumberViews] = useState(0);
+
+    // TODO: Check if is in the right place
     const {setLogin, setUser, setVerified} = useAppStateStore();
+
     const insets = useSafeAreaInsets();
 
+    // TODO: check the login status after update the item in cart
     useEffect(() => {
         if (isLogin) {
             getFoodTruckViews(user.foodTruck.id)

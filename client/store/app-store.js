@@ -64,39 +64,43 @@ export const useAppStateStore = create(
             setCart: (cart) => set({cart}),
             getCart: () => get().cart,
             addCartItem: (item) => set((state) => {
-                const cart = state.cart;
+                const cartItemIndex = state.cart.findIndex((cartItem) => cartItem.id === item.id);
 
-                // check if the item is already in the cart and update the quantity
-                const index = cart.findIndex((cartItem) => cartItem.id === item.id);
-                if (index !== -1) {
-                    cart[index].quantity += 1;
-                    return {cart}
+                if (cartItemIndex !== -1) {
+                    // Item exists in cart, increment quantity
+                    const updatedCart = state.cart.map((cartItem, index) =>
+                        index === cartItemIndex ? {...cartItem, quantity: cartItem.quantity + 1} : cartItem
+                    );
+                    return {cart: updatedCart};
                 } else {
-                    cart.push({
-                        ...item,
-                        quantity: 1
-                    });
-                    return {cart}
+                    // Item does not exist in cart, add new item
+                    const updatedCart = [...state.cart, {...item, quantity: 1}];
+                    return {cart: updatedCart};
                 }
             }),
             removeCartItem: (itemId) => set((state) => {
-
-                // check if the time is already in the cart and update the quantity, if the quantity is 1 remove the item else decrease the quantity
-                const cart = state.cart;
+                const cart = [...state.cart];
                 const index = cart.findIndex((cartItem) => cartItem.id === itemId);
-                if (index !== -1) {
-                    if (cart[index].quantity === 1) {
-                        cart.splice(index, 1);
-                    } else {
-                        cart[index].quantity -= 1;
-                    }
+
+                if (index === -1) {
+                    console.error(`Item with id ${itemId} not found in cart.`);
+                    return;
                 }
-                return {cart}
+
+                if (cart[index].quantity === 1) {
+                    return {cart: cart.filter((item, i) => i !== index)};
+                } else {
+                    const updatedCart = cart.map((item, i) =>
+                        i === index ? {...item, quantity: item.quantity - 1} : item
+                    );
+                    return {cart: updatedCart};
+                }
             }),
             quantityInCart: () => get().cart.reduce((acc, item) => acc + item.quantity, 0),
             itemQuantityInCart: (itemId) => {
-                const itemIndex = get().cart.findIndex((cartItem) => cartItem.id === itemId);
-                return itemIndex !== -1 ? get().cart[itemIndex].quantity : 0;
+                const cart = get().cart;
+                const itemIndex = cart.findIndex((cartItem) => cartItem.id === itemId);
+                return itemIndex !== -1 ? cart[itemIndex].quantity : 0;
             },
             totalPriceInCart: () => get().cart.reduce((acc, item) => acc + item.price * item.quantity, 0),
             clearCart: () => set({cart: []}),

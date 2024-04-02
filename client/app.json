@@ -42,7 +42,8 @@
         }
       ],
       "permissions": [
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"
       ]
     },
     "ios": {
@@ -53,7 +54,44 @@
         "NSLocationWhenInUseUsageDescription": "This app requires access to your location to function properly.",
         "NSLocationAlwaysUsageDescription": "This app requires access to your location to function properly.",
         "UIViewControllerBasedStatusBarAppearance": "yes",
-        "ExpoLocalization_supportsRTL": true
+        "ExpoLocalization_supportsRTL": true,
+        "ExpoFont": {
+          "fonts": [
+            {
+              "asset": "./assets/fonts/Inter-Regular.ttf",
+              "fontWeight": "400",
+              "fontStyle": "normal"
+            },
+            {
+              "asset": "./assets/fonts/Inter-Medium.ttf",
+              "fontWeight": "500",
+              "fontStyle": "normal"
+            },
+            {
+              "asset": "./assets/fonts/Inter-SemiBold.ttf",
+              "fontWeight": "600",
+              "fontStyle": "normal"
+            },
+            {
+              "asset": "./assets/fonts/Inter-Bold.ttf",
+              "fontWeight": "700",
+              "fontStyle": "normal"
+            }
+          ]
+        },
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSExceptionDomains": {
+            "kwft.page.link": {
+              "NSIncludesSubdomains": true,
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            },
+            "kwftapp.page.link": {
+              "NSIncludesSubdomains": true,
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            }
+          }
+        }
       },
       "associatedDomains": [
         "applinks:kwftapp.page.link",

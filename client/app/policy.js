@@ -13,6 +13,8 @@ export default () => {
     const {i18n} = useTranslation()
     const [isLoading, setLoading] = useState(false);
 
+    const source = { uri: 'https://kwfts.com/policy.pdf', cache: true };
+
     return (
         <SafeAreaView
             style={styles.container}
@@ -45,11 +47,9 @@ export default () => {
                 }}
                 source={{uri: 'https://docs.google.com/gview?embedded=true&url=https://kwfts.com/policy.pdf'}}
                 onLoadStart={() => {
-                     ("loading")
                     setLoading(true)
                 }}
                 onLoadEnd={() => {
-                     ("loaded")
                     setLoading(false)
                 }}
             />
