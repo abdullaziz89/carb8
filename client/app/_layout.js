@@ -2,8 +2,8 @@ import {Drawer} from 'expo-router/drawer';
 import {AntDesign, Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import {useAppStateStore} from "../store/app-store";
 import {useCallback, useEffect, useState} from "react";
-import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
-import {View, Text, StatusBar} from "react-native";
+import {DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
+import {View, Text} from "react-native";
 import {Image} from "expo-image";
 import TextWithFont from "../component/TextWithFont";
 import {getFoodTruckViews} from "../services/FoodTruckServices";
@@ -26,31 +26,25 @@ Sentry.init({
     debug: __DEV__,
     integrations: [
         new Sentry.ReactNativeTracing({
-            // Pass instrumentation to be used as `routingInstrumentation`
-            routingInstrumentation,
-            // ...
+            routingInstrumentation
         }),
     ],
 });
 
-function customDrawerContent(props, user, isLogin) {
+function customDrawerContent(props, user, isLogin, i18n) {
 
     const [numberViews, setNumberViews] = useState(0);
     const {setLogin, setUser, setVerified} = useAppStateStore();
-    const {i18n} = useTranslation();
     const insets = useSafeAreaInsets();
-
-    const [logoutClicked, setLogoutClicked] = useState(false);
 
     useEffect(() => {
         if (isLogin) {
             getFoodTruckViews(user.foodTruck.id)
                 .then((response) => {
-                    ('response: ', response)
                     setNumberViews(response.views);
                 })
                 .catch((error) => {
-                    ('error: ', error);
+                    throw new Error(error);
                 });
         }
     }, [isLogin]);
@@ -138,7 +132,7 @@ function customDrawerContent(props, user, isLogin) {
                     inactiveTintColor={"#000"}
                     activeBackgroundColor={props.state.index === 0 ? "#fff" : "transparent"}
                     inactiveBackgroundColor={"transparent"}
-                    icon={({focused, size}) => (
+                    icon={() => (
                         <AntDesign
                             name="home"
                             size={24}
@@ -158,7 +152,7 @@ function customDrawerContent(props, user, isLogin) {
                             inactiveTintColor={"#000"}
                             activeBackgroundColor={props.state.index === 1 ? "#fff" : "transparent"}
                             inactiveBackgroundColor={"transparent"}
-                            icon={({focused, size}) => (
+                            icon={({size}) => (
                                 <MaterialCommunityIcons
                                     name="account-circle-outline"
                                     size={size}
@@ -176,7 +170,7 @@ function customDrawerContent(props, user, isLogin) {
                             inactiveTintColor={"#000"}
                             activeBackgroundColor={props.state.index === 2 ? "#fff" : "transparent"}
                             inactiveBackgroundColor={"transparent"}
-                            icon={({focused, size}) => (
+                            icon={({size}) => (
                                 <MaterialCommunityIcons
                                     name="login"
                                     size={size}
@@ -213,7 +207,7 @@ function customDrawerContent(props, user, isLogin) {
                             inactiveTintColor={"#000"}
                             activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
                             inactiveBackgroundColor={"transparent"}
-                            icon={({focused, size}) => (
+                            icon={({size}) => (
                                 <MaterialCommunityIcons
                                     name="logout"
                                     size={size}
@@ -235,7 +229,7 @@ function customDrawerContent(props, user, isLogin) {
                     inactiveTintColor={"#000"}
                     activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
                     inactiveBackgroundColor={"transparent"}
-                    icon={({focused, size}) => (
+                    icon={({size}) => (
                         <MaterialCommunityIcons
                             name="police-badge-outline"
                             size={size}
@@ -255,7 +249,7 @@ function customDrawerContent(props, user, isLogin) {
                     inactiveTintColor={"#000"}
                     activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
                     inactiveBackgroundColor={"transparent"}
-                    icon={({focused, size}) => (
+                    icon={({size}) => (
                         <Ionicons
                             name="settings-outline"
                             size={size}
@@ -288,7 +282,7 @@ const MyDrawer = (props) => {
         }
     }
 
-    const {isLogin, user, setOrders} = useAppStateStore();
+    const {isLogin, user} = useAppStateStore();
     const {i18n} = useTranslation();
 
     // Capture the NavigationContainer ref and register it with the instrumentation.
@@ -329,12 +323,12 @@ const MyDrawer = (props) => {
                         overlayColor: "transparent",
                         drawerPosition: i18n.language === "ar" ? "right" : "left",
                     }}
-                    drawerContent={(props) => customDrawerContent(props, user, isLogin)}
+                    drawerContent={(props) => customDrawerContent(props, user, isLogin, i18n)}
                 >
                     <Drawer.Screen
                         name="(home)"
                         options={{
-                            drawerIcon: ({focused, size}) => (
+                            drawerIcon: ({size}) => (
                                 <MaterialCommunityIcons
                                     name="home"
                                     size={size}
@@ -347,12 +341,11 @@ const MyDrawer = (props) => {
                             drawerActiveTintColor: "#000",
                             drawerInactiveTintColor: "#000",
                         }}
-                        customDrawerContent={customDrawerContent}
                     />
                     <Drawer.Screen
                         name="(user)"
                         options={{
-                            drawerIcon: ({focused, size}) => (
+                            drawerIcon: ({size}) => (
                                 <MaterialCommunityIcons
                                     name="account"
                                     size={size}
@@ -369,7 +362,7 @@ const MyDrawer = (props) => {
                     <Drawer.Screen
                         name="(auth)"
                         options={{
-                            drawerIcon: ({focused, size}) => (
+                            drawerIcon: ({size}) => (
                                 <MaterialCommunityIcons
                                     name="login"
                                     size={size}
