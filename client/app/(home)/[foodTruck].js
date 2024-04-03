@@ -4,10 +4,10 @@ import {
     Dimensions,
     View,
     Text,
-    ScrollView,
     Platform,
     Linking,
-    TouchableOpacity, FlatList, SectionList
+    TouchableOpacity,
+    SectionList
 } from "react-native";
 import {Stack, useNavigation, useRouter, useLocalSearchParams} from "expo-router";
 import {useEffect, useRef, useState} from "react";
@@ -15,11 +15,10 @@ import {Image} from "expo-image";
 import CustomCarousel from "./CustomCarousel";
 import {Entypo, EvilIcons, Ionicons, MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
 import {getFoodTruck, updateFoodTruckView} from "../../services/FoodTruckServices";
-import {LinearGradient} from "expo-linear-gradient";
 import HeaderTitleView from "./HeaderTitleView";
 import {useTranslation} from "react-i18next";
 import TextWithFont from "../../component/TextWithFont";
-import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import {interpolate, useAnimatedStyle, useSharedValue} from "react-native-reanimated";
 import deg2rad from "deg2rad";
 import * as Location from "expo-location";
 import {useAppStateStore} from "../../store/app-store";

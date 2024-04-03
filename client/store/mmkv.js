@@ -8,6 +8,7 @@ export const storage = new MMKV({
 
 export const zustandStorage = {
     setItem: (name, value) => {
+        console.log('setItem', name, value)
         return storage.set(name, value);
     },
     getItem: (name) => {

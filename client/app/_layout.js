@@ -31,12 +31,21 @@ Sentry.init({
     ],
 });
 
-function customDrawerContent(props, user, isLogin, i18n) {
+const MyDrawer = (props) => {
+
+    if (!__DEV__) {
+        for (const iterator of Object.keys(global.console)) {
+            global.console[iterator] = () => 0;
+        }
+    }
+
+    const {isLogin, user, setLogin, setUser, setVerified} = useAppStateStore();
+    const {i18n} = useTranslation();
+
+    // Capture the NavigationContainer ref and register it with the instrumentation.
+    const ref = useNavigationContainerRef();
 
     const [numberViews, setNumberViews] = useState(0);
-
-    // TODO: Check if is in the right place
-    const {setLogin, setUser, setVerified} = useAppStateStore();
 
     const insets = useSafeAreaInsets();
 
@@ -74,224 +83,6 @@ function customDrawerContent(props, user, isLogin, i18n) {
         )
     }
 
-    return (
-        <View
-            style={{
-                flex: 1,
-            }}
-        >
-            <DrawerContentScrollView
-                {...props}
-                contentContainerStyle={{
-                    backgroundColor: "#f8b91c",
-                    width: "100%",
-                    height: "100%",
-                    paddingTop: 50,
-                }}
-                onLayout={onLayoutRootView}
-            >
-                {
-                    isLogin &&
-                    <View
-                        style={{
-                            width: "100%",
-                            height: 200,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            padding: 10,
-                            marginBottom: 15,
-                        }}
-                    >
-                        {getLogo()}
-                        <View
-                            style={{
-                                marginTop: 15,
-                            }}
-                        >
-                            <TextWithFont
-                                text={i18n.language === "ar" ? user.foodTruck.nameArb : user.foodTruck.nameEng}
-                                style={{
-                                    color: "#000",
-                                    fontSize: 20,
-                                    textAlign: "center",
-                                }}
-                            />
-                            <TextWithFont
-                                text={`Number of views: ${numberViews}`}
-                                style={{
-                                    color: "#000",
-                                    fontSize: 16,
-                                    textAlign: "center",
-                                }}
-                            />
-                        </View>
-                    </View>
-                }
-                <DrawerItem
-                    {...props}
-                    label={i18n.language === "ar" ? "الرئيسية" : "Home"}
-                    onPress={() => props.navigation.navigate("(home)")}
-                    focused={props.state.index === 0}
-                    activeTintColor={"#000"}
-                    inactiveTintColor={"#000"}
-                    activeBackgroundColor={props.state.index === 0 ? "#fff" : "transparent"}
-                    inactiveBackgroundColor={"transparent"}
-                    icon={() => (
-                        <AntDesign
-                            name="home"
-                            size={24}
-                            color="black"
-                            style={{marginLeft: 10}}
-                        />
-                    )}
-                />
-                {
-                    isLogin ?
-                        <DrawerItem
-                            {...props}
-                            label={i18n.language === "ar" ? "الملف الشخصي" : "Profile"}
-                            onPress={() => props.navigation.navigate("(user)")}
-                            focused={props.state.index === 1}
-                            activeTintColor={"#000"}
-                            inactiveTintColor={"#000"}
-                            activeBackgroundColor={props.state.index === 1 ? "#fff" : "transparent"}
-                            inactiveBackgroundColor={"transparent"}
-                            icon={({size}) => (
-                                <MaterialCommunityIcons
-                                    name="account-circle-outline"
-                                    size={size}
-                                    color={"#000"}
-                                    style={{marginLeft: 10}}
-                                />
-                            )}
-                        /> :
-                        <DrawerItem
-                            {...props}
-                            label={i18n.language === "ar" ? "تسجيل الدخول" : "Login"}
-                            onPress={() => props.navigation.navigate("(auth)")}
-                            focused={props.state.index === 2}
-                            activeTintColor={"#000"}
-                            inactiveTintColor={"#000"}
-                            activeBackgroundColor={props.state.index === 2 ? "#fff" : "transparent"}
-                            inactiveBackgroundColor={"transparent"}
-                            icon={({size}) => (
-                                <MaterialCommunityIcons
-                                    name="login"
-                                    size={size}
-                                    color={"#000"}
-                                    style={{marginLeft: 10}}
-                                />
-                            )}
-                        />
-                }
-                <View
-                    style={{
-                        width: "100%",
-                        borderTopColor: "#fff",
-                        borderTopWidth: 1,
-                        marginTop: 20,
-                        paddingTop: 20,
-                    }}
-                >
-                    {
-                        isLogin &&
-                        <DrawerItem
-                            {...props}
-                            label={i18n.language === "ar" ? "تسجيل الخروج" : "Logout"}
-                            onPress={() => {
-                                setLogin(false);
-                                setUser({});
-                                setVerified(false);
-
-                                SplashScreen.preventAutoHideAsync();
-                                props.navigation.navigate("(home)");
-                            }}
-                            focused={props.state.index === 3}
-                            activeTintColor={"#000"}
-                            inactiveTintColor={"#000"}
-                            activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
-                            inactiveBackgroundColor={"transparent"}
-                            icon={({size}) => (
-                                <MaterialCommunityIcons
-                                    name="logout"
-                                    size={size}
-                                    color={"#000"}
-                                    style={{marginLeft: 10}}
-                                />
-                            )}
-                        />
-                    }
-                </View>
-                <DrawerItem
-                    {...props}
-                    label={i18n.language === "ar" ? "السياسة والخصوصية" : "Policy and Privacy"}
-                    onPress={() => {
-                        props.navigation.navigate("policy");
-                    }}
-                    focused={props.state.index === 3}
-                    activeTintColor={"#000"}
-                    inactiveTintColor={"#000"}
-                    activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
-                    inactiveBackgroundColor={"transparent"}
-                    icon={({size}) => (
-                        <MaterialCommunityIcons
-                            name="police-badge-outline"
-                            size={size}
-                            color={"#000"}
-                            style={{marginLeft: 10}}
-                        />
-                    )}
-                />
-                <DrawerItem
-                    {...props}
-                    label={i18n.language === "ar" ? "الأعدادات" : "Settings"}
-                    onPress={() => {
-                        props.navigation.navigate("(setting)");
-                    }}
-                    focused={props.state.index === 3}
-                    activeTintColor={"#000"}
-                    inactiveTintColor={"#000"}
-                    activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
-                    inactiveBackgroundColor={"transparent"}
-                    icon={({size}) => (
-                        <Ionicons
-                            name="settings-outline"
-                            size={size}
-                            color={"#000"}
-                            style={{marginLeft: 10}}
-                        />
-                    )}
-                />
-            </DrawerContentScrollView>
-            <View
-                style={{
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    paddingBottom: insets.bottom + 10,
-                    backgroundColor: "#f8b91c",
-                }}
-            >
-                <Text style={{color: '#efefef'}}>V{Constants.expoConfig.version}</Text>
-            </View>
-        </View>
-    )
-}
-
-const MyDrawer = (props) => {
-
-    if (!__DEV__) {
-        for (const iterator of Object.keys(global.console)) {
-            global.console[iterator] = () => 0;
-        }
-    }
-
-    const {isLogin, user} = useAppStateStore();
-    const {i18n} = useTranslation();
-
-    // Capture the NavigationContainer ref and register it with the instrumentation.
-    const ref = useNavigationContainerRef();
-
     useEffect(() => {
         if (ref) {
             routingInstrumentation.registerNavigationContainer(ref);
@@ -327,7 +118,210 @@ const MyDrawer = (props) => {
                         overlayColor: "transparent",
                         drawerPosition: i18n.language === "ar" ? "right" : "left",
                     }}
-                    drawerContent={(props) => customDrawerContent(props, user, isLogin, i18n)}
+                    drawerContent={(props) => {
+                        return (
+                            <View
+                                style={{
+                                    flex: 1,
+                                }}
+                            >
+                                <DrawerContentScrollView
+                                    {...props}
+                                    contentContainerStyle={{
+                                        backgroundColor: "#f8b91c",
+                                        width: "100%",
+                                        height: "100%",
+                                        paddingTop: 50,
+                                    }}
+                                    onLayout={onLayoutRootView}
+                                >
+                                    {
+                                        isLogin &&
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                height: 200,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                padding: 10,
+                                                marginBottom: 15,
+                                            }}
+                                        >
+                                            {getLogo()}
+                                            <View
+                                                style={{
+                                                    marginTop: 15,
+                                                }}
+                                            >
+                                                <TextWithFont
+                                                    text={i18n.language === "ar" ? user.foodTruck.nameArb : user.foodTruck.nameEng}
+                                                    style={{
+                                                        color: "#000",
+                                                        fontSize: 20,
+                                                        textAlign: "center",
+                                                    }}
+                                                />
+                                                <TextWithFont
+                                                    text={`Number of views: ${numberViews}`}
+                                                    style={{
+                                                        color: "#000",
+                                                        fontSize: 16,
+                                                        textAlign: "center",
+                                                    }}
+                                                />
+                                            </View>
+                                        </View>
+                                    }
+                                    <DrawerItem
+                                        {...props}
+                                        label={i18n.language === "ar" ? "الرئيسية" : "Home"}
+                                        onPress={() => props.navigation.navigate("(home)")}
+                                        focused={props.state.index === 0}
+                                        activeTintColor={"#000"}
+                                        inactiveTintColor={"#000"}
+                                        activeBackgroundColor={props.state.index === 0 ? "#fff" : "transparent"}
+                                        inactiveBackgroundColor={"transparent"}
+                                        icon={() => (
+                                            <AntDesign
+                                                name="home"
+                                                size={24}
+                                                color="black"
+                                                style={{marginLeft: 10}}
+                                            />
+                                        )}
+                                    />
+                                    {
+                                        isLogin ?
+                                            <DrawerItem
+                                                {...props}
+                                                label={i18n.language === "ar" ? "الملف الشخصي" : "Profile"}
+                                                onPress={() => props.navigation.navigate("(user)")}
+                                                focused={props.state.index === 1}
+                                                activeTintColor={"#000"}
+                                                inactiveTintColor={"#000"}
+                                                activeBackgroundColor={props.state.index === 1 ? "#fff" : "transparent"}
+                                                inactiveBackgroundColor={"transparent"}
+                                                icon={({size}) => (
+                                                    <MaterialCommunityIcons
+                                                        name="account-circle-outline"
+                                                        size={size}
+                                                        color={"#000"}
+                                                        style={{marginLeft: 10}}
+                                                    />
+                                                )}
+                                            /> :
+                                            <DrawerItem
+                                                {...props}
+                                                label={i18n.language === "ar" ? "تسجيل الدخول" : "Login"}
+                                                onPress={() => props.navigation.navigate("(auth)")}
+                                                focused={props.state.index === 2}
+                                                activeTintColor={"#000"}
+                                                inactiveTintColor={"#000"}
+                                                activeBackgroundColor={props.state.index === 2 ? "#fff" : "transparent"}
+                                                inactiveBackgroundColor={"transparent"}
+                                                icon={({size}) => (
+                                                    <MaterialCommunityIcons
+                                                        name="login"
+                                                        size={size}
+                                                        color={"#000"}
+                                                        style={{marginLeft: 10}}
+                                                    />
+                                                )}
+                                            />
+                                    }
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                            borderTopColor: "#fff",
+                                            borderTopWidth: 1,
+                                            marginTop: 20,
+                                            paddingTop: 20,
+                                        }}
+                                    >
+                                        {
+                                            isLogin &&
+                                            <DrawerItem
+                                                {...props}
+                                                label={i18n.language === "ar" ? "تسجيل الخروج" : "Logout"}
+                                                onPress={() => {
+                                                    setLogin(false);
+                                                    setUser({});
+                                                    setVerified(false);
+
+                                                    SplashScreen.preventAutoHideAsync();
+                                                    props.navigation.navigate("(home)");
+                                                }}
+                                                focused={props.state.index === 3}
+                                                activeTintColor={"#000"}
+                                                inactiveTintColor={"#000"}
+                                                activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
+                                                inactiveBackgroundColor={"transparent"}
+                                                icon={({size}) => (
+                                                    <MaterialCommunityIcons
+                                                        name="logout"
+                                                        size={size}
+                                                        color={"#000"}
+                                                        style={{marginLeft: 10}}
+                                                    />
+                                                )}
+                                            />
+                                        }
+                                    </View>
+                                    <DrawerItem
+                                        {...props}
+                                        label={i18n.language === "ar" ? "السياسة والخصوصية" : "Policy and Privacy"}
+                                        onPress={() => {
+                                            props.navigation.navigate("policy");
+                                        }}
+                                        focused={props.state.index === 3}
+                                        activeTintColor={"#000"}
+                                        inactiveTintColor={"#000"}
+                                        activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
+                                        inactiveBackgroundColor={"transparent"}
+                                        icon={({size}) => (
+                                            <MaterialCommunityIcons
+                                                name="police-badge-outline"
+                                                size={size}
+                                                color={"#000"}
+                                                style={{marginLeft: 10}}
+                                            />
+                                        )}
+                                    />
+                                    <DrawerItem
+                                        {...props}
+                                        label={i18n.language === "ar" ? "الأعدادات" : "Settings"}
+                                        onPress={() => {
+                                            props.navigation.navigate("(setting)");
+                                        }}
+                                        focused={props.state.index === 3}
+                                        activeTintColor={"#000"}
+                                        inactiveTintColor={"#000"}
+                                        activeBackgroundColor={props.state.index === 3 ? "#fff" : "transparent"}
+                                        inactiveBackgroundColor={"transparent"}
+                                        icon={({size}) => (
+                                            <Ionicons
+                                                name="settings-outline"
+                                                size={size}
+                                                color={"#000"}
+                                                style={{marginLeft: 10}}
+                                            />
+                                        )}
+                                    />
+                                </DrawerContentScrollView>
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        alignItems: "center",
+                                        justifyContent: "flex-start",
+                                        paddingBottom: insets.bottom + 10,
+                                        backgroundColor: "#f8b91c",
+                                    }}
+                                >
+                                    <Text style={{color: '#efefef'}}>V{Constants.expoConfig.version}</Text>
+                                </View>
+                            </View>
+                        )
+                    }}
                 >
                     <Drawer.Screen
                         name="(home)"
