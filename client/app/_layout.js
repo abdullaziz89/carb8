@@ -15,23 +15,25 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import * as Sentry from "@sentry/react-native";
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
-const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+// const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+//
+// Sentry.init({
+//     dsn: "https://86d556e97d63e40532cd8ab0094ede13@o4507008560726016.ingest.us.sentry.io/4507008649527296",
+//     enableAutoSessionTracking: true,
+//     // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+//     // We recommend adjusting this value in production.
+//     tracesSampleRate: 1.0,
+//     debug: __DEV__,
+//     integrations: [
+//         new Sentry.ReactNativeTracing({
+//             routingInstrumentation
+//         }),
+//     ],
+// });
 
-Sentry.init({
-    dsn: "https://86d556e97d63e40532cd8ab0094ede13@o4507008560726016.ingest.us.sentry.io/4507008649527296",
-    enableAutoSessionTracking: true,
-    // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-    // We recommend adjusting this value in production.
-    tracesSampleRate: 1.0,
-    debug: __DEV__,
-    integrations: [
-        new Sentry.ReactNativeTracing({
-            routingInstrumentation
-        }),
-    ],
-});
+export const CustomDrawerContent = (props) => {
 
-function CustomDrawerContent(props, isLogin, getLogo, user, i18n, numberViews, setLogin, setUser, setVerified, insets) {
+    const {isLogin, getLogo, user, i18n, numberViews, setLogin, setUser, setVerified, insets} = props;
 
     return (
         <View
@@ -237,17 +239,17 @@ function CustomDrawerContent(props, isLogin, getLogo, user, i18n, numberViews, s
 
 const MyDrawer = (props) => {
 
-    if (!__DEV__) {
-        for (const iterator of Object.keys(global.console)) {
-            global.console[iterator] = () => 0;
-        }
-    }
+    // if (__DEV__) {
+    //     for (const iterator of Object.keys(global.console)) {
+    //         global.console[iterator] = () => 0;
+    //     }
+    // }
 
     const {isLogin, user, setLogin, setUser, setVerified} = useAppStateStore();
     const {i18n} = useTranslation();
 
     // Capture the NavigationContainer ref and register it with the instrumentation.
-    const ref = useNavigationContainerRef();
+    // const ref = useNavigationContainerRef();
 
     const [numberViews, setNumberViews] = useState(0);
 
@@ -287,11 +289,11 @@ const MyDrawer = (props) => {
         )
     }
 
-    useEffect(() => {
-        if (ref) {
-            routingInstrumentation.registerNavigationContainer(ref);
-        }
-    }, [ref]);
+    // useEffect(() => {
+    //     if (ref) {
+    //         routingInstrumentation.registerNavigationContainer(ref);
+    //     }
+    // }, [ref]);
 
     useEffect(() => {
         // add isLogin to props
@@ -322,7 +324,20 @@ const MyDrawer = (props) => {
                         overlayColor: "transparent",
                         drawerPosition: i18n.language === "ar" ? "right" : "left",
                     }}
-                    drawerContent={(props) => CustomDrawerContent(props, isLogin, getLogo, user, i18n, numberViews, setLogin, setUser, setVerified, insets)}
+                    drawerContent={(props) =>
+                        <CustomDrawerContent
+                            {...props}
+                            user={user}
+                            setUser={setUser}
+                            isLogin={isLogin}
+                            setLogin={setLogin}
+                            getLogo={getLogo}
+                            i18n={i18n}
+                            numberViews={numberViews}
+                            setVerified={setVerified}
+                            insets={insets}
+                        />
+                    }
                 >
                     <Drawer.Screen
                         name="(home)"
@@ -393,4 +408,4 @@ const MyDrawer = (props) => {
     )
 }
 
-export default Sentry.wrap(MyDrawer);
+export default MyDrawer;
