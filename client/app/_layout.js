@@ -245,8 +245,8 @@ const MyDrawer = (props) => {
     //     }
     // }
 
-    const {isLogin, user, setLogin, setUser, setVerified} = useAppStateStore();
-    const {i18n} = useTranslation();
+    // const {isLogin, user, setLogin, setUser, setVerified} = useAppStateStore();
+    // const {i18n} = useTranslation();
 
     // Capture the NavigationContainer ref and register it with the instrumentation.
     // const ref = useNavigationContainerRef();
@@ -256,17 +256,17 @@ const MyDrawer = (props) => {
     const insets = useSafeAreaInsets();
 
     // TODO: check the login status after update the item in cart
-    useEffect(() => {
-        if (isLogin) {
-            getFoodTruckViews(user.foodTruck.id)
-                .then((response) => {
-                    setNumberViews(response.views);
-                })
-                .catch((error) => {
-                    throw new Error(error);
-                });
-        }
-    }, [isLogin]);
+    // useEffect(() => {
+    //     if (isLogin) {
+    //         getFoodTruckViews(user.foodTruck.id)
+    //             .then((response) => {
+    //                 setNumberViews(response.views);
+    //             })
+    //             .catch((error) => {
+    //                 throw new Error(error);
+    //             });
+    //     }
+    // }, [isLogin]);
 
     const onLayoutRootView = useCallback(async () => {
         setTimeout(async () => {
@@ -274,20 +274,20 @@ const MyDrawer = (props) => {
         }, 3000);
     }, []);
 
-    const getLogo = () => {
-        const logo = `https://file.kwfts.com/foodTruck/${user.foodTruck.id}/logo.jpg`
-        return (
-            <Image
-                source={{uri: logo}}
-                style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: 50,
-                    marginBottom: 10,
-                }}
-            />
-        )
-    }
+    // const getLogo = () => {
+    //     const logo = `https://file.kwfts.com/foodTruck/${user.foodTruck.id}/logo.jpg`
+    //     return (
+    //         <Image
+    //             source={{uri: logo}}
+    //             style={{
+    //                 width: 100,
+    //                 height: 100,
+    //                 borderRadius: 50,
+    //                 marginBottom: 10,
+    //             }}
+    //         />
+    //     )
+    // }
 
     // useEffect(() => {
     //     if (ref) {
@@ -295,11 +295,11 @@ const MyDrawer = (props) => {
     //     }
     // }, [ref]);
 
-    useEffect(() => {
-        // add isLogin to props
-        props.isLogin = isLogin;
-        // throw new Error("This is a test error");
-    }, []);
+    // useEffect(() => {
+    //     // add isLogin to props
+    //     props.isLogin = isLogin;
+    //     // throw new Error("This is a test error");
+    // }, []);
 
     return (
         <SafeAreaView
@@ -322,7 +322,7 @@ const MyDrawer = (props) => {
                             backgroundColor: "#f8b91c"
                         },
                         overlayColor: "transparent",
-                        drawerPosition: i18n.language === "ar" ? "right" : "left",
+                        // drawerPosition: i18n.language === "ar" ? "right" : "left",
                     }}
                     // drawerContent={(props) =>
                     //     <CustomDrawerContent
