@@ -39,7 +39,6 @@
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
     "expo-structured-headers": "^3.7.2",
-    "expo-updates": "~0.24.12",
     "expo-web-browser": "~12.8.2",
     "fiction-expo-restart": "^2.0.0",
     "i18next": "^22.4.15",

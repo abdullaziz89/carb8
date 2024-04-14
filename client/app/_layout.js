@@ -324,20 +324,20 @@ const MyDrawer = (props) => {
                         overlayColor: "transparent",
                         drawerPosition: i18n.language === "ar" ? "right" : "left",
                     }}
-                    drawerContent={(props) =>
-                        <CustomDrawerContent
-                            {...props}
-                            user={user}
-                            setUser={setUser}
-                            isLogin={isLogin}
-                            setLogin={setLogin}
-                            getLogo={getLogo}
-                            i18n={i18n}
-                            numberViews={numberViews}
-                            setVerified={setVerified}
-                            insets={insets}
-                        />
-                    }
+                    // drawerContent={(props) =>
+                    //     <CustomDrawerContent
+                    //         {...props}
+                    //         user={user}
+                    //         setUser={setUser}
+                    //         isLogin={isLogin}
+                    //         setLogin={setLogin}
+                    //         getLogo={getLogo}
+                    //         i18n={i18n}
+                    //         numberViews={numberViews}
+                    //         setVerified={setVerified}
+                    //         insets={insets}
+                    //     />
+                    // }
                 >
                     <Drawer.Screen
                         name="(home)"
