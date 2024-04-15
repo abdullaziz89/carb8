@@ -1,3 +1,4 @@
+import '../config/i18n';
 import {Drawer} from 'expo-router/drawer';
 import {AntDesign, Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import {useAppStateStore} from "../store/app-store";
@@ -7,12 +8,11 @@ import {View, Text} from "react-native";
 import {Image} from "expo-image";
 import TextWithFont from "../component/TextWithFont";
 import {getFoodTruckViews} from "../services/FoodTruckServices";
-import {SplashScreen, useNavigationContainerRef} from "expo-router";
-import {useTranslation} from "react-i18next";
+import {SplashScreen} from "expo-router";
+import {useTranslation, withTranslation} from "react-i18next";
 import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import * as Sentry from "@sentry/react-native";
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 // const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
@@ -245,8 +245,8 @@ const MyDrawer = (props) => {
     //     }
     // }
 
-    // const {isLogin, user, setLogin, setUser, setVerified} = useAppStateStore();
-    // const {i18n} = useTranslation();
+    const {isLogin, user, setLogin, setUser, setVerified} = useAppStateStore();
+    const {i18n} = useTranslation();
 
     // Capture the NavigationContainer ref and register it with the instrumentation.
     // const ref = useNavigationContainerRef();
@@ -256,17 +256,17 @@ const MyDrawer = (props) => {
     const insets = useSafeAreaInsets();
 
     // TODO: check the login status after update the item in cart
-    // useEffect(() => {
-    //     if (isLogin) {
-    //         getFoodTruckViews(user.foodTruck.id)
-    //             .then((response) => {
-    //                 setNumberViews(response.views);
-    //             })
-    //             .catch((error) => {
-    //                 throw new Error(error);
-    //             });
-    //     }
-    // }, [isLogin]);
+    useEffect(() => {
+        if (isLogin) {
+            getFoodTruckViews(user.foodTruck.id)
+                .then((response) => {
+                    setNumberViews(response.views);
+                })
+                .catch((error) => {
+                    throw new Error(error);
+                });
+        }
+    }, [isLogin]);
 
     const onLayoutRootView = useCallback(async () => {
         setTimeout(async () => {
@@ -274,20 +274,20 @@ const MyDrawer = (props) => {
         }, 3000);
     }, []);
 
-    // const getLogo = () => {
-    //     const logo = `https://file.kwfts.com/foodTruck/${user.foodTruck.id}/logo.jpg`
-    //     return (
-    //         <Image
-    //             source={{uri: logo}}
-    //             style={{
-    //                 width: 100,
-    //                 height: 100,
-    //                 borderRadius: 50,
-    //                 marginBottom: 10,
-    //             }}
-    //         />
-    //     )
-    // }
+    const getLogo = () => {
+        const logo = `https://file.kwfts.com/foodTruck/${user.foodTruck.id}/logo.jpg`
+        return (
+            <Image
+                source={{uri: logo}}
+                style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 50,
+                    marginBottom: 10,
+                }}
+            />
+        )
+    }
 
     // useEffect(() => {
     //     if (ref) {
@@ -322,22 +322,22 @@ const MyDrawer = (props) => {
                             backgroundColor: "#f8b91c"
                         },
                         overlayColor: "transparent",
-                        // drawerPosition: i18n.language === "ar" ? "right" : "left",
+                        drawerPosition: i18n.language === "ar" ? "right" : "left",
                     }}
-                    // drawerContent={(props) =>
-                    //     <CustomDrawerContent
-                    //         {...props}
-                    //         user={user}
-                    //         setUser={setUser}
-                    //         isLogin={isLogin}
-                    //         setLogin={setLogin}
-                    //         getLogo={getLogo}
-                    //         i18n={i18n}
-                    //         numberViews={numberViews}
-                    //         setVerified={setVerified}
-                    //         insets={insets}
-                    //     />
-                    // }
+                    drawerContent={(props) =>
+                        <CustomDrawerContent
+                            {...props}
+                            user={user}
+                            setUser={setUser}
+                            isLogin={isLogin}
+                            setLogin={setLogin}
+                            getLogo={getLogo}
+                            i18n={i18n}
+                            numberViews={numberViews}
+                            setVerified={setVerified}
+                            insets={insets}
+                        />
+                    }
                 >
                     <Drawer.Screen
                         name="(home)"
@@ -408,4 +408,4 @@ const MyDrawer = (props) => {
     )
 }
 
-export default MyDrawer;
+export default withTranslation()(MyDrawer);
