@@ -121,6 +121,12 @@
             "deploymentTarget": "17.0"
           }
         }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "abdullaziz89"
+        }
       ]
     ],
     "extra": {

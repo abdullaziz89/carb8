@@ -4,19 +4,44 @@
   },
   "build": {
     "development": {
+      "ios": {
+        "buildConfiguration": "Debug"
+      },
       "android": {
-        "buildType": "apk"
-      }
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_LOG_LEVEL": "debug"
+      },
+      "channel": "development"
     },
     "preview": {
+      "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
+      },
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_LOG_LEVEL": "debug"
+      },
+      "channel": "preview"
     },
     "production": {
+      "distribution": "store",
+      "ios": {
+        "buildConfiguration": "Release"
+      },
       "android": {
-        "buildType": "apk"
-      }
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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",
+        "SENTRY_LOG_LEVEL": "error"
+      },
+      "channel": "production"
     }
   },
   "submit": {

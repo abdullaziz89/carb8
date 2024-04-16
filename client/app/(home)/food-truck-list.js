@@ -132,7 +132,7 @@ export default (props) => {
         let {status} = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
-             ("Permission to access location was denied");
+            ("Permission to access location was denied");
         } else {
             return await Location.getCurrentPositionAsync({});
         }
@@ -198,15 +198,21 @@ export default (props) => {
         }
 
         setFilteredFoodTrucks((prev) => {
-            return prev.map((item) => {
-                if (item.id === id) {
-                    return {
-                        ...item,
-                        distance: getDistance()
+            return prev
+                .map((item, index) => {
+                    if (index === 0) {
+                        console.log(item)
                     }
-                }
-                return item;
-            });
+                    if (item.id === id) {
+                        return {
+                            ...item,
+                            distance: getDistance()
+                        }
+                    }
+                    return item;
+                })
+                .sort((a, b) => a.distance - b.distance)
+                .sort((a, b) => checkClosed(a.foodTruckInfo.FoodTruckWorkingDay) - checkClosed(b.foodTruckInfo.FoodTruckWorkingDay));
         });
     }
 
