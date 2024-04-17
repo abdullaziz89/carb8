@@ -21,14 +21,6 @@
       "channel": "preview"
     },
     "production": {
-      "distribution": "store",
-      "ios": {
-        "buildConfiguration": "Release"
-      },
-      "android": {
-        "buildType": "app-bundle",
-        "gradleCommand": ":app:assembleRelease"
-      },
       "channel": "production"
     }
   },
