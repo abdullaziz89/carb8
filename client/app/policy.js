@@ -13,12 +13,17 @@ export default () => {
     const {i18n} = useTranslation()
     const [isLoading, setLoading] = useState(false);
 
-    const source = { uri: 'https://kwfts.com/policy.pdf', cache: true };
+    const indicator = (
+        <View>
+            <ActivityIndicator size="large" color="#f8b91c"/>
+        </View>
+    )
 
     return (
         <SafeAreaView
             style={styles.container}
         >
+            {indicator}
             <TouchableOpacity
                 style={{
                     flexDirection: 'row',
@@ -45,13 +50,14 @@ export default () => {
                     flex: 1,
                     width: '100%',
                 }}
-                source={{uri: 'https://docs.google.com/gview?embedded=true&url=https://kwfts.com/policy.pdf'}}
+                source={{uri: 'https://kwfts.com/policy.html'}}
                 onLoadStart={() => {
                     setLoading(true)
                 }}
                 onLoadEnd={() => {
                     setLoading(false)
                 }}
+                initialScale={100}
             />
         </SafeAreaView>
     )

@@ -103,6 +103,7 @@ export default () => {
 
     const langItems = [
         {
+            key: "en",
             title: "English",
             onPress: () => {
                 i18n.changeLanguage("en")
@@ -122,6 +123,7 @@ export default () => {
             }
         },
         {
+            key: "ar",
             title: "اللغة العربية",
             onPress: () => {
                 i18n.changeLanguage("ar")
