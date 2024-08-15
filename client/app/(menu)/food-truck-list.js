@@ -285,7 +285,7 @@ export default (props) => {
                                 flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
                             }}
                         >
-                            <Entypo name="location-pin" size={18} color="#f8b91c"/>
+                            <Entypo name="location-pin" size={18} color="#226377"/>
                             <Text
                                 style={{textAlign: i18n.language === "ar" ? "right" : "left"}}>{i18n.language === "ar" ? item.address.governorate.nameArb : item.address.governorate.nameEng}</Text>
                         </View>
@@ -298,7 +298,7 @@ export default (props) => {
                             flexDirection: "row",
                             alignItems: "center",
                             justifyContent: "center",
-                            backgroundColor: "#f8b91c",
+                            backgroundColor: "#226377",
                             padding: 5,
                             borderRadius: 10
                         }}

@@ -1,42 +1,31 @@
 import {
     Dimensions,
-    FlatList,
-    TouchableOpacity,
     View,
     Text,
-    ScrollView,
-    Modal, SafeAreaView, Platform, RefreshControl, I18nManager, ImageBackground, DevSettings
+    ScrollView, SafeAreaView, Platform, RefreshControl, Alert, FlatList, ImageBackground, TouchableOpacity
 } from "react-native";
 import {Link, SplashScreen, Stack, useNavigation, useRouter} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
-import {getHeadersImages} from "../../services/HeadersImagesServices";
-import {getCuisine, updateCuisineView} from "../../services/CuisineServices";
-import FoodTruckList from "./food-truck-list";
-import {CreateResponsiveStyle, DEVICE_SIZES, useDeviceSize} from "rn-responsive-styles";
-import {AntDesign, Feather, FontAwesome, MaterialIcons} from "@expo/vector-icons";
-import FoodTrucksFilterOptions from "./FoodTrucksFilterOptions";
-import {Image} from "expo-image";
-import CustomCarousel from "./CustomCarousel";
-import {forkJoin} from "rxjs";
+import {CreateResponsiveStyle, DEVICE_SIZES} from "rn-responsive-styles";
+import CustomCarousel from "../(menu)/CustomCarousel";
 import "../../config/i18n";
 import {useTranslation} from "react-i18next";
-import HeaderTitleView, {HeaderLogo} from "./HeaderTitleView";
+import HeaderTitleView from "../(menu)/HeaderTitleView";
 import {
     BalsamiqSans_400Regular,
     BalsamiqSans_400Regular_Italic,
     BalsamiqSans_700Bold,
     BalsamiqSans_700Bold_Italic,
 } from '@expo-google-fonts/balsamiq-sans';
-import Animated, {interpolate, useSharedValue, withTiming} from "react-native-reanimated";
+import {useSharedValue, withTiming} from "react-native-reanimated";
 import {useFonts} from "expo-font";
 import {LogLevel, OneSignal} from 'react-native-onesignal';
 import Constants from "expo-constants";
 import {useAppStateStore} from "../../store/app-store";
+import axios from "axios";
 import TextWithFont from "../../component/TextWithFont";
-import {Restart} from 'fiction-expo-restart';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {DrawerToggleButton} from "@react-navigation/drawer";
-import * as Sentry from "@sentry/react-native";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {Image} from "expo-image";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -65,16 +54,9 @@ export default function Home() {
     const navigation = useNavigation();
 
     const [headerImages, setHeaderImages] = useState([]);
-    const [cuisines, setCuisines] = useState([]);
-    const [selectedCuisine, setSelectedCuisine] = useState(null);
-    const [searchNameValue, setSearchNameValue] = useState("");
+    const [plans, setPlans] = useState([]);
     const [showFilterOptions, setShowFilterOptions] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
-    const [FoodTrucksFilter, setFoodTrucksFilter] = useState({
-        filterValue: {
-            governorate: null
-        }, isFilterActive: false
-    });
 
     const modelViewScale = useSharedValue(0)
 
@@ -108,13 +90,34 @@ export default function Home() {
             setIsRefreshing(true);
         }
 
-        forkJoin([getCuisine(), getHeadersImages()])
-            .subscribe(([cuisines, headersImages]) => {
-                setIsRefreshing(false);
-                setCuisines(cuisines);
-                setHeaderImages(headersImages);
-                console.log("headersImages", headersImages);
-            });
+        const dateObj = new Date();
+        let time = dateObj.getTime();
+        let date = dateObj.getDate();
+
+        // format datetime to 'yyyy-mm-dd hh:mm:ss', format time to 'hh:mm:ss', format date to 'yyyy-mm-dd'
+        time = new Date(time).toLocaleTimeString('en-US', {hour12: false});
+        date = new Date(date).toLocaleDateString('en-US');
+        const dateTime = date + ' ' + time;
+
+        axios.post('https://carb8-kw.com/DATAAPI/getfrontpage.php',
+            {
+                "Userid": "eo4o03coe800vddvuin9it7ah0",
+                "CompID": "15",
+                "Action": "Getfront",
+                "Date": date,
+                "Time": time,
+                "Datetime": dateTime
+            }, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                setHeaderImages(response.data.FrontSlider);
+                setPlans(response.data.MealPlans.filter(item => item.PranId === "145" || item.PranId === "159" || item.PranId === "162"));
+            }).catch(error => {
+            Alert.alert('Error', 'something went wrong, please try again late.');
+        })
     };
 
     useEffect(() => {
@@ -137,114 +140,15 @@ export default function Home() {
 
     const currentYear = new Date().getFullYear();
 
-    const cuisineRenderItem = ({item, index}) => {
-
-        const isFirst = index === 0;
-        return (
-            <TouchableOpacity
-                style={[
-                    styles.cuisineRenderItem,
-                    selectedCuisine === item.id ? {backgroundColor: "#f8b91c"} : {backgroundColor: "#fff"},
-                    {marginStart: isFirst ? 10 : 0}
-                ]}
-                onPress={() => {
-                    // set selected sport type
-                    updateCuisineView(item.id);
-                    setSelectedCuisine(item.id);
-                }}
-            >
-                <Image
-                    source={{uri: item.image}}
-                    style={[
-                        {
-                            width: 64,
-                            height: 64,
-                        },
-                        selectedCuisine === item.id ? {borderRadius: 22, backgroundColor: "white"} : {}
-                    ]}
-                    contentFit={"cover"}
-                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
-                />
-                <Text
-                    style={{
-                        fontSize: 16,
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        marginTop: 10
-                    }}
-                >
-                    {i18n.language === "ar" ? item.nameArb : item.nameEng}
-                </Text>
-            </TouchableOpacity>
-        );
-    };
-
-    const modelView = () => {
-
-        const color = interpolate(
-            modelViewScale.value,
-            [0, 1],
-            ["rgba(255,255,255,0.5)", "rgba(0,0,0,0.5)"]
-        );
-
-        return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={showFilterOptions}
-            >
-                <Animated.View
-                    style={[styles.filterOptionsModal, {backgroundColor: color}]}
-                >
-                    <FoodTrucksFilterOptions
-                        setShowFilterOptions={setShowFilterOptions}
-                        foodTrucksFilter={FoodTrucksFilter}
-                        setFoodTruckFilter={setFoodTrucksFilter}
-                    />
-                </Animated.View>
-            </Modal>
-        );
-    };
-
-    const rightHeader = () => {
-        return (
-            <TouchableOpacity
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginEnd: 10,
-                    height: "100%"
-                }}
-                onPress={() => {
-                    i18n.changeLanguage(i18n.language === "ar" ? "en" : "ar")
-                        .then(async () => {
-                            await AsyncStorage.setItem("settings.lang", i18n.language);
-                            if (__DEV__) {
-                                DevSettings.reload()
-                                return
-                            }
-                            Restart();
-                        });
-                }}
-            >
-                <FontAwesome
-                    name="language"
-                    size={24}
-                    color="#fff"
-                />
-            </TouchableOpacity>
-        );
-    };
 
     return (
         <SafeAreaView
             style={{
                 flex: 1,
-                backgroundColor: "white",
-                width: width
+                backgroundColor: "#efefef",
+                width: width,
+                marginBottom: 100,
             }}
-            onLayout={onLayoutRootView}
         >
             <ScrollView
                 style={{
@@ -253,7 +157,8 @@ export default function Home() {
                     width: width,
                 }}
                 contentContainerStyle={{
-                    alignItems: "center"
+                    alignItems: "center",
+                    paddingBottom: 50
                 }}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
@@ -267,196 +172,273 @@ export default function Home() {
                 <Stack.Screen
                     options={{
                         headerLargeTitle: true,
-                        title: "Kuwait Food Trucks",
+                        title: "Carb 8",
+                        headerLargeTitleStyle: {
+                            fontFamily: 'BalsamiqSans_400Regular',
+                            fontSize: 30,
+                            color: "white"
+                        },
+                        headerTitleStyle: {
+                            fontFamily: 'BalsamiqSans_400Regular',
+                            fontSize: 20,
+                            color: "white"
+                        },
                         headerTitle: () => Platform.OS !== "ios" &&
-                            <HeaderTitleView title={"Kuwait Food Trucks"} logo={require("../../assets/icon.png")}
+                            <HeaderTitleView title={"Carb 8"} logo={require("../../assets/icon.png")}
                                              localLogo={true}/>,
-                        headerLeft: () => <DrawerToggleButton tintColor={'#fff'}/>,
-                        // headerRight: () => rightHeader(),
                         headerBackTitleVisible: false,
                         headerStyle: {
-                            backgroundColor: "#f8b91c",
+                            backgroundColor: "#226377",
                         }
                     }}
                 />
 
-                {headerImages.length > 0 && <CustomCarousel images={headerImages} clickable={true}/>}
-
-                {
-                    getOrders().length > 0 && (
-                        <TouchableOpacity
-                            style={{
-                                width: width,
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                marginTop: 20,
-                                padding: 10,
-                                backgroundColor: "#ffffff",
-                            }}
-                            onPress={() => {
-                                // navigate to orders
-                                // navigation.navigate("order");
-                                router.push("orders");
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: "100%",
-                                    flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    margin: 10
-                                }}
-                            >
-                                <TextWithFont
-                                    text={i18n.language === "ar" ? "طلباتي" : "My Orders"}
-                                    style={{
-                                        fontSize: 20,
-                                        fontWeight: "bold",
-                                        fontFamily: 'BalsamiqSans_400Regular',
-                                    }}
-                                />
-                                {i18n.language === "ar" ?
-                                    <MaterialIcons name="arrow-back-ios" size={20} color="#f8b91c"/> :
-                                    <MaterialIcons name="arrow-forward-ios" size={20} color="#f8b91c"/>}
-                            </View>
-                        </TouchableOpacity>
-                    )
-                }
+                {headerImages.length > 0 && <CustomCarousel images={headerImages} clickable={false}/>}
 
                 <View
-                    style={styles.cuisinesHeaderHolder}
+                    style={{
+                        paddingStart: 10,
+                        alignItems: "flex-start",
+                        justifyContent: "center",
+                    }}
                 >
-                    <View
-                        style={styles.cuisinesHeader}
-                    >
-                        <View
-                            style={{
-                                flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                                width: "100%",
-                                alignItems: "center",
-                                justifyContent: "space-between"
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: "bold",
-                                    fontFamily: 'BalsamiqSans_400Regular',
-                                }}
-                            >
-                                {i18n.language === "ar" ? "الأقسام" : "Categories"}
-                            </Text>
-                            {
-                                selectedCuisine !== null &&
-                                <TouchableOpacity
-                                    style={{
-                                        marginStart: 20
-                                    }}
-                                    onPress={() => {
-                                        // clear selected sport type
-                                        setSelectedCuisine(null);
-                                    }}
-                                >
-                                    <AntDesign name="closecircle" size={20} color="#f8b91c"/>
-                                </TouchableOpacity>
-                            }
-                        </View>
-                    </View>
-                    <FlatList
+                    <TextWithFont
+                        text={i18n.language === "ar" ? "باقاتنا" : "Out Plans"}
                         style={{
+                            fontSize: 20,
+                            fontWeight: "bold",
+                            fontFamily: 'BalsamiqSans_400Regular',
                             marginTop: 20,
-                        }}
-                        contentContainerStyle={{
-                            padding: 10,
-                            // flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-                        }}
-                        data={cuisines}
-                        renderItem={cuisineRenderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                        ListEmptyComponent={() => {
-                            return (
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        width: width,
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 18,
-                                            fontWeight: "bold",
-                                            color: "lightgray"
-                                        }}
-                                    >
-                                        {i18n.language === "ar" ? "لا يوجد مأكولات" : "No Cuisines"}
-                                    </Text>
-                                </View>
-                            );
+                            width: width,
+                            textAlign: "left",
+                            paddingStart: 15
                         }}
                     />
-                </View>
-                <View
-                    style={[styles.foodTrucksHeaderHolder, {flexDirection: i18n.language === "ar" ? "row-reverse" : "row"}]}
-                >
-                    <Text
-                        style={styles.foodTrucksHeader}
-                    >
-                        {i18n.language === "ar" ? "عربات الطعام" : "Food Trucks"}
-                    </Text>
-                    {
-                        cuisines.length > 0 &&
-                        <TouchableOpacity
-                            onPress={() => {
-                                setShowFilterOptions(true);
-                            }}
-                        >
-                            <Feather name="filter" size={24} color="#f8b91c"/>
-                        </TouchableOpacity>
-                    }
-                </View>
-                {
-                    cuisines.length > 0 ?
-                        <View
-                            style={{
-                                flex: 1,
-                                minHeight: height / 2,
-                            }}
-                        >
-                            <FoodTruckList
-                                searchByName={searchNameValue}
-                                selectedCuisine={selectedCuisine}
-                                cuisines={cuisines}
-                                foodTrucksFilter={FoodTrucksFilter}
-                                isRefreshing={isRefreshing}
-                            />
-                            {modelView()}
-                        </View> :
-                        <View
-                            style={{
-                                flex: 1,
-                                alignItems: "center",
-                                marginTop: 80,
-                                width: width
-                            }}
-                        >
-                            <Text
+                    <FlatList
+                        style={{marginTop: 20, maxHeight: 220}}
+                        contentContainerStyle={{
+                            paddingStart: 10,
+                            maxHeight: 220
+                        }}
+                        data={plans}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({item, index}) => (
+                            <TouchableOpacity
                                 style={{
-                                    fontSize: 18,
-                                    fontWeight: "bold",
-                                    color: "lightgray",
-                                    textAlign: "center"
+                                    width: 350,
+                                    height: 200,
+                                    marginEnd: 15,
+                                    borderRadius: 20,
+                                    backgroundColor: "white",
+                                    // drop shadow
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
                                 }}
                             >
-                                {i18n.language === "ar" ? "لا توجد عربات" : "No Food Trucks"}
-                            </Text>
-                        </View>
-                }
+                                <ImageBackground
+                                    source={{uri: 'https://imagedelivery.net/bxlE0nH6a9wkPR6_oDoHgA/fef5c94f-96bf-41d0-9ea4-20f9f627ca00/public'}}
+                                    imageStyle={{
+                                        borderRadius: 20,
+                                        backgroundColor: "white",
+                                        justifyContent: "flex-end",
+                                    }}
+                                    style={{
+                                        width: 350,
+                                        height: 200,
+                                        borderRadius: 20,
+                                        backgroundColor: "white",
+                                        padding: 10,
+                                        paddingTop: 20
+                                    }}
+                                    resizeMode={"contain"}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "flex-start"
+                                        }}
+                                    >
+                                        <MaterialCommunityIcons name="food-apple-outline" size={24} color="#226377"/>
+                                        <TextWithFont
+                                            text={`${item.Meals} Meals`}
+                                            style={{
+                                                fontSize: 24,
+                                                fontFamily: 'BalsamiqSans_400Regular',
+                                                color: '#226377',
+                                                marginStart: 10
+                                            }}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "flex-start"
+                                        }}
+                                    >
+                                        <MaterialCommunityIcons name="food-steak" size={24} color="#f0ad4e"/>
+                                        <TextWithFont
+                                            text={`${item.Proteins} proteins`}
+                                            style={{
+                                                fontSize: 24,
+                                                fontFamily: 'BalsamiqSans_400Regular',
+                                                color: '#f0ad4e',
+                                                marginStart: 10
+                                            }}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "flex-start"
+                                        }}
+                                    >
+                                        <MaterialCommunityIcons name="food-croissant" size={24} color="#5cb85c"/>
+                                        <TextWithFont
+                                            text={`${item.Carbs} carbs`}
+                                            style={{
+                                                fontSize: 24,
+                                                fontFamily: 'BalsamiqSans_400Regular',
+                                                color: '#5cb85c',
+                                                marginStart: 10
+                                            }}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "flex-start",
+                                            marginTop: 25
+                                        }}
+                                    >
+                                        <TextWithFont
+                                            text={`Start today ${item.AmtPerDay}KWD`}
+                                            style={{
+                                                fontSize: 26,
+                                                fontFamily: 'BalsamiqSans_700Bold',
+                                                color: '#226377',
+                                                marginStart: 10
+                                            }}
+                                        />
+                                    </View>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <View>
+                        <TextWithFont
+                            text={'How it works'}
+                            style={{
+                                fontSize: 20,
+                                fontWeight: "bold",
+                                fontFamily: 'BalsamiqSans_400Regular',
+                                width: width,
+                                textAlign: "left",
+                                paddingStart: 15,
+                                marginTop: 20
+                            }}
+                        />
+                        <TextWithFont
+                            text={'Set your goals and let us do the work while you enjoy the taste and convenience of your meal plan.'}
+                            style={{
+                                fontSize: 16,
+                                fontFamily: 'BalsamiqSans_400Regular',
+                                maxWidth: width - 30,
+                                textAlign: "left",
+                                paddingStart: 15,
+                                marginTop: 10
+                            }}
+                        />
+                        <FlatList
+                            style={{marginTop: 20, maxHeight: 250}}
+                            contentContainerStyle={{
+                                paddingStart: 10,
+                                maxHeight: 250
+                            }}
+                            data={[
+                                {
+                                    id: 1,
+                                    title: 'Select your meal plan',
+                                    subtitle: 'Select the meal plan that is best suited for your lifestyle and helps you reach your goals.',
+                                    img: 'https://carb8-kw.com/comp_logo/Calendar.webp'
+                                },
+                                {
+                                    id: 2,
+                                    title: 'Manage your meal plan',
+                                    subtitle: 'Customise to your preferences and intolerances. Skip, pause or select meals from other plans.',
+                                    img: 'https://carb8-kw.com/comp_logo/Box.webp'
+                                },
+                                {
+                                    id: 3,
+                                    title: 'Receive your meals',
+                                    subtitle: 'Enjoy delicious freshly prepared meals delivered to your door.',
+                                    img: 'https://carb8-kw.com/comp_logo/Bowl.webp'
+                                }
+                            ]}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({item, index}) => (
+                                <View
+                                    style={{
+                                        width: 220,
+                                        height: 250,
+                                        marginEnd: 15,
+                                        borderRadius: 15,
+                                        backgroundColor: "white",
+                                        alignItems: "center",
+                                        justifyContent: "flex-start",
+                                        padding: 10,
+                                        paddingBottom: 20,
+                                    }}
+                                >
+                                    <Image
+                                        source={{uri: item.img}}
+                                        style={{
+                                            width: 100,
+                                            height: 100,
+                                            backgroundColor: "white",
+                                        }}
+                                        contentFit={"contain"}
+                                    />
+                                    <TextWithFont
+                                        text={item.title}
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'BalsamiqSans_400Regular',
+                                            color: '#000',
+                                            marginTop: 10,
+                                            textAlign: "left"
+                                        }}
+                                    />
+                                    <TextWithFont
+                                        text={item.subtitle}
+                                        style={{
+                                            fontSize: 14,
+                                            fontFamily: 'BalsamiqSans_400Regular',
+                                            color: '#000',
+                                            marginTop: 10,
+                                            textAlign: "left"
+                                        }}
+                                        numberOfLines={3}
+                                    />
+                                </View>
+                            )}
+                        />
+                    </View>
+                </View>
+
                 {
                     Platform.OS === "web" &&
                     <View

@@ -254,7 +254,7 @@ export default () => {
                     headerTitle: () => foodTruck !== null &&
                         <HeaderTitleView title={t('checkout.title')} logo={logo} isProfile={true}/>,
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     },
                     headerTintColor: "#fff",
                 }}
@@ -418,7 +418,7 @@ export default () => {
                                             backgroundColor: "white",
                                             padding: 10,
                                         },
-                                        selectedPaymentMethod && selectedPaymentMethod.key === item.key ? {backgroundColor: "#f8b91c"} : {}
+                                        selectedPaymentMethod && selectedPaymentMethod.key === item.key ? {backgroundColor: "#226377"} : {}
                                     ]}
                                     onPress={() => {
                                         setSelectedPaymentMethod(item);
@@ -451,7 +451,7 @@ export default () => {
                         justifyContent: "center",
                         marginTop: 30,
                     },
-                    selectedPaymentMethod === null || customerPhone === "" || customerPhone.length < 8 ? {backgroundColor: "gray"} : {backgroundColor: "#f8b91c"}
+                    selectedPaymentMethod === null || customerPhone === "" || customerPhone.length < 8 ? {backgroundColor: "gray"} : {backgroundColor: "#226377"}
                 ]}
                 onPress={pay}
                 disabled={selectedPaymentMethod === null || customerPhone === "" || customerPhone.length < 8}

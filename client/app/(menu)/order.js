@@ -38,7 +38,7 @@ export default () => {
             >
                 <ActivityIndicator
                     size="large"
-                    color="#f8b91c"
+                    color="#226377"
                 />
             </View>
         )
@@ -47,7 +47,7 @@ export default () => {
     const orderStatusColor = (status) => {
         switch (status.toUpperCase()) {
             case "PENDING":
-                return "#f8b91c";
+                return "#226377";
             case "ACCEPTED":
                 return "#28a745";
             case "REJECTED":
@@ -104,7 +104,7 @@ export default () => {
                         width: 100,
                         height: 100,
                         borderRadius: 50,
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     }}
                     placeholder={require("../../assets/kwft-logo-placeholder.png")}
                 />
@@ -187,7 +187,7 @@ export default () => {
                     title: i18n.language === "ar" ? "تفاصيل الطلب" : "Order Details",
                     headerTitle: () => <HeaderTitleView title={i18n.language === "ar" ? "تفاصيل الطلب" : "Order Details"} logo={null} isProfile={true}/>,
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     },
                     headerShown: true,
                     headerTintColor: "#fff",

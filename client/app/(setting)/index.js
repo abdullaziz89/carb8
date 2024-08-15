@@ -233,7 +233,7 @@ export default () => {
                         )
                     },
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     }
                 }}
             />

@@ -120,7 +120,7 @@ export default () => {
             >
                 <ActivityIndicator
                     size={"large"}
-                    color={"#f8b91c"}
+                    color={"#226377"}
                 />
             </View>
         )
@@ -174,7 +174,7 @@ export default () => {
                 options={{
                     headerTitle: () => <HeaderTitleView title={'Payment Success'} isProfile={true}/>,
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     }
                 }}
             />
@@ -202,7 +202,7 @@ export default () => {
                     style={{
                         fontSize: 20,
                         margin: 10,
-                        color: "#f8b91c",
+                        color: "#226377",
                     }}
                 />
             </View>

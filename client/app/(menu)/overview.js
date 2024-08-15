@@ -120,7 +120,7 @@ export default () => {
                     style={{
                         width: "100%",
                         padding: 10,
-                        backgroundColor: "#f8b91c",
+                        backgroundColor: "#226377",
                         alignItems: "center",
                         justifyContent: "center",
                         marginTop: 20,
@@ -213,7 +213,7 @@ export default () => {
                         onPress={() => addCartItem(selectedItem)}
                     >
                         <MaterialCommunityIcons name="plus-circle" size={24}
-                                                color="#f8b91c"/>
+                                                color="#226377"/>
                     </TouchableOpacity>
                     <TextWithFont
                         text={itemQuantityInCart(selectedItem.id)}
@@ -227,14 +227,14 @@ export default () => {
                         onPress={() => removeCartItem(selectedItem.id)}
                     >
                         <MaterialCommunityIcons name="minus-circle" size={24}
-                                                color="#f8b91c"/>
+                                                color="#226377"/>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity
                     style={{
                         width: "100%",
                         padding: 10,
-                        backgroundColor: "#f8b91c",
+                        backgroundColor: "#226377",
                         alignItems: "center",
                         justifyContent: "center",
                         marginTop: 25,
@@ -304,7 +304,7 @@ export default () => {
                     style={{
                         width: "100%",
                         padding: 10,
-                        backgroundColor: "#f8b91c",
+                        backgroundColor: "#226377",
                         alignItems: "center",
                         justifyContent: "center",
                         marginTop: 20,
@@ -382,7 +382,7 @@ export default () => {
                         isLoading && <ActivityIndicator size={26} color="white"/>
                     ),
                     headerStyle: {
-                        backgroundColor: "#f8b91c",
+                        backgroundColor: "#226377",
                     },
                     headerTintColor: "#fff",
                 }}
@@ -482,7 +482,7 @@ export default () => {
                         marginStart: 5
                     }}
                 >
-                    <MaterialIcons name="notes" size={24} color="#f8b91c"/>
+                    <MaterialIcons name="notes" size={24} color="#226377"/>
                     <View
                         style={{
                             flexDirection: "column",
@@ -635,7 +635,7 @@ export default () => {
                                         {
                                             width: "100%",
                                             fontSize: 16,
-                                            color: "#f8b91c",
+                                            color: "#226377",
                                         },
                                         i18n.language === "ar" ? {textAlign: "right"} : {textAlign: "left"}
                                     ]}
@@ -904,7 +904,7 @@ export default () => {
                 style={{
                     width: "100%",
                     padding: 10,
-                    backgroundColor: "#f8b91c",
+                    backgroundColor: "#226377",
                     alignItems: "center",
                     justifyContent: "center",
                     marginTop: 30,

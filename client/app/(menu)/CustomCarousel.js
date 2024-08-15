@@ -73,9 +73,10 @@ export default (props) => {
                 );
             }
         } else {
+            console.log("==== > item.imageUrl", item)
             return (
                 <Image
-                    source={{uri: item}}
+                    source={{uri: item.ImageUrll}}
                     style={styles.carouselImage}
                     contentFit={"fill"}
                     contentPosition={"center"}
@@ -111,7 +112,7 @@ const useStyles = CreateResponsiveStyle(
         carousel: {
             width: width,
             height: 250,
-            backgroundColor: "#f8b91c",
+            backgroundColor: "#226377",
         },
         carouselImage: {
             width: width + 10,

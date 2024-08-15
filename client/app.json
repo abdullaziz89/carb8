@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "kwftapp",
+    "scheme": "carb8app",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splashscreen.png",
@@ -11,8 +11,8 @@
       "favicon": "./assets/icon.png",
       "bundler": "metro"
     },
-    "name": "KWFT",
-    "slug": "kwft",
+    "name": "Carb8",
+    "slug": "carb8",
     "android": {
       "versionCode": 4,
       "adaptiveIcon": {
@@ -20,7 +20,7 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.ideveloprs.kwft",
+      "package": "com.ideveloprs.carb8",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -28,11 +28,11 @@
           "data": [
             {
               "scheme": "https",
-              "host": "kwft.page.link"
+              "host": "carb8.page.link"
             },
             {
               "scheme": "https",
-              "host": "kwftapp.page.link"
+              "host": "carb8app.page.link"
             }
           ],
           "category": [
@@ -48,7 +48,7 @@
     },
     "ios": {
       "buildNumber": "1.0.1",
-      "bundleIdentifier": "com.ideveloprs.kwft",
+      "bundleIdentifier": "com.ideveloprs.carb8",
       "supportsTablet": false,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app requires access to your location to function properly.",
@@ -82,11 +82,11 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true,
           "NSExceptionDomains": {
-            "kwft.page.link": {
+            "carb8.page.link": {
               "NSIncludesSubdomains": true,
               "NSExceptionAllowsInsecureHTTPLoads": true
             },
-            "kwftapp.page.link": {
+            "carb8app.page.link": {
               "NSIncludesSubdomains": true,
               "NSExceptionAllowsInsecureHTTPLoads": true
             }
@@ -94,8 +94,8 @@
         }
       },
       "associatedDomains": [
-        "applinks:kwftapp.page.link",
-        "applinks:kwft.page.link"
+        "applinks:carb8.page.link",
+        "applinks:carb8.page.link"
       ]
     },
     "plugins": [
@@ -117,6 +117,11 @@
       [
         "expo-build-properties",
         {
+          "android": {
+            "compileSdkVersion": 33,
+            "targetSdkVersion": 33,
+            "minSdkVersion": 21
+          },
           "ios": {
             "deploymentTarget": "17.0"
           }
@@ -127,8 +132,8 @@
       "supportsRTL": true,
       "oneSignalAppId": "41309cd4-f41f-4e4f-b8db-273628a801b6",
       "host": {
-        "dev": "https://kwft.io",
-        "prod": "https://kwft.io"
+        "dev": "https://carb8-kw.com",
+        "prod": "https://carb8-kw.com"
       },
       "eas": {
         "build": {
@@ -137,10 +142,10 @@
               "appExtensions": [
                 {
                   "targetName": "OneSignalNotificationServiceExtension",
-                  "bundleIdentifier": "com.ideveloprs.kwft.OneSignalNotificationServiceExtension",
+                  "bundleIdentifier": "com.ideveloprs.carb8.OneSignalNotificationServiceExtension",
                   "entitlements": {
                     "com.apple.security.application-groups": [
-                      "group.com.ideveloprs.kwft.onesignal"
+                      "group.com.ideveloprs.carb8.onesignal"
                     ]
                   }
                 }
@@ -148,7 +153,7 @@
             }
           }
         },
-        "projectId": "594d2682-1171-41ca-9dd6-7244480288b6"
+        "projectId": "440a7de2-3698-43cf-9df8-334b54f7987c"
       }
     },
     "owner": "abdullaziz89"

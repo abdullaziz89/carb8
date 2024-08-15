@@ -11,7 +11,7 @@ import {
     Dimensions, Keyboard, ActivityIndicator
 } from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import HeaderTitleView from "../(home)/HeaderTitleView";
+import HeaderTitleView from "../(menu)/HeaderTitleView";
 import {Stack, useNavigation, useRouter, useLocalSearchParams} from "expo-router";
 import {MaterialIcons} from "@expo/vector-icons";
 import {Image} from "expo-image";
@@ -220,7 +220,7 @@ export default () => {
             <TouchableOpacity
                 style={[
                     styles.cuisineRenderItem,
-                    selectedCuisine === item.id ? {backgroundColor: "#f8b91c"} : {backgroundColor: "#fff"},
+                    selectedCuisine === item.id ? {backgroundColor: "#226377"} : {backgroundColor: "#fff"},
                     {marginStart: isFirst ? 10 : 0}
                 ]}
                 onPress={() => {
@@ -318,7 +318,7 @@ export default () => {
                                 backgroundColor: "white",
                                 padding: 10,
                                 borderRadius: 10,
-                                borderColor: "#f8b91c",
+                                borderColor: "#226377",
                                 borderWidth: 1,
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -411,7 +411,7 @@ export default () => {
                         <TouchableOpacity
                             style={{
                                 width: "100%",
-                                backgroundColor: "#f8b91c",
+                                backgroundColor: "#226377",
                                 padding: 10,
                                 borderRadius: 10,
                                 alignItems: "center",
@@ -537,7 +537,7 @@ export default () => {
                     padding: 10,
                     marginEnd: 20,
                     borderRadius: 10,
-                    borderColor: "#f8b91c",
+                    borderColor: "#226377",
                     borderWidth: 1,
                     alignItems: "center",
                     justifyContent: "center"
@@ -588,7 +588,7 @@ export default () => {
             >
                 <ActivityIndicator
                     size={"large"}
-                    color={"#f8b91c"}
+                    color={"#226377"}
                 />
             </View>
         )
@@ -631,7 +631,7 @@ export default () => {
                         )
                     },
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     }
                 }}
             />
@@ -640,7 +640,7 @@ export default () => {
                     width: "100%",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: "#f8b91c",
+                    backgroundColor: "#226377",
                     paddingTop: Platform.OS === "ios" ? 50 : 25,
                 }}
             >
@@ -878,7 +878,7 @@ export default () => {
                         backgroundColor: "white",
                         padding: 10,
                         borderRadius: 10,
-                        borderColor: "#f8b91c",
+                        borderColor: "#226377",
                         borderWidth: 1,
                         alignItems: "center",
                         justifyContent: "center"
@@ -1146,7 +1146,7 @@ export default () => {
                             setFoodTruckWorkingDaysModelShow(true);
                         }}
                     >
-                        <MaterialIcons name={"add"} size={24} color={"#f8b91c"}/>
+                        <MaterialIcons name={"add"} size={24} color={"#226377"}/>
                     </TouchableOpacity>
                 </View>
                 <FlatList
@@ -1171,7 +1171,7 @@ export default () => {
                                     padding: 10,
                                     marginEnd: 20,
                                     borderRadius: 10,
-                                    borderColor: "#f8b91c",
+                                    borderColor: "#226377",
                                     borderWidth: 1,
                                     alignItems: "center",
                                     justifyContent: "center"
@@ -1299,7 +1299,7 @@ export default () => {
                 <TouchableOpacity
                     style={{
                         width: "48%",
-                        backgroundColor: "#f8b91c",
+                        backgroundColor: "#226377",
                         padding: 10,
                         borderRadius: 10,
                         alignItems: "center",
@@ -1319,7 +1319,7 @@ export default () => {
                 <TouchableOpacity
                     style={{
                         width: "48%",
-                        backgroundColor: "#f8b91c",
+                        backgroundColor: "#226377",
                         padding: 10,
                         borderRadius: 10,
                         alignItems: "center",

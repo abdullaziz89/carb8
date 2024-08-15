@@ -1,5 +1,5 @@
 ### Create Subscriptions
-POST http://192.168.8.169:3001/subscription-statue
+POST http://192.168.8.114:3001/subscription-statue
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhN2U2MTQ0LWIzZmUtNDU0My1iYmEzLTM3NTU5OTA2NzQ3YyIsImVtYWlsIjoiaW1AYWJkdWxsYXppei5tZSIsImVuYWJsZSI6dHJ1ZSwibmFtZSI6IkFiZHVsIEF6aXoiLCJyb2xlSWQiOiJhMTlkZjM1ZS04ZDllLTQwYTItYWFmOC01ZjBkOWMzZWI0NWUiLCJidXNpbmVzc0lkIjpudWxsLCJpYXQiOjE2NzY0NTcyNTgsImV4cCI6MTY3NjQ2MDg1OH0._nhOEEDC_wb8V-eiP-juOzJzDLhea--Z6BwRGrV4LKE
 

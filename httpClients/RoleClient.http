@@ -1,12 +1,12 @@
-### Create Role
-POST http://192.168.8.170:3000/role
+### Create Role - Localhost
+POST http://192.168.8.114:3000/role
 Content-Type: application/json
 
 {
     "name": "SUPER_ADMIN"
 }
 
-### Create Role
+### Create Role - Server
 POST https://api.kwfts.com/role
 Content-Type: application/json
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Create Role
-GET http://192.168.8.169:3001/role
+GET http://192.168.8.114:3001/role
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhN2U2MTQ0LWIzZmUtNDU0My1iYmEzLTM3NTU5OTA2NzQ3YyIsImVtYWlsIjoiaW1AYWJkdWxsYXppei5tZSIsImVuYWJsZSI6dHJ1ZSwibmFtZSI6IkFiZHVsIEF6aXoiLCJyb2xlSWQiOiJhMTlkZjM1ZS04ZDllLTQwYTItYWFmOC01ZjBkOWMzZWI0NWUiLCJidXNpbmVzc0lkIjpudWxsLCJpYXQiOjE2NzY0NTcyNTgsImV4cCI6MTY3NjQ2MDg1OH0._nhOEEDC_wb8V-eiP-juOzJzDLhea--Z6BwRGrV4LKE
 

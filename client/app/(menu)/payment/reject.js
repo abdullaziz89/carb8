@@ -119,7 +119,7 @@ export default () => {
             >
                 <ActivityIndicator
                     size={"large"}
-                    color={"#f8b91c"}
+                    color={"#226377"}
                 />
             </View>
         )
@@ -170,7 +170,7 @@ export default () => {
         <Stack.Screen
             options={{
                 headerTitle: () => <HeaderTitleView title={'Payment Rejected'} isProfile={true}/>, headerStyle: {
-                    backgroundColor: "#f8b91c"
+                    backgroundColor: "#226377"
                 }
             }}
         />

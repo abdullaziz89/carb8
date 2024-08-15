@@ -119,7 +119,7 @@ export default () => {
                         )
                     },
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     }
                 }}
             />
@@ -172,7 +172,7 @@ export default () => {
                 style={{
                     width: '100%',
                     padding: 10,
-                    backgroundColor: '#f8b91c',
+                    backgroundColor: '#226377',
                     borderRadius: 5,
                     marginTop: 20,
                     alignItems: 'center'

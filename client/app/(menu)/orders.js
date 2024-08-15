@@ -17,7 +17,7 @@ export default () => {
     const orderStatusColor = (status) => {
         switch (status.toUpperCase()) {
             case "PENDING":
-                return "#f8b91c";
+                return "#226377";
             case "ACCEPTED":
                 return "#28a745";
             case "REJECTED":
@@ -93,7 +93,7 @@ export default () => {
                         width: 40,
                         height: 40,
                         borderRadius: 20,
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     }}
                     placeholder={require("../../assets/kwft-logo-placeholder.png")}
                 />
@@ -160,8 +160,8 @@ export default () => {
                     </View>
                 </View>
                 {i18n.language === "ar" ?
-                    (<MaterialIcons name="arrow-back-ios" size={20} color="#f8b91c"/>) :
-                    (<MaterialIcons name="arrow-forward-ios" size={20} color="#f8b91c"/>)}
+                    (<MaterialIcons name="arrow-back-ios" size={20} color="#226377"/>) :
+                    (<MaterialIcons name="arrow-forward-ios" size={20} color="#226377"/>)}
             </TouchableOpacity>
         )
     }
@@ -178,7 +178,7 @@ export default () => {
                     title: 'My Orders',
                     headerTitle: () => <HeaderTitleView title={t('order.myOrder.title')} logo={null} isProfile={true}/>,
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     },
                     headerShown: true,
                     headerBackTitleVisible: false,

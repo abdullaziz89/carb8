@@ -23,6 +23,7 @@ export default (props) => {
                 text={title}
                 style={{
                     fontSize: 20, marginLeft: !isProfile && logo ? 10 : 0,
+                    color: "#fff"
                 }}
             />
         </View>
@@ -34,7 +35,7 @@ export const HeaderLogo = (navigation, logo, localLogo) => {
     return (
         <TouchableOpacity
             onPress={() => {
-                DrawerAction.toggleDrawer();
+                // DrawerAction.toggleDrawer();
             }}
         >
             <Image

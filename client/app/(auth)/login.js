@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator} from "react-native";
+import {View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator, SafeAreaView} from "react-native";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {Stack, useNavigation, useRouter} from "expo-router";
 import {MaterialIcons} from "@expo/vector-icons";
@@ -122,7 +122,7 @@ export default () => {
                     alignItems: 'center'
                 }}
             >
-                <ActivityIndicator size="large" color="#f8b91c"/>
+                <ActivityIndicator size="large" color="#226377"/>
             </View>
         )
     }
@@ -132,118 +132,107 @@ export default () => {
     }
 
     return (
-        <KeyboardAwareScrollView
+        <SafeAreaView
             style={{
                 flex: 1,
                 backgroundColor: "#efefe0f"
             }}
-            contentContainerStyle={{
-                justifyContent: "center",
-                alignItems: "center"
-            }}
-            scrollEnabled={true}
         >
-            <Stack.Screen
-                options={{
-                    title: "Login",
-                    headerLeft: () => {
-                        // back icon button
-                        return (
-                            <TouchableOpacity
-                                style={{
-                                    marginRight: 15
-                                }}
-                                onPress={() => {
-                                    navigation.goBack();
-                                }}
-                            >
-                                <MaterialIcons name="arrow-back" size={24} color="black"/>
-                            </TouchableOpacity>
-                        )
-                    },
-                    headerStyle: {
-                        backgroundColor: "#f8b91c"
-                    },
+            <KeyboardAwareScrollView
+                style={{
+                    flex: 1,
+                    backgroundColor: "#efefe0f"
                 }}
-            />
-            <View>
-                <Image
-                    source={require("../../assets/login-food-truck.png")}
-                    style={{
-                        width: 300,
-                        height: 300,
-                        marginBottom: 10
+                contentContainerStyle={{
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+                scrollEnabled={true}
+            >
+                <Stack.Screen
+                    options={{
+                        headerShown: false,
                     }}
                 />
-                <View
-                    style={{
-                        width: "100%",
-                        alignItems: "flex-start",
-                    }}
-                >
-                    <Text
+                <View>
+                    <Image
+                        source={require("../../assets/login-food-truck.png")}
                         style={{
-                            fontSize: 30,
-                            fontFamily: 'BalsamiqSans_400Regular',
+                            width: 250,
+                            height: 250,
+                            marginBottom: 5
+                        }}
+                    />
+                    <View
+                        style={{
+                            width: "100%",
+                            alignItems: "flex-start",
                         }}
                     >
-                        Login to your {"\n"}
-                        <Text style={{fontWeight: "bold",}}>Food Truck</Text>
-                    </Text>
-                </View>
-            </View>
-            <View
-                style={{
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}
-            >
-                {
-                    inputs.map((input, index) => inputItem(input, index))
-                }
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleSubmit(onSubmit)}
-                >
-                    <Text
-                        style={{
-                            color: 'white',
-                            fontSize: 20,
-                            textAlign: 'center',
-                            lineHeight: 40,
-                            fontFamily: 'BalsamiqSans_400Regular',
-                        }}
-                    >
-                        Login
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => {
-                        router.push("/register");
-                    }}
-                >
-                    <Text
-                        style={{
-                            marginTop: 20,
-                            fontSize: 14,
-                            textAlign: 'center',
-                            lineHeight: 25,
-                            fontFamily: 'BalsamiqSans_400Regular',
-                        }}
-                    >
-                        You don't have <Text style={{fontWeight: 'bold'}}>food truck</Text> account?{"\n"}
                         <Text
                             style={{
-                                color: '#f8b91c',
+                                fontSize: 30,
+                                fontFamily: 'BalsamiqSans_400Regular',
                             }}
                         >
-                            Register it here
+                            Login to your {"\n"}
+                            <Text style={{fontWeight: "bold",}}>Account</Text>
                         </Text>
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </KeyboardAwareScrollView>
+                    </View>
+                </View>
+                <View
+                    style={{
+                        width: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    {
+                        inputs.map((input, index) => inputItem(input, index))
+                    }
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleSubmit(onSubmit)}
+                    >
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontSize: 20,
+                                textAlign: 'center',
+                                lineHeight: 40,
+                                fontFamily: 'BalsamiqSans_400Regular',
+                            }}
+                        >
+                            Login
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            router.push("/register");
+                        }}
+                    >
+                        <Text
+                            style={{
+                                marginTop: 20,
+                                fontSize: 14,
+                                textAlign: 'center',
+                                lineHeight: 25,
+                                fontFamily: 'BalsamiqSans_400Regular',
+                            }}
+                        >
+                            You don't have <Text style={{fontWeight: 'bold'}}>food truck</Text> account?{"\n"}
+                            <Text
+                                style={{
+                                    color: '#226377',
+                                }}
+                            >
+                                Register it here
+                            </Text>
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAwareScrollView>
+        </SafeAreaView>
     )
 }
 
@@ -260,7 +249,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
         color: 'white',
         height: 40,
-        backgroundColor: '#f8b91c',
+        backgroundColor: '#226377',
         borderRadius: 4,
         width: '80%',
         fontFamily: 'BalsamiqSans_400Regular',

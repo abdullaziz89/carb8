@@ -226,7 +226,7 @@ export default (props) => {
 
     const indicator = showIndicator ? (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <ActivityIndicator size="large" color="#f8b91c"/>
+            <ActivityIndicator size="large" color="#226377"/>
         </View>
     ) : null;
 
@@ -351,7 +351,7 @@ export default (props) => {
                         width: "100%",
                         alignItems: "flex-start",
                         justifyContent: "center",
-                        backgroundColor: "#f8b91c",
+                        backgroundColor: "#226377",
                         paddingHorizontal: 20,
                         paddingVertical: 10,
                         paddingTop: Platform.OS === "ios" ? 50 : 25,
@@ -542,7 +542,7 @@ export default (props) => {
                     headerTitle: () => foodTruck !== null &&
                         <HeaderTitleView title={foodTruck.nameEng} logo={logo} isProfile={true}/>,
                     headerStyle: {
-                        backgroundColor: "#f8b91c"
+                        backgroundColor: "#226377"
                     },
                     headerTintColor: "#fff",
                     headerBackTitleVisible: false,
@@ -594,7 +594,7 @@ export default (props) => {
                                     item.quantity > 0 ? {
                                         borderLeftWidth: 5,
                                         borderLeftStyle: "solid",
-                                        borderLeftColor: "#f8b91c",
+                                        borderLeftColor: "#226377",
                                     } : {}
                                 ]}
                             >
@@ -665,7 +665,7 @@ export default (props) => {
                                                         onPress={() => addCartItem(item)}
                                                     >
                                                         <MaterialCommunityIcons name="plus-circle" size={24}
-                                                                                color="#f8b91c"/>
+                                                                                color="#226377"/>
                                                     </TouchableOpacity>
                                                     <TextWithFont
                                                         text={item.quantity.toString()}
@@ -679,14 +679,14 @@ export default (props) => {
                                                         onPress={() => removeCartItem(item.id)}
                                                     >
                                                         <MaterialCommunityIcons name="minus-circle" size={24}
-                                                                                color="#f8b91c"/>
+                                                                                color="#226377"/>
                                                     </TouchableOpacity>
                                                 </View>
                                             ) : (
                                                 <TouchableOpacity
                                                     onPress={() => addCartItem(item)}
                                                 >
-                                                    <MaterialIcons name="add-circle" size={24} color="#f8b91c"/>
+                                                    <MaterialIcons name="add-circle" size={24} color="#226377"/>
                                                 </TouchableOpacity>
                                             )
                                         }
@@ -750,7 +750,7 @@ export default (props) => {
                             justifyContent: "center",
                             borderRadius: 10,
                         },
-                        quantityCart === 0 ? {backgroundColor: "grey"} : {backgroundColor: "#f8b91c"}
+                        quantityCart === 0 ? {backgroundColor: "grey"} : {backgroundColor: "#226377"}
                     ]}
                     onPress={() => {
                         navigation.navigate("overview", {foodTruckParam: JSON.stringify(foodTruck)});
