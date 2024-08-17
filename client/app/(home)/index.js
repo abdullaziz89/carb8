@@ -11,14 +11,7 @@ import CustomCarousel from "../(menu)/CustomCarousel";
 import "../../config/i18n";
 import {useTranslation} from "react-i18next";
 import HeaderTitleView from "../(menu)/HeaderTitleView";
-import {
-    BalsamiqSans_400Regular,
-    BalsamiqSans_400Regular_Italic,
-    BalsamiqSans_700Bold,
-    BalsamiqSans_700Bold_Italic,
-} from '@expo-google-fonts/balsamiq-sans';
 import {useSharedValue, withTiming} from "react-native-reanimated";
-import {useFonts} from "expo-font";
 import {LogLevel, OneSignal} from 'react-native-onesignal';
 import Constants from "expo-constants";
 import {useAppStateStore} from "../../store/app-store";
@@ -27,24 +20,9 @@ import TextWithFont from "../../component/TextWithFont";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {Image} from "expo-image";
 
-SplashScreen.preventAutoHideAsync();
-
 const {width, height} = Dimensions.get("window");
 
 export default function Home() {
-
-    const [fontsLoaded, fontError] = useFonts({
-        BalsamiqSans_400Regular,
-        BalsamiqSans_400Regular_Italic,
-        BalsamiqSans_700Bold,
-        BalsamiqSans_700Bold_Italic,
-    });
-
-    const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded || fontError) {
-            await SplashScreen.hideAsync();
-        }
-    }, [fontsLoaded, fontError]);
 
     const {i18n} = useTranslation();
     const {getOrders} = useAppStateStore();
@@ -120,26 +98,7 @@ export default function Home() {
         })
     };
 
-    useEffect(() => {
-
-        if (showFilterOptions) {
-            withTiming(modelViewScale.value, {
-                toValue: 1,
-                duration: 200,
-                useNativeDriver: false
-            })
-        } else {
-            withTiming(modelViewScale.value, {
-                toValue: 0,
-                duration: 200,
-                useNativeDriver: false
-            })
-        }
-
-    }, [showFilterOptions]);
-
     const currentYear = new Date().getFullYear();
-
 
     return (
         <SafeAreaView
