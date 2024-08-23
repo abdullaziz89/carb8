@@ -183,7 +183,7 @@ export const useAppStateStore = create(
                 return {...state, orders}
             }),
         }), {
-            name: 'kwft-app-storage',
+            name: 'carb8-app-storage',
             storage: createJSONStorage(() => zustandStorage),
             version: 1,
         }

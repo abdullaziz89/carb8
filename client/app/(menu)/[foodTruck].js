@@ -273,7 +273,7 @@ export default (props) => {
                 <Image
                     source={{uri: logo}}
                     style={{width: 50, height: 50, borderRadius: 25}}
-                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                    placeholder={require("../../assets/carb8-logo-placeholder.png")}
                 />
                 {
                     foodTruck !== null && (
@@ -402,7 +402,7 @@ export default (props) => {
                             }}
                             shape={"circle"}
                             contentFit={"cover"}
-                            placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                            placeholder={require("../../assets/carb8-logo-placeholder.png")}
                         />
                         <View
                             style={{
@@ -605,7 +605,7 @@ export default (props) => {
                                         height: 100,
                                         borderRadius: 20
                                     }}
-                                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                                    placeholder={require("../../assets/carb8-logo-placeholder.png")}
                                     contentFit={"contain"}
                                 />
                                 <View

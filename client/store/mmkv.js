@@ -2,8 +2,8 @@
 import { MMKV } from 'react-native-mmkv'
 
 export const storage = new MMKV({
-    id: 'kwft-app-storage',
-    encryptionKey: '148ec7064bcf43d'
+    id: 'carb8-app-storage',
+    encryptionKey: '148ec7064bcfd43'
 })
 
 export const zustandStorage = {

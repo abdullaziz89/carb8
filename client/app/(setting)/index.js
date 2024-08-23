@@ -156,7 +156,7 @@ export default () => {
             >
                 {
                     langItems.map((item, index) => {
-                        return renderItem(item)
+                        return renderItem({key: index.toLocaleString(), ...item})
                     })
                 }
             </ActionSheet>
@@ -164,6 +164,7 @@ export default () => {
     }
 
     const renderItem = ({title, onPress, icon, isDelete, key}) => {
+        console.log('key', key)
         return (
             <TouchableOpacity
                 key={key}
@@ -217,20 +218,15 @@ export default () => {
             <Stack.Screen
                 options={{
                     title: i18n.language === "ar" ? "الأعدادات" : "Settings",
-                    headerLeft: () => {
-                        // back icon button
-                        return (
-                            <TouchableOpacity
-                                style={{
-                                    marginRight: 15
-                                }}
-                                onPress={() => {
-                                    navigation.goBack();
-                                }}
-                            >
-                                <MaterialIcons name="arrow-back" size={24} color="black"/>
-                            </TouchableOpacity>
-                        )
+                    headerLargeTitleStyle: {
+                        fontFamily: 'BalsamiqSans_400Regular',
+                        fontSize: 30,
+                        color: "white"
+                    },
+                    headerTitleStyle: {
+                        fontFamily: 'BalsamiqSans_400Regular',
+                        fontSize: 20,
+                        color: "white"
                     },
                     headerStyle: {
                         backgroundColor: "#226377"

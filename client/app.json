@@ -47,7 +47,7 @@
       ]
     },
     "ios": {
-      "buildNumber": "1.0.1",
+      "buildNumber": "1.0.2",
       "bundleIdentifier": "com.ideveloprs.carb8",
       "supportsTablet": false,
       "infoPlist": {

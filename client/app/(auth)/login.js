@@ -39,39 +39,40 @@ export default () => {
     ];
 
     const onSubmit = (data) => {
-        setIsLoading(true);
-        // check data not empty
-        if (data.username && data.password) {
-            login(data)
-                .then((response) => {
-                    setIsLoading(false);
-                    const token = response.data.token;
-                    const user = response.data.user;
-                    setToken(token);
-                    setUser(user);
-                    setVerified(true);
-                    setLogin(true);
-                    router.push('(user)/profile');
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-
-                    let response = error.response.data;
-                    console.log('login.js error', response)
-                    // if response has entity
-                    if (response.username) {
-                        if (!response.enable) {
-                            setUsername(response.username);
-                            navigation.navigate('otp');
-                        }
-                    } else {
-                        alert(response.message);
-                    }
-                });
-        } else {
-            setIsLoading(false);
-            alert('Please fill all fields');
-        }
+        console.log('login.js data', data)
+        // setIsLoading(true);
+        // // check data not empty
+        // if (data.username && data.password) {
+        //     login(data)
+        //         .then((response) => {
+        //             setIsLoading(false);
+        //             const token = response.data.token;
+        //             const user = response.data.user;
+        //             setToken(token);
+        //             setUser(user);
+        //             setVerified(true);
+        //             setLogin(true);
+        //             router.push('(user)/profile');
+        //         })
+        //         .catch((error) => {
+        //             setIsLoading(false);
+        //
+        //             let response = error.response.data;
+        //             console.log('login.js error', response)
+        //             // if response has entity
+        //             if (response.username) {
+        //                 if (!response.enable) {
+        //                     setUsername(response.username);
+        //                     navigation.navigate('otp');
+        //                 }
+        //             } else {
+        //                 alert(response.message);
+        //             }
+        //         });
+        // } else {
+        //     setIsLoading(false);
+        //     alert('Please fill all fields');
+        // }
     }
 
     const inputItem = ({name, label, required, secureTextEntry}, index) => {
@@ -208,7 +209,7 @@ export default () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => {
-                            router.push("/register");
+                            // router.push("/register");
                         }}
                     >
                         <Text
@@ -220,7 +221,7 @@ export default () => {
                                 fontFamily: 'BalsamiqSans_400Regular',
                             }}
                         >
-                            You don't have <Text style={{fontWeight: 'bold'}}>food truck</Text> account?{"\n"}
+                            You don't have account?{"\n"}
                             <Text
                                 style={{
                                     color: '#226377',

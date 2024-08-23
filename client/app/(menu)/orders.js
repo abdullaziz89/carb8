@@ -95,7 +95,7 @@ export default () => {
                         borderRadius: 20,
                         backgroundColor: "#226377"
                     }}
-                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                    placeholder={require("../../assets/carb8-logo-placeholder.png")}
                 />
                 <View
                     style={[

@@ -41,7 +41,7 @@ export const HeaderLogo = (navigation, logo, localLogo) => {
             <Image
                 source={localLogo ? logo : {uri: logo}}
                 style={{width: 35, height: 35, borderRadius: 17.5}}
-                placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                placeholder={require("../../assets/carb8-logo-placeholder.png")}
             />
         </TouchableOpacity>
     )

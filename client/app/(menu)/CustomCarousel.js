@@ -5,7 +5,7 @@ import {CreateResponsiveStyle, DEVICE_SIZES} from "rn-responsive-styles";
 import {useRouter} from "expo-router";
 import {useEffect, useState} from "react";
 import {updateHeaderImageView} from "../../services/HeadersImagesServices";
-import AllSportsPlaceholderImage from "../../assets/kwft-logo-placeholder.png";
+import AllSportsPlaceholderImage from "../../assets/carb8-logo-placeholder.png";
 
 const {width, height} = Dimensions.get("window");
 const isWeb = Platform.OS === "web";
@@ -42,7 +42,7 @@ export default (props) => {
                         style={styles.carouselImage}
                         contentFit={"fill"}
                         contentPosition={"center"}
-                        placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                        placeholder={require("../../assets/carb8-logo-placeholder.png")}
                     />
                 );
             } else {
@@ -67,7 +67,7 @@ export default (props) => {
                             style={styles.carouselImage}
                             contentFit={"cover"}
                             contentPosition={"center"}
-                            placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                            placeholder={require("../../assets/carb8-logo-placeholder.png")}
                         />
                     </TouchableOpacity>
                 );
@@ -80,7 +80,7 @@ export default (props) => {
                     style={styles.carouselImage}
                     contentFit={"fill"}
                     contentPosition={"center"}
-                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                    placeholder={require("../../assets/carb8-logo-placeholder.png")}
                 />
             );
         }

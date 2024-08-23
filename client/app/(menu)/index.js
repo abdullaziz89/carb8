@@ -192,7 +192,7 @@ export default function Home() {
                         selectedCuisine === item.id ? {borderRadius: 22, backgroundColor: "white"} : {}
                     ]}
                     contentFit={"cover"}
-                    placeholder={require("../../assets/kwft-logo-placeholder.png")}
+                    placeholder={require("../../assets/carb8-logo-placeholder.png")}
                 />
                 <Text
                     style={{
@@ -271,7 +271,8 @@ export default function Home() {
             style={{
                 flex: 1,
                 backgroundColor: "white",
-                width: width
+                width: width,
+                marginBottom: 120,
             }}
             onLayout={onLayoutRootView}
         >
@@ -297,6 +298,16 @@ export default function Home() {
                     options={{
                         headerLargeTitle: true,
                         title: "Carb 8",
+                        headerLargeTitleStyle: {
+                            fontFamily: 'BalsamiqSans_400Regular',
+                            fontSize: 30,
+                            color: "white"
+                        },
+                        headerTitleStyle: {
+                            fontFamily: 'BalsamiqSans_400Regular',
+                            fontSize: 20,
+                            color: "white"
+                        },
                         headerTitle: () => Platform.OS !== "ios" &&
                             <HeaderTitleView title={"Carb 8"} logo={require("../../assets/icon.png")}
                                              localLogo={true}/>,
@@ -436,7 +447,7 @@ export default function Home() {
                     <Text
                         style={styles.foodTrucksHeader}
                     >
-                        {i18n.language === "ar" ? "عربات الطعام" : "Food Trucks"}
+                        {i18n.language === "ar" ? "الوجبات" : "Meals"}
                     </Text>
                     {
                         cuisines.length > 0 &&
@@ -482,7 +493,7 @@ export default function Home() {
                                     textAlign: "center"
                                 }}
                             >
-                                {i18n.language === "ar" ? "لا توجد عربات" : "No Food Trucks"}
+                                {i18n.language === "ar" ? "لا توجد وجبات" : "No Meals"}
                             </Text>
                         </View>
                 }

@@ -289,7 +289,7 @@ export default () => {
                             }}
                             shape={"circle"}
                             contentFit={"cover"}
-                            placeholder={require("../../../assets/kwft-logo-placeholder.png")}
+                            placeholder={require("../../../assets/carb8-logo-placeholder.png")}
                         />
                         <View
                             style={{

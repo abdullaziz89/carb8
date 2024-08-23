@@ -7,6 +7,7 @@ const TabBar = ({state, descriptors, navigation}) => {
 
     const primaryColor = '#0891b2';
     const greyColor = '#737373';
+
     return (
         <View style={styles.tabbar}>
             {state.routes.map((route, index) => {
